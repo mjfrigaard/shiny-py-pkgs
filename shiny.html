@@ -107,6 +107,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<meta name="mermaid-theme" content="neutral">
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
@@ -537,9 +541,124 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="virtual-environments" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="virtual-environments"><span class="header-section-number">2.2</span> Virtual environments</h2>
-<p>In Python, it’s a good idea to use a virtual environment. This practice is likely new to R developers, so I’ll give a quick overview.</p>
+<p>In Python, it’s a good idea to use a virtual environment. This practice might be new to R developers, so I’ll give a quick overview.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <section id="how-virtual-environments-work" class="level3" data-number="2.2.1">
 <h3 data-number="2.2.1" class="anchored" data-anchor-id="how-virtual-environments-work"><span class="header-section-number">2.2.1</span> How virtual environments work</h3>
+<p>Python virtual environments isolate a project’s dependencies, so any packages installed for one project don’t conflict with other projects. Two common tools used in this approach are illustrated below:</p>
+<style>
+
+.codeStyle span:not(.nodeLabel) {
+  font-family: monospace;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #9753b8 !important;
+  background-color: #f6f6f6;
+  padding: 0.2em;
+}
+</style>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', "fontSize":"14px"}}}%%
+
+flowchart TB
+    SystemPython[("System Python&lt;br/&gt;&lt;code&gt;/usr/bin/python3&lt;/code&gt;")]
+    
+    subgraph VenvFlow["venv (standard library)"]
+        direction TB
+        VenvCmd["&lt;code&gt;python -m venv .venv&lt;/code&gt;"]
+        VenvDir[".venv/&lt;br/&gt;├── bin/python (symlink)&lt;br/&gt;├── bin/activate&lt;br/&gt;└── lib/site-packages/"]
+        VenvPip["&lt;code&gt;pip install shiny&lt;/code&gt;"]
+        VenvPkgs["Packages downloaded&lt;br/&gt;from PyPI"]
+        
+        VenvCmd --&gt; VenvDir
+        VenvDir --&gt; VenvPip
+        VenvPip --&gt; VenvPkgs
+        VenvPkgs --&gt; VenvDir
+    end
+    
+    ProjectA["Project A&lt;br/&gt;needs shiny 1.5.5"]
+    
+    VenvDir -.-&gt;|"isolates"| ProjectA
+    
+    
+    SystemPython --&gt; VenvCmd
+    
+    style VenvDir text-align:left
+    classDef system fill:#2d3748,stroke:#48bb78,color:#fff
+    classDef venvStyle fill:#2c5282,stroke:#63b3ed,color:#fff
+    classDef project fill:#553c9a,stroke:#b794f4,color:#fff
+    
+    class SystemPython system
+    class VenvCmd,VenvDir,VenvPip,VenvPkgs venvStyle
+    class ProjectA project
+    
+</pre>
+</div>
+<p></p><figcaption> Python built-in virtual environments</figcaption> </figure><p></p>
+</div>
+</div>
+</div>
+<p>Python’s built-in virtual environment tool (<code>venv</code>) ships with Python. The general workflow is:</p>
+<ol type="1">
+<li><em>Create virtual environment (<code>python -m venv</code>)</em><br>
+</li>
+<li><em>Use the environment (<code>activate</code>)</em><br>
+</li>
+<li><em>Install dependencies (<code>pip install</code>)</em></li>
+</ol>
+<p><code>venv</code> doesn’t have a built-in lockfile, which also means we’ll need to also run <code>pip freeze</code> to store the dependencies in <code>requirements.txt</code>.</p>
+<p><code>uv</code> is similar, but has a few more benefits:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', "fontSize":"14px"}}}%%
+
+flowchart TB
+    SystemPython[("System Python&lt;br/&gt;&lt;code&gt;/usr/bin/python3&lt;/code&gt;")]
+    
+    subgraph UvFlow["uv (Rust-based, fast)"]
+        direction TB
+        UvCmd["&lt;code&gt;uv venv&lt;/code&gt;"]
+        UvDir[".venv/&lt;br/&gt;├── bin/python&lt;br/&gt;└── lib/site-packages/"]
+        UvAdd["&lt;code&gt;uv add shiny&lt;/code&gt;"]
+        UvCache[("Global cache&lt;br/&gt;&lt;code&gt;~/.cache/uv/&lt;/code&gt;")]
+        UvLock["&lt;code&gt;uv.lock&lt;/code&gt;&lt;br/&gt;(reproducible)"]
+        
+        UvCmd --&gt; UvDir
+        UvAdd --&gt; UvCache
+        UvCache --&gt;|"hardlink&lt;br/&gt;(near-instant)"| UvDir
+        UvAdd --&gt; UvLock
+    end
+    
+    ProjectB["Project B&lt;br/&gt;needs shiny 1.6.1"]
+    
+    SystemPython --&gt; UvCmd
+    
+    UvDir -.-&gt;|"isolates"| ProjectB
+
+    style UvDir text-align:left
+    
+    classDef system fill:#2d3748,stroke:#48bb78,color:#fff
+    classDef uvStyle fill:#744210,stroke:#f6ad55,color:#fff
+    classDef project fill:#553c9a,stroke:#b794f4,color:#fff
+    
+    class SystemPython system
+    class UvCmd,UvDir,UvAdd,UvCache,UvLock uvStyle
+    class ProjectB project
+
+</pre>
+</div>
+<p></p><figcaption> uv virtual environments</figcaption> </figure><p></p>
+</div>
+</div>
+</div>
+<p><code>uv</code> requires a separate install command, <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> but also includes a global cache with hardlinks. During installation, <code>uv</code> reuses downloaded dependencies across projects, which is typically faster than copying/downloading them each time (as <code>venv</code> does). <code>uv add</code> also installs new dependencies in one step, and the <code>uv.lock</code> file automatically tracks exact versions.</p>
+<p>Both tools create a <code>.venv/</code> folder with an isolated Python interpreter and its own <code>site-packages/</code> directory. When activated, the shell points to <em>that</em> Python instead of the <strong>System Python.</strong>— So, <code>pip install shiny</code> only installs <code>shiny</code> in <em>this</em> project.</p>
 </section>
 <section id="virtual-environment-setup" class="level3" data-number="2.2.2">
 <h3 data-number="2.2.2" class="anchored" data-anchor-id="virtual-environment-setup"><span class="header-section-number">2.2.2</span> Virtual environment setup</h3>
@@ -566,6 +685,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 </section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Python environments are a similar concept to the <a href="https://rstudio.github.io/renv/index.html"><code>renv</code> package in R</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Install <code>uv</code> from the Terminal with: <code>curl -LsSf https://astral.sh/uv/install.sh | sh</code><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
