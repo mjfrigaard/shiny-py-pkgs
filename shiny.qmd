@@ -16,9 +16,122 @@ cd pap
 
 ## Virtual environments
 
-In Python, it's a good idea to use a virtual environment. This practice is likely new to R developers, so I'll give a quick overview. 
+In Python, it's a good idea to use a virtual environment. This practice might be new to R developers, so I'll give a quick overview.[^venv-renv]
+
+[^venv-renv]: Python environments are a similar concept to the [`renv` package in R](https://rstudio.github.io/renv/index.html).
 
 ### How virtual environments work
+
+Python virtual environments isolate a project's dependencies, so any packages installed for one project don't conflict with other projects. Two common tools used in this approach are illustrated below:
+
+```{=html}
+<style>
+
+.codeStyle span:not(.nodeLabel) {
+  font-family: monospace;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #9753b8 !important;
+  background-color: #f6f6f6;
+  padding: 0.2em;
+}
+</style>
+```
+
+```{mermaid}
+%%| fig-cap: 'Python built-in virtual environments'
+%%| fig-align: center
+%%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', "fontSize":"14px"}}}%%
+
+flowchart TB
+    SystemPython[("System Python<br/><code>/usr/bin/python3</code>")]
+    
+    subgraph VenvFlow["venv (standard library)"]
+        direction TB
+        VenvCmd["<code>python -m venv .venv</code>"]
+        VenvDir[".venv/<br/>├── bin/python (symlink)<br/>├── bin/activate<br/>└── lib/site-packages/"]
+        VenvPip["<code>pip install shiny</code>"]
+        VenvPkgs["Packages downloaded<br/>from PyPI"]
+        
+        VenvCmd --> VenvDir
+        VenvDir --> VenvPip
+        VenvPip --> VenvPkgs
+        VenvPkgs --> VenvDir
+    end
+    
+    ProjectA["Project A<br/>needs shiny 1.5.5"]
+    
+    VenvDir -.->|"isolates"| ProjectA
+    
+    
+    SystemPython --> VenvCmd
+    
+    style VenvDir text-align:left
+    classDef system fill:#2d3748,stroke:#48bb78,color:#fff
+    classDef venvStyle fill:#2c5282,stroke:#63b3ed,color:#fff
+    classDef project fill:#553c9a,stroke:#b794f4,color:#fff
+    
+    class SystemPython system
+    class VenvCmd,VenvDir,VenvPip,VenvPkgs venvStyle
+    class ProjectA project
+    
+```
+
+Python's built-in virtual environment tool (`venv`) ships with Python. The general workflow is: 
+
+1. _Create virtual environment (`python -m venv`)_  
+2. _Use the environment (`activate`)_   
+3. _Install dependencies (`pip install`)_ 
+
+`venv` doesn't have a built-in lockfile, which also means we'll need to also run `pip freeze` to store the dependencies in `requirements.txt`.
+
+`uv` is similar, but has a few more benefits:
+
+```{mermaid}
+%%| fig-cap: 'uv virtual environments'
+%%| fig-align: center
+%%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', "fontSize":"14px"}}}%%
+
+flowchart TB
+    SystemPython[("System Python<br/><code>/usr/bin/python3</code>")]
+    
+    subgraph UvFlow["uv (Rust-based, fast)"]
+        direction TB
+        UvCmd["<code>uv venv</code>"]
+        UvDir[".venv/<br/>├── bin/python<br/>└── lib/site-packages/"]
+        UvAdd["<code>uv add shiny</code>"]
+        UvCache[("Global cache<br/><code>~/.cache/uv/</code>")]
+        UvLock["<code>uv.lock</code><br/>(reproducible)"]
+        
+        UvCmd --> UvDir
+        UvAdd --> UvCache
+        UvCache -->|"hardlink<br/>(near-instant)"| UvDir
+        UvAdd --> UvLock
+    end
+    
+    ProjectB["Project B<br/>needs shiny 1.6.1"]
+    
+    SystemPython --> UvCmd
+    
+    UvDir -.->|"isolates"| ProjectB
+
+    style UvDir text-align:left
+    
+    classDef system fill:#2d3748,stroke:#48bb78,color:#fff
+    classDef uvStyle fill:#744210,stroke:#f6ad55,color:#fff
+    classDef project fill:#553c9a,stroke:#b794f4,color:#fff
+    
+    class SystemPython system
+    class UvCmd,UvDir,UvAdd,UvCache,UvLock uvStyle
+    class ProjectB project
+
+```
+
+`uv` requires a separate install command, [^uv-install] but also includes a global cache with hardlinks. During installation, `uv` reuses downloaded dependencies across projects, which is typically faster than copying/downloading them each time (as `venv` does). `uv add` also installs new dependencies in one step, and the `uv.lock` file automatically tracks exact versions. 
+
+Both tools create a `.venv/` folder with an isolated Python interpreter and its own `site-packages/` directory. When activated, the shell points to *that* Python instead of the **System Python.**— So, `pip install shiny` only installs `shiny` in *this* project. 
+
+[^uv-install]: Install `uv` from the Terminal with: `curl -LsSf https://astral.sh/uv/install.sh | sh`
 
 ### Virtual environment setup
 
@@ -44,7 +157,7 @@ Create a virtual environment, defaults to `.venv`:
 uv venv
 ```
 
-If you don't want to install/use `uv`, you can use  Python's built-in `venv`:
+If you don't want to install/use `uv`, you can use Python's built-in `venv`:
 
 ```bash
 python -m venv .venv
