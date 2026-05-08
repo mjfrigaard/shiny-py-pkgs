@@ -1,0 +1,5 @@
+---
+title: "Test Tools"
+---
+
+This chapter covers `pytest` fixtures, parametrize, monkeypatching, and mocking with `unittest.mock`. These tools make tests faster, more isolated, and easier to maintain.

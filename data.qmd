@@ -1,0 +1,5 @@
+---
+title: "Data"
+---
+
+This chapter covers how to bundle data files (CSV, JSON, Parquet, etc.) inside a Python package so they are accessible regardless of where the package is installed, using `importlib.resources`.

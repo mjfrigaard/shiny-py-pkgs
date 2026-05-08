@@ -1,0 +1,5 @@
+---
+title: "AI-Assisted Development"
+---
+
+This chapter covers using AI coding assistants (GitHub Copilot, Positron Assistant) to accelerate Shiny for Python development: writing modules, generating tests, and refactoring server logic.

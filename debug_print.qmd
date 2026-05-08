@@ -1,0 +1,5 @@
+---
+title: "Print Debugging"
+---
+
+This chapter covers using `print()` and `logging.debug()` as lightweight, quick debugging tools inside Shiny server functions and reactive expressions.

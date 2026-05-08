@@ -1,0 +1,104 @@
+project:
+  type: book
+
+editor:
+  render-on-save: true
+
+book:
+  title: "Shiny for Python App-Packages"
+  author: "Martin Frigaard"
+  description: |
+    Getting your Shiny for Python app into a Python package
+  reader-mode: true
+  repo-url: https://github.com/mjfrigaard/shiny-py-pkgs
+  repo-branch: main
+  repo-actions: [edit, issue]
+
+  chapters:
+    - index.qmd
+    - part: intro.qmd
+      chapters:
+        - whole_game.qmd
+        - shiny.qmd
+        - packages.qmd
+        - development.qmd
+    - part: app_packages.qmd
+      chapters:
+        - document.qmd
+        - dependencies.qmd
+        - data.qmd
+        - launch.qmd
+        - resources.qmd
+    - part: debug.qmd
+      chapters:
+        - debugger.qmd
+        - debug_print.qmd
+        - debug_apps.qmd
+        - logging.qmd
+    - part: tests.qmd
+      chapters:
+        - test_suite.qmd
+        - test_specs.qmd
+        - test_tools.qmd
+        - test_modules.qmd
+        - test_system.qmd
+    - part: deploy.qmd
+      chapters:
+        - shinyappsio.qmd
+        - docker.qmd
+        - gha.qmd
+        - pypi.qmd
+    - part: frameworks.qmd
+      chapters:
+        - flat_layout.qmd
+        - src_layout.qmd
+        - monorepo.qmd
+    - part: tools.qmd
+      chapters:
+        - shiny_assist.qmd
+        - chatlas.qmd
+        - code_tools.qmd
+    - part: special_topics.qmd
+      chapters:
+        - shiny_ui_edit.qmd
+        - app_data.qmd
+        - classes.qmd
+        - reactive_patterns.qmd
+
+  appendices:
+    - glossary.qmd
+    - create.qmd
+    - github.qmd
+    - comparisons.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: [flatly, custom.scss]
+    highlight-style: arrow
+    toc: true
+    toc-depth: 4
+    toc-location: right
+    toc-title: Contents
+    toc-expand: true
+    number-sections: true
+    code-fold: show
+    code-summary: 'show/hide'
+    code-overflow: scroll
+    code-annotations: hover
+    code-link: false
+    callout-icon: false
+    lightbox: true
+    date: last-modified
+    date-format: iso
+    fontsize: 1.075em
+    linestretch: 1.35
+    fig-format: retina
+    fig-asp: 0.618
+    dpi: 320
+    mermaid:
+      theme: neutral
+  pdf:
+    documentclass: scrreprt

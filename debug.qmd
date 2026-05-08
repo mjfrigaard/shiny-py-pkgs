@@ -1,0 +1,3 @@
+# Debugging {.unnumbered}
+
+This part covers tools and techniques for diagnosing problems in Shiny for Python apps: the Python debugger, print-based debugging, app-specific debugging strategies, and the `logging` module.

@@ -1,0 +1,5 @@
+---
+title: "Dynamic UI"
+---
+
+This chapter covers building dynamic user interfaces in Shiny for Python: conditionally showing panels, rendering UI from the server, and updating inputs programmatically.

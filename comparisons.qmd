@@ -1,0 +1,18 @@
+---
+title: "R vs. Python Shiny"
+---
+
+This appendix provides a side-by-side comparison of key patterns in Shiny for R (as covered in [Shiny App-Packages](https://mjfrigaard.github.io/shiny-app-pkgs/)) and Shiny for Python.
+
+| Concept | R | Python |
+|---------|---|--------|
+| Package file | `DESCRIPTION` | `pyproject.toml` |
+| Namespace file | `NAMESPACE` | `__init__.py` |
+| Dependency locking | `renv.lock` | `requirements.txt` / `uv.lock` |
+| Documentation | `roxygen2` | Docstrings + `pdoc` |
+| Testing framework | `testthat` | `pytest` |
+| App entry point | `runApp()` / `shinyApp()` | `App(ui, server)` |
+| Modules | `moduleServer()` | `module_server()` |
+| Reactive value | `reactiveVal()` | `reactive.Value()` |
+| Reactive expression | `reactive({})` | `reactive.Calc()` |
+| Observer | `observe({})` / `observeEvent()` | `reactive.Effect()` |

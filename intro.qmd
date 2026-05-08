@@ -1,0 +1,14 @@
+# Introduction {.unnumbered}
+
+This section will introduce the two main resources the book is built around: [Shiny for Python](https://shiny.posit.co/py/) and [Python packages](https://py-pkgs.org/welcome). 
+
+
+## Shiny for Python (core)
+
+We're going to be using the application and code referenced directly from Posit's documentation. 
+
+## Python Packages 
+
+The [Python Packages](https://py-pkgs.org/welcome) book is an excellent resource for understanding how to package a Python project. It's also written in the same basic style and structure of [R Packages, 2ed](https://r-pkgs.org/index.html), so if you're coming from the R development world (as I am), these similarities should be comforting. 
+
+

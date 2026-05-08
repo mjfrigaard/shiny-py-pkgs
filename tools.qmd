@@ -1,0 +1,3 @@
+# Tools {.unnumbered}
+
+This part surveys tooling that accelerates Shiny for Python development: AI-assisted coding, the `chatlas` Python LLM package, and code quality tools like `ruff`, `mypy`, and `pre-commit`.

@@ -1,0 +1,3 @@
+# App-Packages {.unnumbered}
+
+This part covers the core components of a well-structured Python app-package: documentation, dependency management, data files, app entry points, and static resources.

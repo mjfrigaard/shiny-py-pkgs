@@ -1,0 +1,5 @@
+---
+title: "PyPI"
+---
+
+This chapter covers publishing a Python app-package to PyPI using `hatch` or `flit`, including versioning, building distributions, and uploading via `twine` or GitHub Actions.

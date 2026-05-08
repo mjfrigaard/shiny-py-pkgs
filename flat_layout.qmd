@@ -1,0 +1,5 @@
+---
+title: "Flat Layout"
+---
+
+This chapter covers the simple flat package layout — all modules at the top level of the package directory — and when it is the right choice for a Shiny app-package.

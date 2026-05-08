@@ -1,0 +1,13 @@
+---
+title: "Glossary"
+---
+
+Key terms used throughout the book.
+
+| Term | Definition |
+|------|-----------|
+| App-package | A Python package whose primary purpose is to deliver a Shiny for Python application |
+| Entry point | A command registered in `pyproject.toml` that lets users launch the app from the terminal |
+| Editable install | Installing a package with `pip install -e .` so code changes take effect without reinstalling |
+| Reactive expression | A `reactive.Calc` that caches its result and re-executes only when its dependencies change |
+| Module | A self-contained pair of `ui` and `server` functions that can be embedded in a larger Shiny app |

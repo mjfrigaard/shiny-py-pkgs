@@ -1,0 +1,5 @@
+---
+title: "Documentation"
+---
+
+This chapter covers writing Python docstrings and generating HTML documentation with `pdoc` or `mkdocs`. Good documentation makes a package usable by others — and by your future self.

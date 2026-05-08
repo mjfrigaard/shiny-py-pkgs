@@ -1,0 +1,74 @@
+---
+title: "Shiny for Python"
+---
+
+This chapter introduces Shiny for Python using the **Core** API. We'll cover the `App`, `ui`, `server`, and `render` components to build the example application we'll use throughout the rest of the book.
+
+
+## Create app directory
+
+We'll create and move into a new directory (`pap`, for Python app-package),
+
+```bash
+mkdir pap
+cd pap
+```
+
+## Virtual environments
+
+In Python, it's a good idea to use a virtual environment. This practice is likely new to R developers, so I'll give a quick overview. 
+
+### How virtual environments work
+
+### Virtual environment setup
+
+Install `uv` with:
+
+**macOS/Linux**:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+After installation, restart your terminal (or run `source ~/.local/bin/env` on macOS/Linux) so the `uv` binary is on your `PATH`.
+
+**Windows (PowerShell)**
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.sh | iex"
+```
+
+Create a virtual environment, defaults to `.venv`:
+
+```bash
+uv venv
+```
+
+If you don't want to install/use `uv`, you can use  Python's built-in `venv`:
+
+```bash
+python -m venv .venv
+```
+
+Activate the virtual environment:
+
+```bash
+source .venv/bin/activate
+```
+
+The terminal prompt will prepend with `(pap)`.
+
+**Windows (PowerShell)**:
+
+```powershell
+.venv\Scripts\Activate.ps1 
+```
+
+### Installing dependencies in virtual environments
+
+Now we can install Shiny into the `venv`:
+
+```bash
+uv pip install shiny
+```
+

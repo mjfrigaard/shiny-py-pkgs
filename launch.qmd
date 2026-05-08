@@ -1,0 +1,5 @@
+---
+title: "Launch"
+---
+
+This chapter covers how to define a package entry point so users can launch the Shiny app with a single command (e.g., `myapp run`) instead of calling `shiny run app.py` directly.

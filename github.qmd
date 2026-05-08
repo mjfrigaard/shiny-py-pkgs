@@ -1,0 +1,5 @@
+---
+title: "GitHub Setup"
+---
+
+This appendix covers setting up a GitHub repository for a Shiny for Python app-package: initialising git, creating a `.gitignore`, pushing to GitHub, and protecting the `main` branch.
