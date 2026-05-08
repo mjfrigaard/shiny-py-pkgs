@@ -11,4 +11,19 @@ We're going to be using the application and code referenced directly from Posit'
 
 The [Python Packages](https://py-pkgs.org/welcome) book is an excellent resource for understanding how to package a Python project. It's also written in the same basic style and structure of [R Packages, 2ed](https://r-pkgs.org/index.html), so if you're coming from the R development world (as I am), these similarities should be comforting. 
 
+## Integrated Development Environments (IDEs)
+
+This book covers building Python applications in the Positron integrated environment. I'll also provide a few other options for Python/Shiny app development.
+
+### Positron
+
+[Positron](https://positron.posit.co/) is a "_free, AI-assisted environment, empowering the full spectrum of data science in Python and R._"
+
+![](images/positron.png){width='100%' fig-align='center'}
+
+### VS Code 
+
+VS Code is a popular IDE for Python developers 
+
+![](images/vs_code.png){width='100%' fig-align='center'}
 

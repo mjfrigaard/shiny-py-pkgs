@@ -100,5 +100,3 @@ format:
     dpi: 320
     mermaid:
       theme: neutral
-  pdf:
-    documentclass: scrreprt
