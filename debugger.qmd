@@ -1,0 +1,5 @@
+---
+title: "The Python Debugger"
+---
+
+This chapter introduces `pdb` and IDE-integrated debuggers (VS Code / Positron) for stepping through Python code, inspecting state, and diagnosing logic errors in a Shiny app.

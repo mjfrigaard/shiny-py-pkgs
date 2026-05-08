@@ -1,0 +1,5 @@
+---
+title: "chatlas"
+---
+
+This chapter covers [`chatlas`](https://github.com/posit-dev/chatlas), Posit's Python LLM interface package, and shows how to embed conversational AI features directly inside a Shiny for Python app.

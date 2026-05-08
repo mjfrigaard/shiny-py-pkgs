@@ -1,0 +1,5 @@
+---
+title: "Test Suite"
+---
+
+This chapter covers setting up `pytest` for a Python app-package: directory layout, configuration in `pyproject.toml`, and running tests from the command line and inside an IDE.

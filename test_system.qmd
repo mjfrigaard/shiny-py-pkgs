@@ -1,0 +1,5 @@
+---
+title: "System Tests"
+---
+
+This chapter covers end-to-end testing of a Shiny for Python app using Playwright and `shiny`'s built-in test utilities, simulating real user interactions in a headless browser.

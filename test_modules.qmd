@@ -1,0 +1,5 @@
+---
+title: "Testing Modules"
+---
+
+This chapter covers testing Shiny for Python modules — the `ui` and `server` components of a module — using `shiny`'s test client and `pytest` fixtures.

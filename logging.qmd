@@ -1,0 +1,5 @@
+---
+title: "Logging"
+---
+
+This chapter covers the Python `logging` module: configuring log levels, writing structured log messages, and routing logs to files or external services in a packaged Shiny app.

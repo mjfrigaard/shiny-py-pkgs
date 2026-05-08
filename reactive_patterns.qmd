@@ -1,0 +1,5 @@
+---
+title: "Reactive Patterns"
+---
+
+This chapter covers advanced reactive design in Shiny for Python: `reactive.Value`, `reactive.Calc`, `reactive.Effect`, isolation, invalidation, and avoiding common pitfalls like circular dependencies.

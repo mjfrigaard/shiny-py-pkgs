@@ -1,0 +1,5 @@
+---
+title: "Docker"
+---
+
+This chapter covers writing a `Dockerfile` for a Shiny for Python app-package, building and running the container locally, and pushing the image to a registry for deployment.

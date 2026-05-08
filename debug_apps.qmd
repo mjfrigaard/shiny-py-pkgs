@@ -1,0 +1,5 @@
+---
+title: "Debugging Shiny Apps"
+---
+
+This chapter covers strategies specific to debugging Shiny for Python apps: understanding reactive dependencies, tracing input/output flows, and isolating errors to UI vs. server logic.

@@ -1,0 +1,5 @@
+---
+title: "Development Workflow"
+---
+
+This chapter covers the day-to-day Python development workflow: creating a virtual environment, installing a package in editable mode (`pip install -e .`), and iterating on code without reinstalling.

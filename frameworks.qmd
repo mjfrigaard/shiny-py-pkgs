@@ -1,0 +1,3 @@
+# Project Patterns {.unnumbered}
+
+This part examines different ways to lay out a Python app-package project: the simple flat layout, the `src/` layout recommended by modern Python tooling, and a monorepo approach for teams managing multiple apps or packages together.

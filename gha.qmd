@@ -1,0 +1,5 @@
+---
+title: "GitHub Actions"
+---
+
+This chapter covers automating testing, linting, and deployment with GitHub Actions: writing workflow YAML files, caching dependencies, and deploying on merge to `main`.

@@ -1,0 +1,5 @@
+---
+title: "The Whole Game"
+---
+
+This chapter walks through the complete workflow — from a bare `app.py` to a working app inside an installable package. We'll highlight each area of the development workflow used throughout the rest of the book so you can see how all the pieces fit together before diving into each topic in detail.

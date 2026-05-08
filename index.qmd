@@ -1,0 +1,59 @@
+# Preface {.unnumbered}
+
+This book walks through how to build [Shiny for Python](https://shiny.posit.co/py/) applications inside Python packages. It is a Python companion to [Shiny App-Packages](https://mjfrigaard.github.io/shiny-app-pkgs/), which covers the same workflow for R.
+
+## Why put an app in a package?
+
+A standalone `app.py` file is a fine place to start. But as an app grows, packaging it offers real benefits:
+
+- **Reusability** — share utility functions, modules, and data across projects  
+- **Testability** — `pytest` can test code that lives in an importable package
+- **Reproducibility** — `pyproject.toml` files make dependencies explicit and installable   
+- **Deployability** — properly packaged apps are easier to containerize and deploy  
+
+## What this book covers
+
+The book follows a single example application from a bare script through a fully packaged, tested, and deployed Shiny app. 
+
+Each part builds on the last:
+
+| Part | Topic |
+|------|-------|
+| Introduction | Shiny for Python basics and Python package fundamentals |
+| App-Packages | Documentation, dependencies, data, and static resources |
+| Debugging | Using the Python debugger and logging inside Shiny apps |
+| Testing | `pytest` setup, fixtures, module tests, and end-to-end tests |
+| Deployment | Posit Connect, Docker, GitHub Actions, and PyPI |
+| Project Patterns | Flat, `src/`, and monorepo layouts |
+| Tools | AI-assisted development and code quality tooling |
+| Special Topics | Dynamic UI, app data patterns, Python classes, and reactive design |
+
+## Prerequisites
+
+Readers should be comfortable with basic Python and have some exposure to Shiny for Python. No prior experience with Python packaging is assumed.
+
+## Conventions
+
+All Shiny code uses [Shiny Core](https://shiny.posit.co/py/api/core/).[^py-code-flavors] 
+
+Code that is meant to be typed in a terminal looks like this:
+
+```bash
+$ pip install shiny
+```
+
+or[^py-code-chunks]
+
+```python
+>>> import numpy as np
+```
+
+Code that belongs in a Python file looks like this:
+
+```python
+from shiny import App, ui, render
+```
+
+[^py-code-flavors]: Read more about the syntax differences [here](https://shiny.posit.co/py/docs/express-vs-core.html).
+
+[^py-code-chunks]: Python code blocks use the `jupyter` engine.

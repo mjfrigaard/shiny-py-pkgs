@@ -1,0 +1,5 @@
+---
+title: "Python Classes"
+---
+
+This chapter covers using Python classes to encapsulate app logic — a pattern analogous to R6 classes in the R book — including dataclasses, regular classes, and when each is appropriate inside a Shiny app.

@@ -1,0 +1,5 @@
+---
+title: "Python Packages"
+---
+
+This chapter covers what a Python package is, how `pyproject.toml` replaces `setup.py`, and how to use tools like `hatch` or `flit` to scaffold a new package. The chapter converts the standalone app from the previous chapter into an installable package.

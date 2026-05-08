@@ -1,0 +1,18 @@
+---
+title: "Creating a Package"
+---
+
+A step-by-step checklist for creating a new Shiny for Python app-package from scratch.
+
+## Checklist
+
+- [ ] Create a virtual environment: `python -m venv .venv`
+- [ ] Scaffold the package: `hatch new myapp`
+- [ ] Add `shiny` to `[project.dependencies]` in `pyproject.toml`
+- [ ] Move `app.py` into the package directory
+- [ ] Add a `__main__.py` entry point
+- [ ] Register the entry point in `pyproject.toml`
+- [ ] Install in editable mode: `pip install -e .`
+- [ ] Set up `pytest` and write a first test
+- [ ] Add a `README.md`
+- [ ] Initialise a git repository

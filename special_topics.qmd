@@ -1,0 +1,3 @@
+# Special Topics {.unnumbered}
+
+This part explores advanced patterns: dynamic UI, app-level data management, using Python classes to encapsulate app logic, and sophisticated reactive design patterns.

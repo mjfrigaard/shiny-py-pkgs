@@ -1,0 +1,5 @@
+---
+title: "Resources"
+---
+
+This chapter covers how to include static resources — CSS, JavaScript, images, and HTML templates — inside a Python package and serve them correctly from a Shiny app.

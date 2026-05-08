@@ -1,0 +1,581 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Shiny for Python App-Packages",
+    "section": "",
+    "text": "Preface\nThis book walks through how to build Shiny for Python applications inside Python packages. It is a Python companion to Shiny App-Packages, which covers the same workflow for R.",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#why-put-an-app-in-a-package",
+    "href": "index.html#why-put-an-app-in-a-package",
+    "title": "Shiny for Python App-Packages",
+    "section": "Why put an app in a package?",
+    "text": "Why put an app in a package?\nA standalone app.py file is a fine place to start. But as an app grows, packaging it offers real benefits:\n\nReusability — share utility functions, modules, and data across projects\n\nTestability — pytest can test code that lives in an importable package\nReproducibility — pyproject.toml files make dependencies explicit and installable\n\nDeployability — properly packaged apps are easier to containerize and deploy",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#what-this-book-covers",
+    "href": "index.html#what-this-book-covers",
+    "title": "Shiny for Python App-Packages",
+    "section": "What this book covers",
+    "text": "What this book covers\nThe book follows a single example application from a bare script through a fully packaged, tested, and deployed Shiny app.\nEach part builds on the last:\n\n\n\n\n\n\n\nPart\nTopic\n\n\n\n\nIntroduction\nShiny for Python basics and Python package fundamentals\n\n\nApp-Packages\nDocumentation, dependencies, data, and static resources\n\n\nDebugging\nUsing the Python debugger and logging inside Shiny apps\n\n\nTesting\npytest setup, fixtures, module tests, and end-to-end tests\n\n\nDeployment\nPosit Connect, Docker, GitHub Actions, and PyPI\n\n\nProject Patterns\nFlat, src/, and monorepo layouts\n\n\nTools\nAI-assisted development and code quality tooling\n\n\nSpecial Topics\nDynamic UI, app data patterns, Python classes, and reactive design",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#prerequisites",
+    "href": "index.html#prerequisites",
+    "title": "Shiny for Python App-Packages",
+    "section": "Prerequisites",
+    "text": "Prerequisites\nReaders should be comfortable with basic Python and have some exposure to Shiny for Python. No prior experience with Python packaging is assumed.",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#conventions",
+    "href": "index.html#conventions",
+    "title": "Shiny for Python App-Packages",
+    "section": "Conventions",
+    "text": "Conventions\nAll Shiny code uses Shiny Core.1\nCode that is meant to be typed in a terminal looks like this:\n$ pip install shiny\nor2\n&gt;&gt;&gt; import numpy as np\nCode that belongs in a Python file looks like this:\nfrom shiny import App, ui, render",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#footnotes",
+    "href": "index.html#footnotes",
+    "title": "Shiny for Python App-Packages",
+    "section": "",
+    "text": "Read more about the syntax differences here.↩︎\nPython code blocks use the jupyter engine.↩︎",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "intro.html",
+    "href": "intro.html",
+    "title": "Introduction",
+    "section": "",
+    "text": "Shiny for Python (core)\nThis section will introduce the two main resources the book is built around: Shiny for Python and Python packages.\nWe’re going to be using the application and code referenced directly from Posit’s documentation.",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "intro.html#python-packages",
+    "href": "intro.html#python-packages",
+    "title": "Introduction",
+    "section": "Python Packages",
+    "text": "Python Packages\nThe Python Packages book is an excellent resource for understanding how to package a Python project. It’s also written in the same basic style and structure of R Packages, 2ed, so if you’re coming from the R development world (as I am), these similarities should be comforting.",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "whole_game.html",
+    "href": "whole_game.html",
+    "title": "1  The Whole Game",
+    "section": "",
+    "text": "This chapter walks through the complete workflow — from a bare app.py to a working app inside an installable package. We’ll highlight each area of the development workflow used throughout the rest of the book so you can see how all the pieces fit together before diving into each topic in detail.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>The Whole Game</span>"
+    ]
+  },
+  {
+    "objectID": "shiny.html",
+    "href": "shiny.html",
+    "title": "2  Shiny for Python",
+    "section": "",
+    "text": "2.1 Create app directory\nThis chapter introduces Shiny for Python using the Core API. We’ll cover the App, ui, server, and render components to build the example application we’ll use throughout the rest of the book.\nWe’ll create and move into a new directory (pap, for Python app-package),",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shiny for Python</span>"
+    ]
+  },
+  {
+    "objectID": "shiny.html#create-app-directory",
+    "href": "shiny.html#create-app-directory",
+    "title": "2  Shiny for Python",
+    "section": "",
+    "text": "mkdir pap\ncd pap",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shiny for Python</span>"
+    ]
+  },
+  {
+    "objectID": "shiny.html#virtual-environments",
+    "href": "shiny.html#virtual-environments",
+    "title": "2  Shiny for Python",
+    "section": "2.2 Virtual environments",
+    "text": "2.2 Virtual environments\nIn Python, it’s a good idea to use a virtual environment. This practice is likely new to R developers, so I’ll give a quick overview.\n\n2.2.1 How virtual environments work\n\n\n2.2.2 Virtual environment setup\nInstall uv with:\nmacOS/Linux:\ncurl -LsSf https://astral.sh/uv/install.sh | sh\nAfter installation, restart your terminal (or run source ~/.local/bin/env on macOS/Linux) so the uv binary is on your PATH.\nWindows (PowerShell)\npowershell -ExecutionPolicy ByPass -c \"irm https://astral.sh/uv/install.sh | iex\"\nCreate a virtual environment, defaults to .venv:\nuv venv\nIf you don’t want to install/use uv, you can use Python’s built-in venv:\npython -m venv .venv\nActivate the virtual environment:\nsource .venv/bin/activate\nThe terminal prompt will prepend with (pap).\nWindows (PowerShell):\n.venv\\Scripts\\Activate.ps1 \n\n\n2.2.3 Installing dependencies in virtual environments\nNow we can install Shiny into the venv:\nuv pip install shiny",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shiny for Python</span>"
+    ]
+  },
+  {
+    "objectID": "packages.html",
+    "href": "packages.html",
+    "title": "3  Python Packages",
+    "section": "",
+    "text": "This chapter covers what a Python package is, how pyproject.toml replaces setup.py, and how to use tools like hatch or flit to scaffold a new package. The chapter converts the standalone app from the previous chapter into an installable package.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Python Packages</span>"
+    ]
+  },
+  {
+    "objectID": "development.html",
+    "href": "development.html",
+    "title": "4  Development Workflow",
+    "section": "",
+    "text": "This chapter covers the day-to-day Python development workflow: creating a virtual environment, installing a package in editable mode (pip install -e .), and iterating on code without reinstalling.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Development Workflow</span>"
+    ]
+  },
+  {
+    "objectID": "app_packages.html",
+    "href": "app_packages.html",
+    "title": "App-Packages",
+    "section": "",
+    "text": "This part covers the core components of a well-structured Python app-package: documentation, dependency management, data files, app entry points, and static resources.",
+    "crumbs": [
+      "App-Packages"
+    ]
+  },
+  {
+    "objectID": "document.html",
+    "href": "document.html",
+    "title": "5  Documentation",
+    "section": "",
+    "text": "This chapter covers writing Python docstrings and generating HTML documentation with pdoc or mkdocs. Good documentation makes a package usable by others — and by your future self.",
+    "crumbs": [
+      "App-Packages",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Documentation</span>"
+    ]
+  },
+  {
+    "objectID": "dependencies.html",
+    "href": "dependencies.html",
+    "title": "6  Dependencies",
+    "section": "",
+    "text": "This chapter covers how to declare, pin, and manage Python dependencies in pyproject.toml, and how to use pip, uv, or pixi to keep environments reproducible across machines.",
+    "crumbs": [
+      "App-Packages",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Dependencies</span>"
+    ]
+  },
+  {
+    "objectID": "data.html",
+    "href": "data.html",
+    "title": "7  Data",
+    "section": "",
+    "text": "This chapter covers how to bundle data files (CSV, JSON, Parquet, etc.) inside a Python package so they are accessible regardless of where the package is installed, using importlib.resources.",
+    "crumbs": [
+      "App-Packages",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Data</span>"
+    ]
+  },
+  {
+    "objectID": "launch.html",
+    "href": "launch.html",
+    "title": "8  Launch",
+    "section": "",
+    "text": "This chapter covers how to define a package entry point so users can launch the Shiny app with a single command (e.g., myapp run) instead of calling shiny run app.py directly.",
+    "crumbs": [
+      "App-Packages",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Launch</span>"
+    ]
+  },
+  {
+    "objectID": "resources.html",
+    "href": "resources.html",
+    "title": "9  Resources",
+    "section": "",
+    "text": "This chapter covers how to include static resources — CSS, JavaScript, images, and HTML templates — inside a Python package and serve them correctly from a Shiny app.",
+    "crumbs": [
+      "App-Packages",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Resources</span>"
+    ]
+  },
+  {
+    "objectID": "debug.html",
+    "href": "debug.html",
+    "title": "Debugging",
+    "section": "",
+    "text": "This part covers tools and techniques for diagnosing problems in Shiny for Python apps: the Python debugger, print-based debugging, app-specific debugging strategies, and the logging module.",
+    "crumbs": [
+      "Debugging"
+    ]
+  },
+  {
+    "objectID": "debugger.html",
+    "href": "debugger.html",
+    "title": "10  The Python Debugger",
+    "section": "",
+    "text": "This chapter introduces pdb and IDE-integrated debuggers (VS Code / Positron) for stepping through Python code, inspecting state, and diagnosing logic errors in a Shiny app.",
+    "crumbs": [
+      "Debugging",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Python Debugger</span>"
+    ]
+  },
+  {
+    "objectID": "debug_print.html",
+    "href": "debug_print.html",
+    "title": "11  Print Debugging",
+    "section": "",
+    "text": "This chapter covers using print() and logging.debug() as lightweight, quick debugging tools inside Shiny server functions and reactive expressions.",
+    "crumbs": [
+      "Debugging",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Print Debugging</span>"
+    ]
+  },
+  {
+    "objectID": "debug_apps.html",
+    "href": "debug_apps.html",
+    "title": "12  Debugging Shiny Apps",
+    "section": "",
+    "text": "This chapter covers strategies specific to debugging Shiny for Python apps: understanding reactive dependencies, tracing input/output flows, and isolating errors to UI vs. server logic.",
+    "crumbs": [
+      "Debugging",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Debugging Shiny Apps</span>"
+    ]
+  },
+  {
+    "objectID": "logging.html",
+    "href": "logging.html",
+    "title": "13  Logging",
+    "section": "",
+    "text": "This chapter covers the Python logging module: configuring log levels, writing structured log messages, and routing logs to files or external services in a packaged Shiny app.",
+    "crumbs": [
+      "Debugging",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Logging</span>"
+    ]
+  },
+  {
+    "objectID": "tests.html",
+    "href": "tests.html",
+    "title": "Testing",
+    "section": "",
+    "text": "This part covers testing a Shiny for Python app-package with pytest: setting up the test suite, writing specifications, using fixtures and plugins, testing Shiny modules, and running end-to-end tests with Playwright.",
+    "crumbs": [
+      "Testing"
+    ]
+  },
+  {
+    "objectID": "test_suite.html",
+    "href": "test_suite.html",
+    "title": "14  Test Suite",
+    "section": "",
+    "text": "This chapter covers setting up pytest for a Python app-package: directory layout, configuration in pyproject.toml, and running tests from the command line and inside an IDE.",
+    "crumbs": [
+      "Testing",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Test Suite</span>"
+    ]
+  },
+  {
+    "objectID": "test_specs.html",
+    "href": "test_specs.html",
+    "title": "15  Test Specifications",
+    "section": "",
+    "text": "This chapter covers writing clear, readable test specifications. It introduces behavior-driven development (BDD) style with pytest-bdd and shows how to map feature descriptions to test functions.",
+    "crumbs": [
+      "Testing",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Test Specifications</span>"
+    ]
+  },
+  {
+    "objectID": "test_tools.html",
+    "href": "test_tools.html",
+    "title": "16  Test Tools",
+    "section": "",
+    "text": "This chapter covers pytest fixtures, parametrize, monkeypatching, and mocking with unittest.mock. These tools make tests faster, more isolated, and easier to maintain.",
+    "crumbs": [
+      "Testing",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Test Tools</span>"
+    ]
+  },
+  {
+    "objectID": "test_modules.html",
+    "href": "test_modules.html",
+    "title": "17  Testing Modules",
+    "section": "",
+    "text": "This chapter covers testing Shiny for Python modules — the ui and server components of a module — using shiny’s test client and pytest fixtures.",
+    "crumbs": [
+      "Testing",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Testing Modules</span>"
+    ]
+  },
+  {
+    "objectID": "test_system.html",
+    "href": "test_system.html",
+    "title": "18  System Tests",
+    "section": "",
+    "text": "This chapter covers end-to-end testing of a Shiny for Python app using Playwright and shiny’s built-in test utilities, simulating real user interactions in a headless browser.",
+    "crumbs": [
+      "Testing",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>System Tests</span>"
+    ]
+  },
+  {
+    "objectID": "deploy.html",
+    "href": "deploy.html",
+    "title": "Deployment",
+    "section": "",
+    "text": "This part covers the main routes for getting a Shiny for Python app-package into production: Posit Connect via rsconnect-python, Docker containers, GitHub Actions CI/CD, and publishing the package itself to PyPI.",
+    "crumbs": [
+      "Deployment"
+    ]
+  },
+  {
+    "objectID": "shinyappsio.html",
+    "href": "shinyappsio.html",
+    "title": "19  Posit Connect",
+    "section": "",
+    "text": "This chapter covers deploying a Shiny for Python app-package to Posit Connect (and shinyapps.io) using rsconnect-python, including setting up credentials and automating deployment.",
+    "crumbs": [
+      "Deployment",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Posit Connect</span>"
+    ]
+  },
+  {
+    "objectID": "docker.html",
+    "href": "docker.html",
+    "title": "20  Docker",
+    "section": "",
+    "text": "This chapter covers writing a Dockerfile for a Shiny for Python app-package, building and running the container locally, and pushing the image to a registry for deployment.",
+    "crumbs": [
+      "Deployment",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Docker</span>"
+    ]
+  },
+  {
+    "objectID": "gha.html",
+    "href": "gha.html",
+    "title": "21  GitHub Actions",
+    "section": "",
+    "text": "This chapter covers automating testing, linting, and deployment with GitHub Actions: writing workflow YAML files, caching dependencies, and deploying on merge to main.",
+    "crumbs": [
+      "Deployment",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>GitHub Actions</span>"
+    ]
+  },
+  {
+    "objectID": "pypi.html",
+    "href": "pypi.html",
+    "title": "22  PyPI",
+    "section": "",
+    "text": "This chapter covers publishing a Python app-package to PyPI using hatch or flit, including versioning, building distributions, and uploading via twine or GitHub Actions.",
+    "crumbs": [
+      "Deployment",
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>PyPI</span>"
+    ]
+  },
+  {
+    "objectID": "frameworks.html",
+    "href": "frameworks.html",
+    "title": "Project Patterns",
+    "section": "",
+    "text": "This part examines different ways to lay out a Python app-package project: the simple flat layout, the src/ layout recommended by modern Python tooling, and a monorepo approach for teams managing multiple apps or packages together.",
+    "crumbs": [
+      "Project Patterns"
+    ]
+  },
+  {
+    "objectID": "flat_layout.html",
+    "href": "flat_layout.html",
+    "title": "23  Flat Layout",
+    "section": "",
+    "text": "This chapter covers the simple flat package layout — all modules at the top level of the package directory — and when it is the right choice for a Shiny app-package.",
+    "crumbs": [
+      "Project Patterns",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Flat Layout</span>"
+    ]
+  },
+  {
+    "objectID": "src_layout.html",
+    "href": "src_layout.html",
+    "title": "24  src/ Layout",
+    "section": "",
+    "text": "This chapter covers the src/ layout, the pattern recommended by modern Python packaging tools, and explains why it prevents a common class of import-path bugs during development and testing.",
+    "crumbs": [
+      "Project Patterns",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>src/ Layout</span>"
+    ]
+  },
+  {
+    "objectID": "monorepo.html",
+    "href": "monorepo.html",
+    "title": "25  Monorepo",
+    "section": "",
+    "text": "This chapter covers managing multiple Shiny app-packages in a single repository, including shared utility packages, workspace tooling (uv workspaces, hatch environments), and CI strategies.",
+    "crumbs": [
+      "Project Patterns",
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Monorepo</span>"
+    ]
+  },
+  {
+    "objectID": "tools.html",
+    "href": "tools.html",
+    "title": "Tools",
+    "section": "",
+    "text": "This part surveys tooling that accelerates Shiny for Python development: AI-assisted coding, the chatlas Python LLM package, and code quality tools like ruff, mypy, and pre-commit.",
+    "crumbs": [
+      "Tools"
+    ]
+  },
+  {
+    "objectID": "shiny_assist.html",
+    "href": "shiny_assist.html",
+    "title": "26  AI-Assisted Development",
+    "section": "",
+    "text": "This chapter covers using AI coding assistants (GitHub Copilot, Positron Assistant) to accelerate Shiny for Python development: writing modules, generating tests, and refactoring server logic.",
+    "crumbs": [
+      "Tools",
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>AI-Assisted Development</span>"
+    ]
+  },
+  {
+    "objectID": "chatlas.html",
+    "href": "chatlas.html",
+    "title": "27  chatlas",
+    "section": "",
+    "text": "This chapter covers chatlas, Posit’s Python LLM interface package, and shows how to embed conversational AI features directly inside a Shiny for Python app.",
+    "crumbs": [
+      "Tools",
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>chatlas</span>"
+    ]
+  },
+  {
+    "objectID": "code_tools.html",
+    "href": "code_tools.html",
+    "title": "28  Code Quality Tools",
+    "section": "",
+    "text": "This chapter covers tools that enforce code quality automatically: ruff for linting and formatting, mypy for type checking, and pre-commit for running checks before every commit.",
+    "crumbs": [
+      "Tools",
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Code Quality Tools</span>"
+    ]
+  },
+  {
+    "objectID": "special_topics.html",
+    "href": "special_topics.html",
+    "title": "Special Topics",
+    "section": "",
+    "text": "This part explores advanced patterns: dynamic UI, app-level data management, using Python classes to encapsulate app logic, and sophisticated reactive design patterns.",
+    "crumbs": [
+      "Special Topics"
+    ]
+  },
+  {
+    "objectID": "shiny_ui_edit.html",
+    "href": "shiny_ui_edit.html",
+    "title": "29  Dynamic UI",
+    "section": "",
+    "text": "This chapter covers building dynamic user interfaces in Shiny for Python: conditionally showing panels, rendering UI from the server, and updating inputs programmatically.",
+    "crumbs": [
+      "Special Topics",
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Dynamic UI</span>"
+    ]
+  },
+  {
+    "objectID": "app_data.html",
+    "href": "app_data.html",
+    "title": "30  App Data",
+    "section": "",
+    "text": "This chapter covers patterns for managing data that lives for the lifetime of a Shiny session or the entire app process: session-scoped state, app-scoped caches, and database connections.",
+    "crumbs": [
+      "Special Topics",
+      "<span class='chapter-number'>30</span>  <span class='chapter-title'>App Data</span>"
+    ]
+  },
+  {
+    "objectID": "classes.html",
+    "href": "classes.html",
+    "title": "31  Python Classes",
+    "section": "",
+    "text": "This chapter covers using Python classes to encapsulate app logic — a pattern analogous to R6 classes in the R book — including dataclasses, regular classes, and when each is appropriate inside a Shiny app.",
+    "crumbs": [
+      "Special Topics",
+      "<span class='chapter-number'>31</span>  <span class='chapter-title'>Python Classes</span>"
+    ]
+  },
+  {
+    "objectID": "reactive_patterns.html",
+    "href": "reactive_patterns.html",
+    "title": "32  Reactive Patterns",
+    "section": "",
+    "text": "This chapter covers advanced reactive design in Shiny for Python: reactive.Value, reactive.Calc, reactive.Effect, isolation, invalidation, and avoiding common pitfalls like circular dependencies.",
+    "crumbs": [
+      "Special Topics",
+      "<span class='chapter-number'>32</span>  <span class='chapter-title'>Reactive Patterns</span>"
+    ]
+  },
+  {
+    "objectID": "glossary.html",
+    "href": "glossary.html",
+    "title": "Appendix A — Glossary",
+    "section": "",
+    "text": "Key terms used throughout the book.\n\n\n\n\n\n\n\nTerm\nDefinition\n\n\n\n\nApp-package\nA Python package whose primary purpose is to deliver a Shiny for Python application\n\n\nEntry point\nA command registered in pyproject.toml that lets users launch the app from the terminal\n\n\nEditable install\nInstalling a package with pip install -e . so code changes take effect without reinstalling\n\n\nReactive expression\nA reactive.Calc that caches its result and re-executes only when its dependencies change\n\n\nModule\nA self-contained pair of ui and server functions that can be embedded in a larger Shiny app",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Glossary</span>"
+    ]
+  },
+  {
+    "objectID": "create.html",
+    "href": "create.html",
+    "title": "Appendix B — Creating a Package",
+    "section": "",
+    "text": "B.1 Checklist\nA step-by-step checklist for creating a new Shiny for Python app-package from scratch.",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Creating a Package</span>"
+    ]
+  },
+  {
+    "objectID": "create.html#checklist",
+    "href": "create.html#checklist",
+    "title": "Appendix B — Creating a Package",
+    "section": "",
+    "text": "Create a virtual environment: python -m venv .venv\nScaffold the package: hatch new myapp\nAdd shiny to [project.dependencies] in pyproject.toml\nMove app.py into the package directory\nAdd a __main__.py entry point\nRegister the entry point in pyproject.toml\nInstall in editable mode: pip install -e .\nSet up pytest and write a first test\nAdd a README.md\nInitialise a git repository",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Creating a Package</span>"
+    ]
+  },
+  {
+    "objectID": "github.html",
+    "href": "github.html",
+    "title": "Appendix C — GitHub Setup",
+    "section": "",
+    "text": "This appendix covers setting up a GitHub repository for a Shiny for Python app-package: initialising git, creating a .gitignore, pushing to GitHub, and protecting the main branch.",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>C</span>  <span class='chapter-title'>GitHub Setup</span>"
+    ]
+  },
+  {
+    "objectID": "comparisons.html",
+    "href": "comparisons.html",
+    "title": "Appendix D — R vs. Python Shiny",
+    "section": "",
+    "text": "This appendix provides a side-by-side comparison of key patterns in Shiny for R (as covered in Shiny App-Packages) and Shiny for Python.\n\n\n\nConcept\nR\nPython\n\n\n\n\nPackage file\nDESCRIPTION\npyproject.toml\n\n\nNamespace file\nNAMESPACE\n__init__.py\n\n\nDependency locking\nrenv.lock\nrequirements.txt / uv.lock\n\n\nDocumentation\nroxygen2\nDocstrings + pdoc\n\n\nTesting framework\ntestthat\npytest\n\n\nApp entry point\nrunApp() / shinyApp()\nApp(ui, server)\n\n\nModules\nmoduleServer()\nmodule_server()\n\n\nReactive value\nreactiveVal()\nreactive.Value()\n\n\nReactive expression\nreactive({})\nreactive.Calc()\n\n\nObserver\nobserve({}) / observeEvent()\nreactive.Effect()",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>D</span>  <span class='chapter-title'>R vs. Python Shiny</span>"
+    ]
+  }
+]

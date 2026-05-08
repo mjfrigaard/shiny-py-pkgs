@@ -1,0 +1,5 @@
+---
+title: "Monorepo"
+---
+
+This chapter covers managing multiple Shiny app-packages in a single repository, including shared utility packages, workspace tooling (`uv workspaces`, `hatch` environments), and CI strategies.

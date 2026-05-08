@@ -1,0 +1,5 @@
+---
+title: "Posit Connect"
+---
+
+This chapter covers deploying a Shiny for Python app-package to Posit Connect (and shinyapps.io) using `rsconnect-python`, including setting up credentials and automating deployment.

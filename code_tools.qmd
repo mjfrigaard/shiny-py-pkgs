@@ -1,0 +1,5 @@
+---
+title: "Code Quality Tools"
+---
+
+This chapter covers tools that enforce code quality automatically: `ruff` for linting and formatting, `mypy` for type checking, and `pre-commit` for running checks before every commit.

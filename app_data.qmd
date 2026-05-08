@@ -1,0 +1,5 @@
+---
+title: "App Data"
+---
+
+This chapter covers patterns for managing data that lives for the lifetime of a Shiny session or the entire app process: session-scoped state, app-scoped caches, and database connections.

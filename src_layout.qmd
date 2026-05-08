@@ -1,0 +1,5 @@
+---
+title: "src/ Layout"
+---
+
+This chapter covers the `src/` layout, the pattern recommended by modern Python packaging tools, and explains why it prevents a common class of import-path bugs during development and testing.

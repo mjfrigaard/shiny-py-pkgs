@@ -1,0 +1,5 @@
+---
+title: "Dependencies"
+---
+
+This chapter covers how to declare, pin, and manage Python dependencies in `pyproject.toml`, and how to use `pip`, `uv`, or `pixi` to keep environments reproducible across machines.
