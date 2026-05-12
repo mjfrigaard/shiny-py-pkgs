@@ -1,5 +1,18 @@
----
-title: "The Whole Game"
----
+# Whole Game {.unnumbered}
 
-This chapter walks through the complete workflow — from a bare `app.py` to a working app inside an installable package. We'll highlight each area of the development workflow used throughout the rest of the book so you can see how all the pieces fit together before diving into each topic in detail.
+```{python}
+#| label: co_box_dev
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color="r",
+    look="minimal",
+    header="Caution",
+    contents="This section is still under development. Thank you for your patience."
+)
+```
+
+This chapter walks through the complete workflow — from a bare `app.py` to a working app inside an installable package. I'll highlight each area of the development workflow used throughout the rest of the book so you can see how all the pieces fit together before diving into each topic in detail.
+
