@@ -1,17 +1,40 @@
-# Preface {.unnumbered}
+# Welcome! {.unnumbered}
 
-This book walks through how to build [Shiny for Python](https://shiny.posit.co/py/) applications inside Python packages. It is a Python companion to [Shiny App-Packages](https://mjfrigaard.github.io/shiny-app-pkgs/), which covers the same workflow for R.
+```{python}
+#| label: co_box_dev
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color="y",
+    look="minimal",
+    header="Alert",
+    contents="This book walks through how to build [Shiny for Python](https://shiny.posit.co/py/) applications inside Python packages. It is a Python companion to [Shiny App-Packages](https://mjfrigaard.github.io/shiny-app-pkgs/), which covers the same workflow for R."
+)
+```
 
-## Why put an app in a package?
+::: {layout="[20, 80]"}
 
-A standalone `app.py` file is a fine place to start. But as an app grows, packaging it offers real benefits:
+![](images/shiny_for_python.png){fig-align="left" width="200"}
 
-- **Reusability** — share utility functions, modules, and data across projects  
-- **Testability** — `pytest` can test code that lives in an importable package
-- **Reproducibility** — `pyproject.toml` files make dependencies explicit and installable   
-- **Deployability** — properly packaged apps are easier to containerize and deploy  
+[Shiny for Python](https://shiny.posit.co/py/) combines the power of Python's data science and machine learning capabilities with the interactivity of a web-based application.
 
-## What this book covers
+
+:::
+
+
+::: {layout="[85, 15]"}
+
+[Python packages](https://py-pkgs.org/welcome) are collections of pre-built, self-contained code, data, and documentation designed to perform operations or accomplish tasks beyond the capabilities of the Python language.
+
+![](images/python_icon.png){fig-align="right" width="200"}
+
+:::
+
+
+
+## What's in the book
 
 The book follows a single example application from a bare script through a fully packaged, tested, and deployed Shiny app. 
 
@@ -28,11 +51,18 @@ Each part builds on the last:
 | Tools | AI-assisted development and code quality tooling |
 | Special Topics | Dynamic UI, app data patterns, Python classes, and reactive design |
 
-## Prerequisites
+
+## What’s not in the book
+
+This book isn’t a replacement for the official Shiny for Python documentation. I highly suggest bookmarking this as a resources for up-to-date news and features.
+
+
+
+## What I assume about you
 
 Readers should be comfortable with basic Python and have some exposure to Shiny for Python. No prior experience with Python packaging is assumed.
 
-## Conventions
+## Code conventions
 
 All Shiny code uses [Shiny Core](https://shiny.posit.co/py/api/core/).[^py-code-flavors] 
 
