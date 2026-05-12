@@ -1,4 +1,4 @@
-# Whole Game {.unnumbered}
+# Whole Game {#sec-whole-game}
 
 ```{python}
 #| label: co_box_dev
