@@ -102,78 +102,78 @@
   {
     "objectID": "whole_game.html",
     "href": "whole_game.html",
-    "title": "Whole Game",
+    "title": "1  Whole Game",
     "section": "",
     "text": "ImportantCaution\n\n\n\n\n\n\nThis section is still under development. Thank you for your patience.\n\n\n\n\n\nThis chapter walks through the complete workflow — from a bare app.py to a working app inside an installable package. I’ll highlight each area of the development workflow used throughout the rest of the book so you can see how all the pieces fit together before diving into each topic in detail.",
     "crumbs": [
       "Introduction",
-      "Whole Game"
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Whole Game</span>"
     ]
   },
   {
     "objectID": "shiny.html",
     "href": "shiny.html",
-    "title": "1  Shiny for Python",
+    "title": "2  Shiny for Python",
     "section": "",
-    "text": "1.1 Create app directory\nThis chapter introduces Shiny for Python using the Core API. We’ll cover the App, ui, server, and render components to build the example application we’ll use throughout the rest of the book.\nWe’ll create and move into a new directory (pap, for Python app-package),",
+    "text": "2.1 Create app directory\nThis chapter introduces Shiny for Python using the Core API. We’ll cover the App, ui, server, and render components to build the example application we’ll use throughout the rest of the book.\nWe’ll create and move into a new directory (pap, for Python app-package),",
     "crumbs": [
       "Introduction",
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Shiny for Python</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shiny for Python</span>"
     ]
   },
   {
     "objectID": "shiny.html#create-app-directory",
     "href": "shiny.html#create-app-directory",
-    "title": "1  Shiny for Python",
+    "title": "2  Shiny for Python",
     "section": "",
     "text": "mkdir pap\ncd pap",
     "crumbs": [
       "Introduction",
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Shiny for Python</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shiny for Python</span>"
     ]
   },
   {
     "objectID": "shiny.html#virtual-environments",
     "href": "shiny.html#virtual-environments",
-    "title": "1  Shiny for Python",
-    "section": "1.2 Virtual environments",
-    "text": "1.2 Virtual environments\nIn Python, it’s a good idea to use a virtual environment. This practice might be new to R developers, so I’ll give a quick overview.1\n\n1.2.1 How virtual environments work\nPython virtual environments isolate a project’s dependencies, so any packages installed for one project don’t conflict with other projects. Two common tools used in this approach are illustrated below:\n\n\n\n\n\n\n%%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', \"fontSize\":\"14px\"}}}%%\n\nflowchart TB\n    SystemPython[(\"System Python&lt;br/&gt;&lt;code&gt;/usr/bin/python3&lt;/code&gt;\")]\n    \n    subgraph VenvFlow[\"venv (standard library)\"]\n        direction TB\n        VenvCmd[\"&lt;code&gt;python -m venv .venv&lt;/code&gt;\"]\n        VenvDir[\".venv/&lt;br/&gt;├── bin/python (symlink)&lt;br/&gt;├── bin/activate&lt;br/&gt;└── lib/site-packages/\"]\n        VenvPip[\"&lt;code&gt;pip install shiny&lt;/code&gt;\"]\n        VenvPkgs[\"Packages downloaded&lt;br/&gt;from PyPI\"]\n        \n        VenvCmd --&gt; VenvDir\n        VenvDir --&gt; VenvPip\n        VenvPip --&gt; VenvPkgs\n        VenvPkgs --&gt; VenvDir\n    end\n    \n    ProjectA[\"Project A&lt;br/&gt;needs shiny 1.5.5\"]\n    \n    VenvDir -.-&gt;|\"isolates\"| ProjectA\n    \n    \n    SystemPython --&gt; VenvCmd\n    \n    style VenvDir text-align:left\n    classDef system fill:#2d3748,stroke:#48bb78,color:#fff\n    classDef venvStyle fill:#2c5282,stroke:#63b3ed,color:#fff\n    classDef project fill:#553c9a,stroke:#b794f4,color:#fff\n    \n    class SystemPython system\n    class VenvCmd,VenvDir,VenvPip,VenvPkgs venvStyle\n    class ProjectA project\n    \n\n\n Python built-in virtual environments \n\n\n\nPython’s built-in virtual environment tool (venv) ships with Python. The general workflow is:\n\nCreate virtual environment (python -m venv)\n\nUse the environment (activate)\n\nInstall dependencies (pip install)\n\nvenv doesn’t have a built-in lockfile, which also means we’ll need to also run pip freeze to store the dependencies in requirements.txt.\nuv is similar, but has a few more benefits:\n\n\n\n\n\n%%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', \"fontSize\":\"14px\"}}}%%\n\nflowchart TB\n    SystemPython[(\"System Python&lt;br/&gt;&lt;code&gt;/usr/bin/python3&lt;/code&gt;\")]\n    \n    subgraph UvFlow[\"uv (Rust-based, fast)\"]\n        direction TB\n        UvCmd[\"&lt;code&gt;uv venv&lt;/code&gt;\"]\n        UvDir[\".venv/&lt;br/&gt;├── bin/python&lt;br/&gt;└── lib/site-packages/\"]\n        UvAdd[\"&lt;code&gt;uv add shiny&lt;/code&gt;\"]\n        UvCache[(\"Global cache&lt;br/&gt;&lt;code&gt;~/.cache/uv/&lt;/code&gt;\")]\n        UvLock[\"&lt;code&gt;uv.lock&lt;/code&gt;&lt;br/&gt;(reproducible)\"]\n        \n        UvCmd --&gt; UvDir\n        UvAdd --&gt; UvCache\n        UvCache --&gt;|\"hardlink&lt;br/&gt;(near-instant)\"| UvDir\n        UvAdd --&gt; UvLock\n    end\n    \n    ProjectB[\"Project B&lt;br/&gt;needs shiny 1.6.1\"]\n    \n    SystemPython --&gt; UvCmd\n    \n    UvDir -.-&gt;|\"isolates\"| ProjectB\n\n    style UvDir text-align:left\n    \n    classDef system fill:#2d3748,stroke:#48bb78,color:#fff\n    classDef uvStyle fill:#744210,stroke:#f6ad55,color:#fff\n    classDef project fill:#553c9a,stroke:#b794f4,color:#fff\n    \n    class SystemPython system\n    class UvCmd,UvDir,UvAdd,UvCache,UvLock uvStyle\n    class ProjectB project\n\n\n\n uv virtual environments \n\n\n\nuv requires a separate install command, 2 but also includes a global cache with hardlinks. During installation, uv reuses downloaded dependencies across projects, which is typically faster than copying/downloading them each time (as venv does). uv add also installs new dependencies in one step, and the uv.lock file automatically tracks exact versions.\nBoth tools create a .venv/ folder with an isolated Python interpreter and its own site-packages/ directory. When activated, the shell points to that Python instead of the System Python.— So, pip install shiny only installs shiny in this project.\n\n\n1.2.2 Virtual environment setup\nInstall uv with:\nmacOS/Linux:\ncurl -LsSf https://astral.sh/uv/install.sh | sh\nAfter installation, restart your terminal (or run source ~/.local/bin/env on macOS/Linux) so the uv binary is on your PATH.\nWindows (PowerShell)\npowershell -ExecutionPolicy ByPass -c \"irm https://astral.sh/uv/install.sh | iex\"\nCreate a virtual environment, defaults to .venv:\nuv venv\nIf you don’t want to install/use uv, you can use Python’s built-in venv:\npython -m venv .venv\nActivate the virtual environment:\nsource .venv/bin/activate\nThe terminal prompt will prepend with (pap).\nWindows (PowerShell):\n.venv\\Scripts\\Activate.ps1 \n\n\n1.2.3 Installing dependencies in virtual environments\nNow we can install Shiny into the venv:\nuv pip install shiny",
+    "title": "2  Shiny for Python",
+    "section": "2.2 Virtual environments",
+    "text": "2.2 Virtual environments\nIn Python, it’s a good idea to use a virtual environment. This practice might be new to R developers, so I’ll give a quick overview.1\n\n2.2.1 How virtual environments work\nPython virtual environments isolate a project’s dependencies, so any packages installed for one project don’t conflict with other projects. Two common tools used in this approach are illustrated below:\n\n\n\n\n\n\n%%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', \"fontSize\":\"14px\"}}}%%\n\nflowchart TB\n    SystemPython[(\"System Python&lt;br/&gt;&lt;code&gt;/usr/bin/python3&lt;/code&gt;\")]\n    \n    subgraph VenvFlow[\"venv (standard library)\"]\n        direction TB\n        VenvCmd[\"&lt;code&gt;python -m venv .venv&lt;/code&gt;\"]\n        VenvDir[\".venv/&lt;br/&gt;├── bin/python (symlink)&lt;br/&gt;├── bin/activate&lt;br/&gt;└── lib/site-packages/\"]\n        VenvPip[\"&lt;code&gt;pip install shiny&lt;/code&gt;\"]\n        VenvPkgs[\"Packages downloaded&lt;br/&gt;from PyPI\"]\n        \n        VenvCmd --&gt; VenvDir\n        VenvDir --&gt; VenvPip\n        VenvPip --&gt; VenvPkgs\n        VenvPkgs --&gt; VenvDir\n    end\n    \n    ProjectA[\"Project A&lt;br/&gt;needs shiny 1.5.5\"]\n    \n    VenvDir -.-&gt;|\"isolates\"| ProjectA\n    \n    \n    SystemPython --&gt; VenvCmd\n    \n    style VenvDir text-align:left\n    classDef system fill:#2d3748,stroke:#48bb78,color:#fff\n    classDef venvStyle fill:#2c5282,stroke:#63b3ed,color:#fff\n    classDef project fill:#553c9a,stroke:#b794f4,color:#fff\n    \n    class SystemPython system\n    class VenvCmd,VenvDir,VenvPip,VenvPkgs venvStyle\n    class ProjectA project\n    \n\n\n Python built-in virtual environments \n\n\n\nPython’s built-in virtual environment tool (venv) ships with Python. The general workflow is:\n\nCreate virtual environment (python -m venv)\n\nUse the environment (activate)\n\nInstall dependencies (pip install)\n\nvenv doesn’t have a built-in lockfile, which also means we’ll need to also run pip freeze to store the dependencies in requirements.txt.\nuv is similar, but has a few more benefits:\n\n\n\n\n\n%%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', \"fontSize\":\"14px\"}}}%%\n\nflowchart TB\n    SystemPython[(\"System Python&lt;br/&gt;&lt;code&gt;/usr/bin/python3&lt;/code&gt;\")]\n    \n    subgraph UvFlow[\"uv (Rust-based, fast)\"]\n        direction TB\n        UvCmd[\"&lt;code&gt;uv venv&lt;/code&gt;\"]\n        UvDir[\".venv/&lt;br/&gt;├── bin/python&lt;br/&gt;└── lib/site-packages/\"]\n        UvAdd[\"&lt;code&gt;uv add shiny&lt;/code&gt;\"]\n        UvCache[(\"Global cache&lt;br/&gt;&lt;code&gt;~/.cache/uv/&lt;/code&gt;\")]\n        UvLock[\"&lt;code&gt;uv.lock&lt;/code&gt;&lt;br/&gt;(reproducible)\"]\n        \n        UvCmd --&gt; UvDir\n        UvAdd --&gt; UvCache\n        UvCache --&gt;|\"hardlink&lt;br/&gt;(near-instant)\"| UvDir\n        UvAdd --&gt; UvLock\n    end\n    \n    ProjectB[\"Project B&lt;br/&gt;needs shiny 1.6.1\"]\n    \n    SystemPython --&gt; UvCmd\n    \n    UvDir -.-&gt;|\"isolates\"| ProjectB\n\n    style UvDir text-align:left\n    \n    classDef system fill:#2d3748,stroke:#48bb78,color:#fff\n    classDef uvStyle fill:#744210,stroke:#f6ad55,color:#fff\n    classDef project fill:#553c9a,stroke:#b794f4,color:#fff\n    \n    class SystemPython system\n    class UvCmd,UvDir,UvAdd,UvCache,UvLock uvStyle\n    class ProjectB project\n\n\n\n uv virtual environments \n\n\n\nuv requires a separate install command, 2 but also includes a global cache with hardlinks. During installation, uv reuses downloaded dependencies across projects, which is typically faster than copying/downloading them each time (as venv does). uv add also installs new dependencies in one step, and the uv.lock file automatically tracks exact versions.\nBoth tools create a .venv/ folder with an isolated Python interpreter and its own site-packages/ directory. When activated, the shell points to that Python instead of the System Python.— So, pip install shiny only installs shiny in this project.\n\n\n2.2.2 Virtual environment setup\nInstall uv with:\nmacOS/Linux:\ncurl -LsSf https://astral.sh/uv/install.sh | sh\nAfter installation, restart your terminal (or run source ~/.local/bin/env on macOS/Linux) so the uv binary is on your PATH.\nWindows (PowerShell)\npowershell -ExecutionPolicy ByPass -c \"irm https://astral.sh/uv/install.sh | iex\"\nCreate a virtual environment, defaults to .venv:\nuv venv\nIf you don’t want to install/use uv, you can use Python’s built-in venv:\npython -m venv .venv\nActivate the virtual environment:\nsource .venv/bin/activate\nThe terminal prompt will prepend with (pap).\nWindows (PowerShell):\n.venv\\Scripts\\Activate.ps1 \n\n\n2.2.3 Installing dependencies in virtual environments\nNow we can install Shiny into the venv:\nuv pip install shiny",
     "crumbs": [
       "Introduction",
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Shiny for Python</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shiny for Python</span>"
     ]
   },
   {
     "objectID": "shiny.html#footnotes",
     "href": "shiny.html#footnotes",
-    "title": "1  Shiny for Python",
+    "title": "2  Shiny for Python",
     "section": "",
     "text": "Python environments are a similar concept to the renv package in R.↩︎\nInstall uv from the Terminal with: curl -LsSf https://astral.sh/uv/install.sh | sh↩︎",
     "crumbs": [
       "Introduction",
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Shiny for Python</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shiny for Python</span>"
     ]
   },
   {
     "objectID": "packages.html",
     "href": "packages.html",
-    "title": "2  Python Packages",
+    "title": "3  Python Packages",
     "section": "",
     "text": "This chapter covers what a Python package is, how pyproject.toml replaces setup.py, and how to use tools like hatch or flit to scaffold a new package. The chapter converts the standalone app from the previous chapter into an installable package.",
     "crumbs": [
       "Introduction",
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Python Packages</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Python Packages</span>"
     ]
   },
   {
     "objectID": "development.html",
     "href": "development.html",
-    "title": "3  Development Workflow",
+    "title": "4  Development Workflow",
     "section": "",
     "text": "This chapter covers the day-to-day Python development workflow: creating a virtual environment, installing a package in editable mode (pip install -e .), and iterating on code without reinstalling.",
     "crumbs": [
       "Introduction",
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Development Workflow</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Development Workflow</span>"
     ]
   },
   {
@@ -189,56 +189,56 @@
   {
     "objectID": "document.html",
     "href": "document.html",
-    "title": "4  Documentation",
+    "title": "5  Documentation",
     "section": "",
     "text": "This chapter covers writing Python docstrings and generating HTML documentation with pdoc or mkdocs. Good documentation makes a package usable by others — and by your future self.",
     "crumbs": [
       "App-Packages",
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Documentation</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Documentation</span>"
     ]
   },
   {
     "objectID": "dependencies.html",
     "href": "dependencies.html",
-    "title": "5  Dependencies",
+    "title": "6  Dependencies",
     "section": "",
     "text": "This chapter covers how to declare, pin, and manage Python dependencies in pyproject.toml, and how to use pip, uv, or pixi to keep environments reproducible across machines.",
     "crumbs": [
       "App-Packages",
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Dependencies</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Dependencies</span>"
     ]
   },
   {
     "objectID": "data.html",
     "href": "data.html",
-    "title": "6  Data",
+    "title": "7  Data",
     "section": "",
     "text": "This chapter covers how to bundle data files (CSV, JSON, Parquet, etc.) inside a Python package so they are accessible regardless of where the package is installed, using importlib.resources.",
     "crumbs": [
       "App-Packages",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Data</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Data</span>"
     ]
   },
   {
     "objectID": "launch.html",
     "href": "launch.html",
-    "title": "7  Launch",
+    "title": "8  Launch",
     "section": "",
     "text": "This chapter covers how to define a package entry point so users can launch the Shiny app with a single command (e.g., myapp run) instead of calling shiny run app.py directly.",
     "crumbs": [
       "App-Packages",
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Launch</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Launch</span>"
     ]
   },
   {
     "objectID": "resources.html",
     "href": "resources.html",
-    "title": "8  Resources",
+    "title": "9  Resources",
     "section": "",
     "text": "This chapter covers how to include static resources — CSS, JavaScript, images, and HTML templates — inside a Python package and serve them correctly from a Shiny app.",
     "crumbs": [
       "App-Packages",
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Resources</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Resources</span>"
     ]
   },
   {
@@ -254,45 +254,45 @@
   {
     "objectID": "debugger.html",
     "href": "debugger.html",
-    "title": "9  The Python Debugger",
+    "title": "10  The Python Debugger",
     "section": "",
     "text": "This chapter introduces pdb and IDE-integrated debuggers (VS Code / Positron) for stepping through Python code, inspecting state, and diagnosing logic errors in a Shiny app.",
     "crumbs": [
       "Debugging",
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Python Debugger</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Python Debugger</span>"
     ]
   },
   {
     "objectID": "debug_print.html",
     "href": "debug_print.html",
-    "title": "10  Print Debugging",
+    "title": "11  Print Debugging",
     "section": "",
     "text": "This chapter covers using print() and logging.debug() as lightweight, quick debugging tools inside Shiny server functions and reactive expressions.",
     "crumbs": [
       "Debugging",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Print Debugging</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Print Debugging</span>"
     ]
   },
   {
     "objectID": "debug_apps.html",
     "href": "debug_apps.html",
-    "title": "11  Debugging Shiny Apps",
+    "title": "12  Debugging Shiny Apps",
     "section": "",
     "text": "This chapter covers strategies specific to debugging Shiny for Python apps: understanding reactive dependencies, tracing input/output flows, and isolating errors to UI vs. server logic.",
     "crumbs": [
       "Debugging",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Debugging Shiny Apps</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Debugging Shiny Apps</span>"
     ]
   },
   {
     "objectID": "logging.html",
     "href": "logging.html",
-    "title": "12  Logging",
+    "title": "13  Logging",
     "section": "",
     "text": "This chapter covers the Python logging module: configuring log levels, writing structured log messages, and routing logs to files or external services in a packaged Shiny app.",
     "crumbs": [
       "Debugging",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Logging</span>"
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Logging</span>"
     ]
   },
   {
@@ -308,56 +308,56 @@
   {
     "objectID": "test_suite.html",
     "href": "test_suite.html",
-    "title": "13  Test Suite",
+    "title": "14  Test Suite",
     "section": "",
     "text": "This chapter covers setting up pytest for a Python app-package: directory layout, configuration in pyproject.toml, and running tests from the command line and inside an IDE.",
     "crumbs": [
       "Testing",
-      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Test Suite</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Test Suite</span>"
     ]
   },
   {
     "objectID": "test_specs.html",
     "href": "test_specs.html",
-    "title": "14  Test Specifications",
+    "title": "15  Test Specifications",
     "section": "",
     "text": "This chapter covers writing clear, readable test specifications. It introduces behavior-driven development (BDD) style with pytest-bdd and shows how to map feature descriptions to test functions.",
     "crumbs": [
       "Testing",
-      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Test Specifications</span>"
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Test Specifications</span>"
     ]
   },
   {
     "objectID": "test_tools.html",
     "href": "test_tools.html",
-    "title": "15  Test Tools",
+    "title": "16  Test Tools",
     "section": "",
     "text": "This chapter covers pytest fixtures, parametrize, monkeypatching, and mocking with unittest.mock. These tools make tests faster, more isolated, and easier to maintain.",
     "crumbs": [
       "Testing",
-      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Test Tools</span>"
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Test Tools</span>"
     ]
   },
   {
     "objectID": "test_modules.html",
     "href": "test_modules.html",
-    "title": "16  Testing Modules",
+    "title": "17  Testing Modules",
     "section": "",
     "text": "This chapter covers testing Shiny for Python modules — the ui and server components of a module — using shiny’s test client and pytest fixtures.",
     "crumbs": [
       "Testing",
-      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Testing Modules</span>"
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Testing Modules</span>"
     ]
   },
   {
     "objectID": "test_system.html",
     "href": "test_system.html",
-    "title": "17  System Tests",
+    "title": "18  System Tests",
     "section": "",
     "text": "This chapter covers end-to-end testing of a Shiny for Python app using Playwright and shiny’s built-in test utilities, simulating real user interactions in a headless browser.",
     "crumbs": [
       "Testing",
-      "<span class='chapter-number'>17</span>  <span class='chapter-title'>System Tests</span>"
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>System Tests</span>"
     ]
   },
   {
@@ -373,45 +373,45 @@
   {
     "objectID": "shinyappsio.html",
     "href": "shinyappsio.html",
-    "title": "18  Posit Connect",
+    "title": "19  Posit Connect",
     "section": "",
     "text": "This chapter covers deploying a Shiny for Python app-package to Posit Connect (and shinyapps.io) using rsconnect-python, including setting up credentials and automating deployment.",
     "crumbs": [
       "Deployment",
-      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Posit Connect</span>"
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Posit Connect</span>"
     ]
   },
   {
     "objectID": "docker.html",
     "href": "docker.html",
-    "title": "19  Docker",
+    "title": "20  Docker",
     "section": "",
     "text": "This chapter covers writing a Dockerfile for a Shiny for Python app-package, building and running the container locally, and pushing the image to a registry for deployment.",
     "crumbs": [
       "Deployment",
-      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Docker</span>"
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Docker</span>"
     ]
   },
   {
     "objectID": "gha.html",
     "href": "gha.html",
-    "title": "20  GitHub Actions",
+    "title": "21  GitHub Actions",
     "section": "",
     "text": "This chapter covers automating testing, linting, and deployment with GitHub Actions: writing workflow YAML files, caching dependencies, and deploying on merge to main.",
     "crumbs": [
       "Deployment",
-      "<span class='chapter-number'>20</span>  <span class='chapter-title'>GitHub Actions</span>"
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>GitHub Actions</span>"
     ]
   },
   {
     "objectID": "pypi.html",
     "href": "pypi.html",
-    "title": "21  PyPI",
+    "title": "22  PyPI",
     "section": "",
     "text": "This chapter covers publishing a Python app-package to PyPI using hatch or flit, including versioning, building distributions, and uploading via twine or GitHub Actions.",
     "crumbs": [
       "Deployment",
-      "<span class='chapter-number'>21</span>  <span class='chapter-title'>PyPI</span>"
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>PyPI</span>"
     ]
   },
   {
@@ -427,34 +427,34 @@
   {
     "objectID": "flat_layout.html",
     "href": "flat_layout.html",
-    "title": "22  Flat Layout",
+    "title": "23  Flat Layout",
     "section": "",
     "text": "This chapter covers the simple flat package layout — all modules at the top level of the package directory — and when it is the right choice for a Shiny app-package.",
     "crumbs": [
       "Project Patterns",
-      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Flat Layout</span>"
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Flat Layout</span>"
     ]
   },
   {
     "objectID": "src_layout.html",
     "href": "src_layout.html",
-    "title": "23  src/ Layout",
+    "title": "24  src/ Layout",
     "section": "",
     "text": "This chapter covers the src/ layout, the pattern recommended by modern Python packaging tools, and explains why it prevents a common class of import-path bugs during development and testing.",
     "crumbs": [
       "Project Patterns",
-      "<span class='chapter-number'>23</span>  <span class='chapter-title'>src/ Layout</span>"
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>src/ Layout</span>"
     ]
   },
   {
     "objectID": "monorepo.html",
     "href": "monorepo.html",
-    "title": "24  Monorepo",
+    "title": "25  Monorepo",
     "section": "",
     "text": "This chapter covers managing multiple Shiny app-packages in a single repository, including shared utility packages, workspace tooling (uv workspaces, hatch environments), and CI strategies.",
     "crumbs": [
       "Project Patterns",
-      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Monorepo</span>"
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Monorepo</span>"
     ]
   },
   {
@@ -470,34 +470,34 @@
   {
     "objectID": "shiny_assist.html",
     "href": "shiny_assist.html",
-    "title": "25  AI-Assisted Development",
+    "title": "26  AI-Assisted Development",
     "section": "",
     "text": "This chapter covers using AI coding assistants (GitHub Copilot, Positron Assistant) to accelerate Shiny for Python development: writing modules, generating tests, and refactoring server logic.",
     "crumbs": [
       "Tools",
-      "<span class='chapter-number'>25</span>  <span class='chapter-title'>AI-Assisted Development</span>"
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>AI-Assisted Development</span>"
     ]
   },
   {
     "objectID": "chatlas.html",
     "href": "chatlas.html",
-    "title": "26  chatlas",
+    "title": "27  chatlas",
     "section": "",
     "text": "This chapter covers chatlas, Posit’s Python LLM interface package, and shows how to embed conversational AI features directly inside a Shiny for Python app.",
     "crumbs": [
       "Tools",
-      "<span class='chapter-number'>26</span>  <span class='chapter-title'>chatlas</span>"
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>chatlas</span>"
     ]
   },
   {
     "objectID": "code_tools.html",
     "href": "code_tools.html",
-    "title": "27  Code Quality Tools",
+    "title": "28  Code Quality Tools",
     "section": "",
     "text": "This chapter covers tools that enforce code quality automatically: ruff for linting and formatting, mypy for type checking, and pre-commit for running checks before every commit.",
     "crumbs": [
       "Tools",
-      "<span class='chapter-number'>27</span>  <span class='chapter-title'>Code Quality Tools</span>"
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Code Quality Tools</span>"
     ]
   },
   {
@@ -513,45 +513,45 @@
   {
     "objectID": "shiny_ui_edit.html",
     "href": "shiny_ui_edit.html",
-    "title": "28  Dynamic UI",
+    "title": "29  Dynamic UI",
     "section": "",
     "text": "This chapter covers building dynamic user interfaces in Shiny for Python: conditionally showing panels, rendering UI from the server, and updating inputs programmatically.",
     "crumbs": [
       "Special Topics",
-      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Dynamic UI</span>"
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Dynamic UI</span>"
     ]
   },
   {
     "objectID": "app_data.html",
     "href": "app_data.html",
-    "title": "29  App Data",
+    "title": "30  App Data",
     "section": "",
     "text": "This chapter covers patterns for managing data that lives for the lifetime of a Shiny session or the entire app process: session-scoped state, app-scoped caches, and database connections.",
     "crumbs": [
       "Special Topics",
-      "<span class='chapter-number'>29</span>  <span class='chapter-title'>App Data</span>"
+      "<span class='chapter-number'>30</span>  <span class='chapter-title'>App Data</span>"
     ]
   },
   {
     "objectID": "classes.html",
     "href": "classes.html",
-    "title": "30  Python Classes",
+    "title": "31  Python Classes",
     "section": "",
     "text": "This chapter covers using Python classes to encapsulate app logic — a pattern analogous to R6 classes in the R book — including dataclasses, regular classes, and when each is appropriate inside a Shiny app.",
     "crumbs": [
       "Special Topics",
-      "<span class='chapter-number'>30</span>  <span class='chapter-title'>Python Classes</span>"
+      "<span class='chapter-number'>31</span>  <span class='chapter-title'>Python Classes</span>"
     ]
   },
   {
     "objectID": "reactive_patterns.html",
     "href": "reactive_patterns.html",
-    "title": "31  Reactive Patterns",
+    "title": "32  Reactive Patterns",
     "section": "",
     "text": "This chapter covers advanced reactive design in Shiny for Python: reactive.Value, reactive.Calc, reactive.Effect, isolation, invalidation, and avoiding common pitfalls like circular dependencies.",
     "crumbs": [
       "Special Topics",
-      "<span class='chapter-number'>31</span>  <span class='chapter-title'>Reactive Patterns</span>"
+      "<span class='chapter-number'>32</span>  <span class='chapter-title'>Reactive Patterns</span>"
     ]
   },
   {
