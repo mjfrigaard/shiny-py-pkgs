@@ -80,11 +80,11 @@
     ]
   },
   {
-    "objectID": "intro.html#resources",
-    "href": "intro.html#resources",
+    "objectID": "intro.html#primary-resources",
+    "href": "intro.html#primary-resources",
     "title": "Introduction",
-    "section": "Resources",
-    "text": "Resources\nThis section will introduce the two main resources the book is built around: Shiny for Python and Python packages.\n\nShiny for Python (core)\nWe’re going to be using the application and code referenced directly from Posit’s documentation:\n\n\nPython Packages\nThe Python Packages book is an excellent resource for understanding how to package a Python project. It’s also written in the same basic style and structure of R Packages, 2ed, so if you’re coming from the R development world (as I am), these similarities should be comforting.",
+    "section": "Primary resources",
+    "text": "Primary resources\nThis section will introduce the two main resources the book is built around: Shiny for Python and Python packages.\n\nShiny for Python\nWe’re going to be using the application and code referenced directly from Posit’s documentation: https://shiny.posit.co/py/\nYou’ll notice Shiny for Python has two syntax modes, express and core.\n\n\nPython Packages\nThe Python Packages book is an excellent resource for understanding how to package a Python project. It’s also written in the same basic style and structure of R Packages, 2ed, so if you’re coming from the R development world (as I am), these similarities should be comforting.",
     "crumbs": [
       "Introduction"
     ]
@@ -94,7 +94,17 @@
     "href": "intro.html#system-setup",
     "title": "Introduction",
     "section": "System setup",
-    "text": "System setup\n\nTerminals\n\n\nPython installations\n\n\nPython packaging software\n\n\nIntegrated Development Environments (IDEs)\nThis book covers building Python applications in the Positron integrated environment. I’ll also provide a few other options for Python/Shiny app development.\n\nPositron\nPositron  is a “free, AI-assisted environment, empowering the full spectrum of data science in Python and R.”\n\n\n\n\n\nWhen I’m using Positron for development, you’ll see this icon:\n\n\nVS Code\nVS Code  is also a popular IDE for Python developers.",
+    "text": "System setup\nThe sections below cover the technologies we’ll be using in the book. I primarily develop on MaBook Pro (with macOS), but also use a System76 laptop, which uses an Ubuntu-flavored operating system. I’ve tried to keep the examples general enough that most readers will be able to follow along, regardless of their operating system.\n\nTerminals\nTerminals are a command-line interface (CLI) for communicating with your computer. This includes the macOS Terminal, or the WSL for Windows. You can also download terminal emulators (like iTerm2), which offer a lot more options for customizing your CLI experience.\n\n\nPython installations\n\n\nPython packaging software\n\n\nIntegrated Development Environments (IDEs)\nThis book covers building Python applications in the Positron integrated environment. I’ll also provide a few other options for Python/Shiny app development.\n\nPositron\nPositron  is a “free, AI-assisted environment, empowering the full spectrum of data science in Python and R.”\n\n\n\n\n\nWhen I’m using Positron for development, you’ll see this icon:\n\n\nVS Code\nVS Code  is also a popular IDE for Python developers.",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "intro.html#other-resources",
+    "href": "intro.html#other-resources",
+    "title": "Introduction",
+    "section": "Other resources",
+    "text": "Other resources\nBelow are additional resources I recommend on creating Python packages:\n\nResearch Software Engineering with Python\n\nAnother Book on Data Science: Learn R and Python in Parallel",
     "crumbs": [
       "Introduction"
     ]
