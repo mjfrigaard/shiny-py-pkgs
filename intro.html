@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-05-12">
+<meta name="dcterms.date" content="2026-06-04">
 <meta name="description" content="Getting your Shiny for Python app into a Python package">
 
 <title>Introduction – Shiny for Python App-Packages</title>
@@ -459,9 +459,9 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#why-put-an-app-in-a-package" id="toc-why-put-an-app-in-a-package" class="nav-link active" data-scroll-target="#why-put-an-app-in-a-package">Why put an app in a package?</a></li>
-  <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources">Resources</a>
+  <li><a href="#primary-resources" id="toc-primary-resources" class="nav-link" data-scroll-target="#primary-resources">Primary resources</a>
   <ul>
-  <li><a href="#shiny-for-python-core" id="toc-shiny-for-python-core" class="nav-link" data-scroll-target="#shiny-for-python-core">Shiny for Python (core)</a></li>
+  <li><a href="#shiny-for-python" id="toc-shiny-for-python" class="nav-link" data-scroll-target="#shiny-for-python">Shiny for Python</a></li>
   <li><a href="#python-packages" id="toc-python-packages" class="nav-link" data-scroll-target="#python-packages">Python Packages</a></li>
   </ul></li>
   <li><a href="#system-setup" id="toc-system-setup" class="nav-link" data-scroll-target="#system-setup">System setup</a>
@@ -475,6 +475,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#vs-code" id="toc-vs-code" class="nav-link" data-scroll-target="#vs-code">VS Code</a></li>
   </ul></li>
   </ul></li>
+  <li><a href="#other-resources" id="toc-other-resources" class="nav-link" data-scroll-target="#other-resources">Other resources</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/mjfrigaard/shiny-py-pkgs/edit/main/intro.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mjfrigaard/shiny-py-pkgs/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -494,7 +495,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2026-05-12</p>
+      <p class="date">2026-06-04</p>
     </div>
   </div>
   
@@ -539,12 +540,13 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Deployability</strong> — properly packaged apps are easier to containerize and deploy</li>
 </ul>
 </section>
-<section id="resources" class="level2">
-<h2 class="anchored" data-anchor-id="resources">Resources</h2>
+<section id="primary-resources" class="level2">
+<h2 class="anchored" data-anchor-id="primary-resources">Primary resources</h2>
 <p>This section will introduce the two main resources the book is built around: <a href="https://shiny.posit.co/py/">Shiny for Python</a> and <a href="https://py-pkgs.org/welcome">Python packages</a>.</p>
-<section id="shiny-for-python-core" class="level3">
-<h3 class="anchored" data-anchor-id="shiny-for-python-core">Shiny for Python (core)</h3>
-<p>We’re going to be using the application and code referenced directly from Posit’s documentation:</p>
+<section id="shiny-for-python" class="level3">
+<h3 class="anchored" data-anchor-id="shiny-for-python">Shiny for Python</h3>
+<p>We’re going to be using the application and code referenced directly from Posit’s documentation: <a href="https://shiny.posit.co/py/" class="uri">https://shiny.posit.co/py/</a></p>
+<p>You’ll notice Shiny for Python has two syntax modes, express and core.</p>
 </section>
 <section id="python-packages" class="level3">
 <h3 class="anchored" data-anchor-id="python-packages">Python Packages</h3>
@@ -553,8 +555,10 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="system-setup" class="level2">
 <h2 class="anchored" data-anchor-id="system-setup">System setup</h2>
+<p>The sections below cover the technologies we’ll be using in the book. I primarily develop on <a href="https://www.apple.com/macbook-pro/">MaBook Pro</a> (with macOS), but also use a <a href="https://system76.com/laptops">System76 laptop</a>, which uses an Ubuntu-flavored operating system. I’ve tried to keep the examples general enough that most readers will be able to follow along, regardless of their operating system.</p>
 <section id="terminals" class="level3">
 <h3 class="anchored" data-anchor-id="terminals">Terminals</h3>
+<p>Terminals are a command-line interface (CLI) for communicating with your computer. This includes the <a href="https://support.apple.com/guide/terminal/welcome/mac">macOS Terminal</a>, or the <a href="https://learn.microsoft.com/en-us/windows/wsl/install">WSL for Windows</a>. You can also download terminal emulators (like <a href="https://iterm2.com/">iTerm2</a>), which offer a lot more options for customizing your CLI experience.</p>
 </section>
 <section id="python-installations" class="level3">
 <h3 class="anchored" data-anchor-id="python-installations">Python installations</h3>
@@ -583,10 +587,19 @@ ul.task-list li input[type="checkbox"] {
 <p><a href="images/vs_code_ide.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="images/vs_code_ide.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a></p>
 </figure>
 </div>
-
-
 </section>
 </section>
+</section>
+<section id="other-resources" class="level2">
+<h2 class="anchored" data-anchor-id="other-resources">Other resources</h2>
+<p>Below are additional resources I recommend on creating Python packages:</p>
+<ol type="1">
+<li><a href="https://alan-turing-institute.github.io/rse-course/html/index.html">Research Software Engineering with Python</a><br>
+</li>
+<li><a href="https://www.anotherbookondatascience.com">Another Book on Data Science: Learn R and Python in Parallel</a></li>
+</ol>
+
+
 </section>
 
 </main> <!-- /main -->
