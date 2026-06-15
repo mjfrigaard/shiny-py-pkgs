@@ -26,13 +26,15 @@ A standalone `app.py` file is a fine place to start. But as an app grows, packag
 - **Deployability** — properly packaged apps are easier to containerize and deploy  
 
 
-## Resources
+## Primary resources
 
 This section will introduce the two main resources the book is built around: [Shiny for Python](https://shiny.posit.co/py/) and [Python packages](https://py-pkgs.org/welcome).
 
-### Shiny for Python (core)
+### Shiny for Python 
 
-We're going to be using the application and code referenced directly from Posit's documentation:
+We're going to be using the application and code referenced directly from Posit's documentation: <https://shiny.posit.co/py/>
+
+You'll notice Shiny for Python has two syntax modes, express and core. 
 
 ### Python Packages 
 
@@ -40,7 +42,11 @@ The [Python Packages](https://py-pkgs.org/welcome) book is an excellent resource
 
 ## System setup
 
+The sections below cover the technologies we'll be using in the book. I primarily develop on [MaBook Pro](https://www.apple.com/macbook-pro/) (with macOS), but also use a [System76 laptop](https://system76.com/laptops), which uses an Ubuntu-flavored operating system. I've tried to keep the examples general enough that most readers will be able to follow along, regardless of their operating system. 
+
 ### Terminals 
+
+Terminals are a command-line interface (CLI) for communicating with your computer. This includes the [macOS Terminal](https://support.apple.com/guide/terminal/welcome/mac), or the [WSL for Windows](https://learn.microsoft.com/en-us/windows/wsl/install). You can also download terminal emulators (like [iTerm2](https://iterm2.com/)), which offer a lot more  options for customizing your CLI experience. 
 
 ### Python installations
 
@@ -64,3 +70,9 @@ VS Code ![](images/vs_code_icon.png){height="20"} is also a popular IDE for Pyth
 
 ![](images/vs_code_ide.png){width='100%' fig-align='center'}
 
+## Other resources
+
+Below are additional resources I recommend on creating Python packages: 
+
+1. [Research Software Engineering with Python](https://alan-turing-institute.github.io/rse-course/html/index.html)  
+2. [Another Book on Data Science: Learn R and Python in Parallel](https://www.anotherbookondatascience.com)
