@@ -42,13 +42,15 @@ The [Python Packages](https://py-pkgs.org/welcome) book is an excellent resource
 
 ## System setup
 
-The sections below cover the technologies we'll be using in the book. I primarily develop on [MaBook Pro](https://www.apple.com/macbook-pro/) (with macOS), but also use a [System76 laptop](https://system76.com/laptops), which uses an Ubuntu-flavored operating system. I've tried to keep the examples general enough that most readers will be able to follow along, regardless of their operating system. 
+The sections below cover the technologies we'll be using in the book. I primarily develop on [MacBook Pro](https://www.apple.com/macbook-pro/) (with macOS), but also use a [System76 laptop](https://system76.com/laptops), which uses an Ubuntu-flavored operating system. I've tried to keep the examples general enough that most readers will be able to follow along, regardless of their operating system. 
 
 ### Terminals 
 
 Terminals are a command-line interface (CLI) for communicating with your computer. This includes the [macOS Terminal](https://support.apple.com/guide/terminal/welcome/mac), or the [WSL for Windows](https://learn.microsoft.com/en-us/windows/wsl/install). You can also download terminal emulators (like [iTerm2](https://iterm2.com/)), which offer a lot more  options for customizing your CLI experience. 
 
 ### Python installations
+
+
 
 ### Python packaging software
 
