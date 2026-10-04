@@ -148,7 +148,7 @@ After installation, restart your terminal (or run `source ~/.local/bin/env` on m
 **Windows (PowerShell)**
 
 ```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.sh | iex"
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
 Create a virtual environment, defaults to `.venv`:
