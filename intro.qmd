@@ -50,9 +50,44 @@ Terminals are a command-line interface (CLI) for communicating with your compute
 
 ### Python installations
 
+The examples in this book use Python 3.12. Most macOS and Ubuntu machines already come with a system Python (the version the operating system depends on), but I recommend leaving it alone and installing a separate Python for development. You can download installers for macOS and Windows from [python.org](https://www.python.org/downloads/), but I've found it easier to let [`uv`](https://docs.astral.sh/uv/) (covered in the next section) install and manage Python versions for me.
 
+After installing `uv`, the commands below install Python 3.12 and list the Python versions `uv` can find on your machine. They work the same in the macOS/Ubuntu terminal and Windows PowerShell:
+
+```bash
+uv python install 3.12
+uv python list
+```
+
+If you've used [`rig`](https://github.com/r-lib/rig) to install and switch between R versions, `uv python` fills the same role.
 
 ### Python packaging software
+
+R developers get most of their package development toolchain from `devtools`, `usethis`, and `renv`. Python splits these jobs across several tools (`pip`, `venv`, `setuptools`, `hatch`, `poetry`, and others), which can be confusing when you're first starting out. This book uses [`uv`](https://docs.astral.sh/uv/), a single command-line tool that installs Python versions, creates virtual environments, installs packages, and records exact versions in a lockfile.
+
+Install `uv` on macOS or Ubuntu with the [standalone installer](https://docs.astral.sh/uv/getting-started/installation/):
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+On Windows, run the installer from PowerShell:
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+The table below maps the `uv` commands we'll use most often to their closest R equivalents:
+
+| Task | R | Python (`uv`) |
+|---|---|---|
+| Manage language versions | `rig` | `uv python install` |
+| Create a package | `usethis::create_package()` | `uv init --package` |
+| Isolate project dependencies | `renv::init()` | `uv venv` |
+| Add a dependency | `usethis::use_package()` | `uv add` |
+| Record exact versions | `renv.lock` | `uv.lock` |
+
+Package metadata and dependencies live in `pyproject.toml`, which is Python's version of the `DESCRIPTION` file. The early branches of [`pyap`](https://github.com/mjfrigaard/pyap) install dependencies from a `requirements.txt` file with `uv pip install`, and later branches move to `pyproject.toml`, `uv add`, and `uv.lock`. If you'd rather not install `uv`, Python's built-in `venv` and `pip` cover the essentials, and the [Shiny for Python](shiny.qmd) chapter shows the equivalent commands.
 
 ### Integrated Development Environments (IDEs)
 
