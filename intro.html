@@ -2,25 +2,66 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-06-04">
+<meta name="dcterms.date" content="2026-10-04">
 <meta name="description" content="Getting your Shiny for Python app into a Python package">
 
 <title>Introduction – Shiny for Python App-Packages</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -36,15 +77,14 @@ ul.task-list li input[type="checkbox"] {
 <link href="./index.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7e2a82ea2c815f37f0ec30c8333a45ed.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-53a3bec4dbb8e52b51227661461c4b19.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -495,7 +535,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2026-06-04</p>
+      <p class="date">2026-10-04</p>
     </div>
   </div>
   
@@ -555,16 +595,64 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="system-setup" class="level2">
 <h2 class="anchored" data-anchor-id="system-setup">System setup</h2>
-<p>The sections below cover the technologies we’ll be using in the book. I primarily develop on <a href="https://www.apple.com/macbook-pro/">MaBook Pro</a> (with macOS), but also use a <a href="https://system76.com/laptops">System76 laptop</a>, which uses an Ubuntu-flavored operating system. I’ve tried to keep the examples general enough that most readers will be able to follow along, regardless of their operating system.</p>
+<p>The sections below cover the technologies we’ll be using in the book. I primarily develop on <a href="https://www.apple.com/macbook-pro/">MacBook Pro</a> (with macOS), but also use a <a href="https://system76.com/laptops">System76 laptop</a>, which uses an Ubuntu-flavored operating system. I’ve tried to keep the examples general enough that most readers will be able to follow along, regardless of their operating system.</p>
 <section id="terminals" class="level3">
 <h3 class="anchored" data-anchor-id="terminals">Terminals</h3>
 <p>Terminals are a command-line interface (CLI) for communicating with your computer. This includes the <a href="https://support.apple.com/guide/terminal/welcome/mac">macOS Terminal</a>, or the <a href="https://learn.microsoft.com/en-us/windows/wsl/install">WSL for Windows</a>. You can also download terminal emulators (like <a href="https://iterm2.com/">iTerm2</a>), which offer a lot more options for customizing your CLI experience.</p>
 </section>
 <section id="python-installations" class="level3">
 <h3 class="anchored" data-anchor-id="python-installations">Python installations</h3>
+<p>The examples in this book use Python 3.12. Most macOS and Ubuntu machines already come with a system Python (the version the operating system depends on), but I recommend leaving it alone and installing a separate Python for development. You can download installers for macOS and Windows from <a href="https://www.python.org/downloads/">python.org</a>, but I’ve found it easier to let <a href="https://docs.astral.sh/uv/"><code>uv</code></a> (covered in the next section) install and manage Python versions for me.</p>
+<p>After installing <code>uv</code>, the commands below install Python 3.12 and list the Python versions <code>uv</code> can find on your machine. They work the same in the macOS/Ubuntu terminal and Windows PowerShell:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> python install 3.12</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> python list</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If you’ve used <a href="https://github.com/r-lib/rig"><code>rig</code></a> to install and switch between R versions, <code>uv python</code> fills the same role.</p>
 </section>
 <section id="python-packaging-software" class="level3">
 <h3 class="anchored" data-anchor-id="python-packaging-software">Python packaging software</h3>
+<p>R developers get most of their package development toolchain from <code>devtools</code>, <code>usethis</code>, and <code>renv</code>. Python splits these jobs across several tools (<code>pip</code>, <code>venv</code>, <code>setuptools</code>, <code>hatch</code>, <code>poetry</code>, and others), which can be confusing when you’re first starting out. This book uses <a href="https://docs.astral.sh/uv/"><code>uv</code></a>, a single command-line tool that installs Python versions, creates virtual environments, installs packages, and records exact versions in a lockfile.</p>
+<p>Install <code>uv</code> on macOS or Ubuntu with the <a href="https://docs.astral.sh/uv/getting-started/installation/">standalone installer</a>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-LsSf</span> https://astral.sh/uv/install.sh <span class="kw">|</span> <span class="fu">sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>On Windows, run the installer from PowerShell:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>powershell <span class="op">-</span>ExecutionPolicy ByPass <span class="op">-</span>c <span class="st">"irm https://astral.sh/uv/install.ps1 | iex"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The table below maps the <code>uv</code> commands we’ll use most often to their closest R equivalents:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>R</th>
+<th>Python (<code>uv</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Manage language versions</td>
+<td><code>rig</code></td>
+<td><code>uv python install</code></td>
+</tr>
+<tr class="even">
+<td>Create a package</td>
+<td><code>usethis::create_package()</code></td>
+<td><code>uv init --package</code></td>
+</tr>
+<tr class="odd">
+<td>Isolate project dependencies</td>
+<td><code>renv::init()</code></td>
+<td><code>uv venv</code></td>
+</tr>
+<tr class="even">
+<td>Add a dependency</td>
+<td><code>usethis::use_package()</code></td>
+<td><code>uv add</code></td>
+</tr>
+<tr class="odd">
+<td>Record exact versions</td>
+<td><code>renv.lock</code></td>
+<td><code>uv.lock</code></td>
+</tr>
+</tbody>
+</table>
+<p>Package metadata and dependencies live in <code>pyproject.toml</code>, which is Python’s version of the <code>DESCRIPTION</code> file. The early branches of <a href="https://github.com/mjfrigaard/pyap"><code>pyap</code></a> install dependencies from a <code>requirements.txt</code> file with <code>uv pip install</code>, and later branches move to <code>pyproject.toml</code>, <code>uv add</code>, and <code>uv.lock</code>. If you’d rather not install <code>uv</code>, Python’s built-in <code>venv</code> and <code>pip</code> cover the essentials, and the <a href="./shiny.html">Shiny for Python</a> chapter shows the equivalent commands.</p>
 </section>
 <section id="integrated-development-environments-ides" class="level3">
 <h3 class="anchored" data-anchor-id="integrated-development-environments-ides">Integrated Development Environments (IDEs)</h3>
