@@ -834,135 +834,185 @@ flowchart TB
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>└── utils.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The movies app reads the data with <code>pandas</code>, so we’ll install it into the virtual environment (<code>shiny</code> and <code>matplotlib</code> are already installed):</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install pandas</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="pandas or polars?">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>pandas or polars?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>This book uses <code>pandas</code> because it’s more common in Shiny for Python examples (roughly 3 to 1 over <a href="https://pola.rs/"><code>polars</code></a> in the <a href="https://github.com/posit-dev/py-shiny"><code>py-shiny</code></a> and <a href="https://github.com/posit-dev/py-shiny-templates"><code>py-shiny-templates</code></a> repositories as of 2026-10). Shiny doesn’t force the choice, though: <code>@render.data_frame</code> accepts both <code>pandas</code> and <code>polars</code> DataFrames. To follow along with <code>polars</code> instead, install it into the virtual environment:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install polars</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>polars</code> builds queries from column expressions (like <code>pl.col("genre")</code>), so its syntax will feel familiar if you’re coming from <code>dplyr</code>.</p>
+</div>
+</div>
+</div>
 <section id="app.py-1" class="level3" data-number="2.4.1">
 <h3 data-number="2.4.1" class="anchored" data-anchor-id="app.py-1"><span class="header-section-number">2.4.1</span> app.py</h3>
 <p>The full <code>app.py</code> for the movies app is below:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run with: shiny run app.py</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> shiny <span class="im">import</span> App, ui, render, reactive</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> utils <span class="im">import</span> scatter_plot</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>movies <span class="op">=</span> pd.read_csv(<span class="st">"movies.csv"</span>)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>app_ui <span class="op">=</span> ui.page_sidebar(</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    ui.sidebar(</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>        ui.input_select(</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">"y"</span>,</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Y-axis:"</span>,</span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>            choices<span class="op">=</span>{</span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>                <span class="st">"imdb_rating"</span>: <span class="st">"IMDB rating"</span>,</span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>                <span class="st">"imdb_num_votes"</span>: <span class="st">"IMDB number of votes"</span>,</span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>                <span class="st">"critics_score"</span>: <span class="st">"Critics Score"</span>,</span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>                <span class="st">"audience_score"</span>: <span class="st">"Audience Score"</span>,</span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>                <span class="st">"runtime"</span>: <span class="st">"Runtime"</span>,</span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>            },</span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>            selected<span class="op">=</span><span class="st">"audience_score"</span>,</span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>        ui.input_select(</span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>            <span class="st">"x"</span>,</span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>            <span class="st">"X-axis:"</span>,</span>
-<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>            choices<span class="op">=</span>{</span>
-<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>                <span class="st">"imdb_rating"</span>: <span class="st">"IMDB rating"</span>,</span>
-<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>                <span class="st">"imdb_num_votes"</span>: <span class="st">"IMDB number of votes"</span>,</span>
-<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>                <span class="st">"critics_score"</span>: <span class="st">"Critics Score"</span>,</span>
-<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>                <span class="st">"audience_score"</span>: <span class="st">"Audience Score"</span>,</span>
-<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>                <span class="st">"runtime"</span>: <span class="st">"Runtime"</span>,</span>
-<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>            },</span>
-<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>            selected<span class="op">=</span><span class="st">"critics_score"</span>,</span>
-<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>        ui.input_select(</span>
-<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>            <span class="st">"z"</span>,</span>
-<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Color by:"</span>,</span>
-<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>            choices<span class="op">=</span>{</span>
-<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>                <span class="st">"title_type"</span>: <span class="st">"Title Type"</span>,</span>
-<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a>                <span class="st">"genre"</span>: <span class="st">"Genre"</span>,</span>
-<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>                <span class="st">"mpaa_rating"</span>: <span class="st">"MPAA Rating"</span>,</span>
-<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>                <span class="st">"critics_rating"</span>: <span class="st">"Critics Rating"</span>,</span>
-<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a>                <span class="st">"audience_rating"</span>: <span class="st">"Audience Rating"</span>,</span>
-<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a>            },</span>
-<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a>            selected<span class="op">=</span><span class="st">"mpaa_rating"</span>,</span>
-<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a>        ui.input_slider(</span>
-<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a>            <span class="st">"alpha"</span>, <span class="st">"Alpha:"</span>, <span class="bu">min</span><span class="op">=</span><span class="fl">0.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">1.0</span>, value<span class="op">=</span><span class="fl">0.4</span>, step<span class="op">=</span><span class="fl">0.05</span></span>
-<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a>        ui.input_slider(<span class="st">"size"</span>, <span class="st">"Size:"</span>, <span class="bu">min</span><span class="op">=</span><span class="dv">1</span>, <span class="bu">max</span><span class="op">=</span><span class="dv">5</span>, value<span class="op">=</span><span class="dv">3</span>),</span>
-<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a>        ui.input_text(</span>
-<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a>            <span class="st">"plot_title"</span>,</span>
-<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Plot title"</span>,</span>
-<span id="cb21-53"><a href="#cb21-53" aria-hidden="true" tabindex="-1"></a>            placeholder<span class="op">=</span><span class="st">"Enter text to be used as plot title"</span>,</span>
-<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="cb21-55"><a href="#cb21-55" aria-hidden="true" tabindex="-1"></a>        ui.input_action_button(<span class="st">"update_plot_title"</span>, <span class="st">"Update plot title"</span>),</span>
-<span id="cb21-56"><a href="#cb21-56" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb21-57"><a href="#cb21-57" aria-hidden="true" tabindex="-1"></a>    ui.p(</span>
-<span id="cb21-58"><a href="#cb21-58" aria-hidden="true" tabindex="-1"></a>        <span class="st">"These data were obtained from "</span>,</span>
-<span id="cb21-59"><a href="#cb21-59" aria-hidden="true" tabindex="-1"></a>        ui.a(<span class="st">"IMDB"</span>, href<span class="op">=</span><span class="st">"http://www.imdb.com/"</span>),</span>
-<span id="cb21-60"><a href="#cb21-60" aria-hidden="true" tabindex="-1"></a>        <span class="st">" and "</span>,</span>
-<span id="cb21-61"><a href="#cb21-61" aria-hidden="true" tabindex="-1"></a>        ui.a(<span class="st">"Rotten Tomatoes"</span>, href<span class="op">=</span><span class="st">"https://www.rottentomatoes.com/"</span>),</span>
-<span id="cb21-62"><a href="#cb21-62" aria-hidden="true" tabindex="-1"></a>        <span class="st">"."</span>,</span>
-<span id="cb21-63"><a href="#cb21-63" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb21-64"><a href="#cb21-64" aria-hidden="true" tabindex="-1"></a>    ui.p(</span>
-<span id="cb21-65"><a href="#cb21-65" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"The data represent </span><span class="sc">{</span><span class="bu">len</span>(movies)<span class="sc">}</span><span class="ss"> randomly sampled movies "</span></span>
-<span id="cb21-66"><a href="#cb21-66" aria-hidden="true" tabindex="-1"></a>        <span class="st">"released between 1972 to 2014 in the United States."</span></span>
-<span id="cb21-67"><a href="#cb21-67" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb21-68"><a href="#cb21-68" aria-hidden="true" tabindex="-1"></a>    ui.output_plot(<span class="st">"scatterplot"</span>),</span>
-<span id="cb21-69"><a href="#cb21-69" aria-hidden="true" tabindex="-1"></a>    ui.hr(),</span>
-<span id="cb21-70"><a href="#cb21-70" aria-hidden="true" tabindex="-1"></a>    ui.p(</span>
-<span id="cb21-71"><a href="#cb21-71" aria-hidden="true" tabindex="-1"></a>        ui.em(</span>
-<span id="cb21-72"><a href="#cb21-72" aria-hidden="true" tabindex="-1"></a>            <span class="st">"The code for this Shiny application comes from "</span>,</span>
-<span id="cb21-73"><a href="#cb21-73" aria-hidden="true" tabindex="-1"></a>            ui.a(</span>
-<span id="cb21-74"><a href="#cb21-74" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Building Web Applications with Shiny"</span>,</span>
-<span id="cb21-75"><a href="#cb21-75" aria-hidden="true" tabindex="-1"></a>                href<span class="op">=</span><span class="st">"https://rstudio-education.github.io/shiny-course/"</span>,</span>
-<span id="cb21-76"><a href="#cb21-76" aria-hidden="true" tabindex="-1"></a>            ),</span>
-<span id="cb21-77"><a href="#cb21-77" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb21-78"><a href="#cb21-78" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb21-79"><a href="#cb21-79" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-80"><a href="#cb21-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-81"><a href="#cb21-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-82"><a href="#cb21-82" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> server(<span class="bu">input</span>, output, session):</span>
-<span id="cb21-83"><a href="#cb21-83" aria-hidden="true" tabindex="-1"></a>    <span class="co"># only updates title when button is clicked, runs on init with empty string</span></span>
-<span id="cb21-84"><a href="#cb21-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">@reactive.calc</span></span>
-<span id="cb21-85"><a href="#cb21-85" aria-hidden="true" tabindex="-1"></a>    <span class="at">@reactive.event</span>(<span class="bu">input</span>.update_plot_title, ignore_none<span class="op">=</span><span class="va">False</span>, ignore_init<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb21-86"><a href="#cb21-86" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> new_plot_title():</span>
-<span id="cb21-87"><a href="#cb21-87" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">input</span>.plot_title().title()</span>
-<span id="cb21-88"><a href="#cb21-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-89"><a href="#cb21-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">@render.plot</span></span>
-<span id="cb21-90"><a href="#cb21-90" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> scatterplot():</span>
-<span id="cb21-91"><a href="#cb21-91" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> scatter_plot(</span>
-<span id="cb21-92"><a href="#cb21-92" aria-hidden="true" tabindex="-1"></a>            df<span class="op">=</span>movies,</span>
-<span id="cb21-93"><a href="#cb21-93" aria-hidden="true" tabindex="-1"></a>            x_var<span class="op">=</span><span class="bu">input</span>.x(),</span>
-<span id="cb21-94"><a href="#cb21-94" aria-hidden="true" tabindex="-1"></a>            y_var<span class="op">=</span><span class="bu">input</span>.y(),</span>
-<span id="cb21-95"><a href="#cb21-95" aria-hidden="true" tabindex="-1"></a>            col_var<span class="op">=</span><span class="bu">input</span>.z(),</span>
-<span id="cb21-96"><a href="#cb21-96" aria-hidden="true" tabindex="-1"></a>            alpha_var<span class="op">=</span><span class="bu">input</span>.alpha(),</span>
-<span id="cb21-97"><a href="#cb21-97" aria-hidden="true" tabindex="-1"></a>            size_var<span class="op">=</span><span class="bu">input</span>.size(),</span>
-<span id="cb21-98"><a href="#cb21-98" aria-hidden="true" tabindex="-1"></a>            title<span class="op">=</span>new_plot_title(),</span>
-<span id="cb21-99"><a href="#cb21-99" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb21-100"><a href="#cb21-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-101"><a href="#cb21-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-102"><a href="#cb21-102" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> App(app_ui, server)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run with: shiny run app.py</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> shiny <span class="im">import</span> App, ui, render, reactive</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> utils <span class="im">import</span> scatter_plot</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>movies <span class="op">=</span> pd.read_csv(<span class="st">"movies.csv"</span>)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>app_ui <span class="op">=</span> ui.page_sidebar(</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    ui.sidebar(</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        ui.input_select(</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">"y"</span>,</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Y-axis:"</span>,</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>            choices<span class="op">=</span>{</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>                <span class="st">"imdb_rating"</span>: <span class="st">"IMDB rating"</span>,</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>                <span class="st">"imdb_num_votes"</span>: <span class="st">"IMDB number of votes"</span>,</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>                <span class="st">"critics_score"</span>: <span class="st">"Critics Score"</span>,</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>                <span class="st">"audience_score"</span>: <span class="st">"Audience Score"</span>,</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>                <span class="st">"runtime"</span>: <span class="st">"Runtime"</span>,</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>            },</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>            selected<span class="op">=</span><span class="st">"audience_score"</span>,</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>        ui.input_select(</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>            <span class="st">"x"</span>,</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>            <span class="st">"X-axis:"</span>,</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>            choices<span class="op">=</span>{</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>                <span class="st">"imdb_rating"</span>: <span class="st">"IMDB rating"</span>,</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>                <span class="st">"imdb_num_votes"</span>: <span class="st">"IMDB number of votes"</span>,</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>                <span class="st">"critics_score"</span>: <span class="st">"Critics Score"</span>,</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>                <span class="st">"audience_score"</span>: <span class="st">"Audience Score"</span>,</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>                <span class="st">"runtime"</span>: <span class="st">"Runtime"</span>,</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>            },</span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>            selected<span class="op">=</span><span class="st">"critics_score"</span>,</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>        ui.input_select(</span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>            <span class="st">"z"</span>,</span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Color by:"</span>,</span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>            choices<span class="op">=</span>{</span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>                <span class="st">"title_type"</span>: <span class="st">"Title Type"</span>,</span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>                <span class="st">"genre"</span>: <span class="st">"Genre"</span>,</span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>                <span class="st">"mpaa_rating"</span>: <span class="st">"MPAA Rating"</span>,</span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>                <span class="st">"critics_rating"</span>: <span class="st">"Critics Rating"</span>,</span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>                <span class="st">"audience_rating"</span>: <span class="st">"Audience Rating"</span>,</span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>            },</span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>            selected<span class="op">=</span><span class="st">"mpaa_rating"</span>,</span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a>        ui.input_slider(</span>
+<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a>            <span class="st">"alpha"</span>, <span class="st">"Alpha:"</span>, <span class="bu">min</span><span class="op">=</span><span class="fl">0.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">1.0</span>, value<span class="op">=</span><span class="fl">0.4</span>, step<span class="op">=</span><span class="fl">0.05</span></span>
+<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a>        ui.input_slider(<span class="st">"size"</span>, <span class="st">"Size:"</span>, <span class="bu">min</span><span class="op">=</span><span class="dv">1</span>, <span class="bu">max</span><span class="op">=</span><span class="dv">5</span>, value<span class="op">=</span><span class="dv">3</span>),</span>
+<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a>        ui.input_text(</span>
+<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a>            <span class="st">"plot_title"</span>,</span>
+<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Plot title"</span>,</span>
+<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a>            placeholder<span class="op">=</span><span class="st">"Enter text to be used as plot title"</span>,</span>
+<span id="cb22-54"><a href="#cb22-54" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb22-55"><a href="#cb22-55" aria-hidden="true" tabindex="-1"></a>        ui.input_action_button(<span class="st">"update_plot_title"</span>, <span class="st">"Update plot title"</span>),</span>
+<span id="cb22-56"><a href="#cb22-56" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb22-57"><a href="#cb22-57" aria-hidden="true" tabindex="-1"></a>    ui.p(</span>
+<span id="cb22-58"><a href="#cb22-58" aria-hidden="true" tabindex="-1"></a>        <span class="st">"These data were obtained from "</span>,</span>
+<span id="cb22-59"><a href="#cb22-59" aria-hidden="true" tabindex="-1"></a>        ui.a(<span class="st">"IMDB"</span>, href<span class="op">=</span><span class="st">"http://www.imdb.com/"</span>),</span>
+<span id="cb22-60"><a href="#cb22-60" aria-hidden="true" tabindex="-1"></a>        <span class="st">" and "</span>,</span>
+<span id="cb22-61"><a href="#cb22-61" aria-hidden="true" tabindex="-1"></a>        ui.a(<span class="st">"Rotten Tomatoes"</span>, href<span class="op">=</span><span class="st">"https://www.rottentomatoes.com/"</span>),</span>
+<span id="cb22-62"><a href="#cb22-62" aria-hidden="true" tabindex="-1"></a>        <span class="st">"."</span>,</span>
+<span id="cb22-63"><a href="#cb22-63" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb22-64"><a href="#cb22-64" aria-hidden="true" tabindex="-1"></a>    ui.p(</span>
+<span id="cb22-65"><a href="#cb22-65" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"The data represent </span><span class="sc">{</span><span class="bu">len</span>(movies)<span class="sc">}</span><span class="ss"> randomly sampled movies "</span></span>
+<span id="cb22-66"><a href="#cb22-66" aria-hidden="true" tabindex="-1"></a>        <span class="st">"released between 1972 to 2014 in the United States."</span></span>
+<span id="cb22-67"><a href="#cb22-67" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb22-68"><a href="#cb22-68" aria-hidden="true" tabindex="-1"></a>    ui.output_plot(<span class="st">"scatterplot"</span>),</span>
+<span id="cb22-69"><a href="#cb22-69" aria-hidden="true" tabindex="-1"></a>    ui.hr(),</span>
+<span id="cb22-70"><a href="#cb22-70" aria-hidden="true" tabindex="-1"></a>    ui.p(</span>
+<span id="cb22-71"><a href="#cb22-71" aria-hidden="true" tabindex="-1"></a>        ui.em(</span>
+<span id="cb22-72"><a href="#cb22-72" aria-hidden="true" tabindex="-1"></a>            <span class="st">"The code for this Shiny application comes from "</span>,</span>
+<span id="cb22-73"><a href="#cb22-73" aria-hidden="true" tabindex="-1"></a>            ui.a(</span>
+<span id="cb22-74"><a href="#cb22-74" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Building Web Applications with Shiny"</span>,</span>
+<span id="cb22-75"><a href="#cb22-75" aria-hidden="true" tabindex="-1"></a>                href<span class="op">=</span><span class="st">"https://rstudio-education.github.io/shiny-course/"</span>,</span>
+<span id="cb22-76"><a href="#cb22-76" aria-hidden="true" tabindex="-1"></a>            ),</span>
+<span id="cb22-77"><a href="#cb22-77" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb22-78"><a href="#cb22-78" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb22-79"><a href="#cb22-79" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-80"><a href="#cb22-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-81"><a href="#cb22-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-82"><a href="#cb22-82" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> server(<span class="bu">input</span>, output, session):</span>
+<span id="cb22-83"><a href="#cb22-83" aria-hidden="true" tabindex="-1"></a>    <span class="co"># only updates title when button is clicked, runs on init with empty string</span></span>
+<span id="cb22-84"><a href="#cb22-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">@reactive.calc</span></span>
+<span id="cb22-85"><a href="#cb22-85" aria-hidden="true" tabindex="-1"></a>    <span class="at">@reactive.event</span>(<span class="bu">input</span>.update_plot_title, ignore_none<span class="op">=</span><span class="va">False</span>, ignore_init<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb22-86"><a href="#cb22-86" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> new_plot_title():</span>
+<span id="cb22-87"><a href="#cb22-87" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">input</span>.plot_title().title()</span>
+<span id="cb22-88"><a href="#cb22-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-89"><a href="#cb22-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">@render.plot</span></span>
+<span id="cb22-90"><a href="#cb22-90" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> scatterplot():</span>
+<span id="cb22-91"><a href="#cb22-91" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> scatter_plot(</span>
+<span id="cb22-92"><a href="#cb22-92" aria-hidden="true" tabindex="-1"></a>            df<span class="op">=</span>movies,</span>
+<span id="cb22-93"><a href="#cb22-93" aria-hidden="true" tabindex="-1"></a>            x_var<span class="op">=</span><span class="bu">input</span>.x(),</span>
+<span id="cb22-94"><a href="#cb22-94" aria-hidden="true" tabindex="-1"></a>            y_var<span class="op">=</span><span class="bu">input</span>.y(),</span>
+<span id="cb22-95"><a href="#cb22-95" aria-hidden="true" tabindex="-1"></a>            col_var<span class="op">=</span><span class="bu">input</span>.z(),</span>
+<span id="cb22-96"><a href="#cb22-96" aria-hidden="true" tabindex="-1"></a>            alpha_var<span class="op">=</span><span class="bu">input</span>.alpha(),</span>
+<span id="cb22-97"><a href="#cb22-97" aria-hidden="true" tabindex="-1"></a>            size_var<span class="op">=</span><span class="bu">input</span>.size(),</span>
+<span id="cb22-98"><a href="#cb22-98" aria-hidden="true" tabindex="-1"></a>            title<span class="op">=</span>new_plot_title(),</span>
+<span id="cb22-99"><a href="#cb22-99" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb22-100"><a href="#cb22-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-101"><a href="#cb22-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-102"><a href="#cb22-102" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> App(app_ui, server)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The structure is the same as the Old Faithful app: imports, a UI object, a server function, and <code>App()</code>. The differences are in what each part contains, so we’ll focus on those below.</p>
 </section>
 <section id="reading-data" class="level3" data-number="2.4.2">
 <h3 data-number="2.4.2" class="anchored" data-anchor-id="reading-data"><span class="header-section-number">2.4.2</span> Reading data</h3>
 <p>The app reads <code>movies.csv</code> into a <code>pandas</code> <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html">DataFrame</a> (a table of rows and named columns) at the top of the file:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>movies <span class="op">=</span> pd.read_csv(<span class="st">"movies.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>movies <span class="op">=</span> pd.read_csv(<span class="st">"movies.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Like <code>waiting</code> in the Old Faithful app, <code>movies</code> is created outside the server, so the file is read once when the app starts and every session shares the same data. The path is relative, which means Python looks for <code>movies.csv</code> in the current working directory. We need to run the app from the folder that holds <code>movies.csv</code> (we’ll fix this fragile path when we store the data inside the package in the <a href="./data.html">Data</a> chapter).</p>
 <p>The data have 34 columns describing each movie (<code>title</code>, <code>genre</code>, <code>runtime</code>, <code>mpaa_rating</code>, <code>imdb_rating</code>, <code>critics_score</code>, <code>audience_score</code>, and others). The app only plots a handful of them.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Reading data with polars">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Reading data with polars
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The code blocks below import the package, read <code>movies.csv</code>, and count rows in <code>pandas</code>, <code>polars</code>, and the tidyverse:</p>
+<p><code>pandas</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>movies <span class="op">=</span> pd.read_csv(<span class="st">"movies.csv"</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(movies)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>polars</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>movies <span class="op">=</span> pl.read_csv(<span class="st">"movies.csv"</span>, null_values<span class="op">=</span><span class="st">"NA"</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(movies)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>R (tidyverse):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>movies <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"movies.csv"</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(movies)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>pandas</code> reads the string <code>NA</code> as a missing value by default, but <code>polars</code> only treats empty fields as missing. Because <code>movies.csv</code> stores missing values as <code>NA</code>, <code>pl.read_csv("movies.csv")</code> fails with a parsing error, so we pass the string to <code>null_values</code>.</p>
+</div>
+</div>
+</div>
 </section>
 <section id="inputs" class="level3" data-number="2.4.3">
 <h3 data-number="2.4.3" class="anchored" data-anchor-id="inputs"><span class="header-section-number">2.4.3</span> Inputs</h3>
 <p>The sidebar holds seven inputs. Three of them are <code>ui.input_select()</code> dropdowns for the x axis, the y axis, and the color variable. Each dropdown takes a <code>choices</code> dictionary, where the keys are the values sent to the server and the values are the labels displayed in the app:<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ui.input_select(</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y"</span>,</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Y-axis:"</span>,</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    choices<span class="op">=</span>{</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"imdb_rating"</span>: <span class="st">"IMDB rating"</span>,</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"imdb_num_votes"</span>: <span class="st">"IMDB number of votes"</span>,</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"critics_score"</span>: <span class="st">"Critics Score"</span>,</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"audience_score"</span>: <span class="st">"Audience Score"</span>,</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"runtime"</span>: <span class="st">"Runtime"</span>,</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    },</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    selected<span class="op">=</span><span class="st">"audience_score"</span>,</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>),</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ui.input_select(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y"</span>,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Y-axis:"</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    choices<span class="op">=</span>{</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"imdb_rating"</span>: <span class="st">"IMDB rating"</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"imdb_num_votes"</span>: <span class="st">"IMDB number of votes"</span>,</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"critics_score"</span>: <span class="st">"Critics Score"</span>,</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"audience_score"</span>: <span class="st">"Audience Score"</span>,</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"runtime"</span>: <span class="st">"Runtime"</span>,</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    selected<span class="op">=</span><span class="st">"audience_score"</span>,</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>),</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>When a user picks “Critics Score” from the dropdown, <code>input.y()</code> returns <code>"critics_score"</code>, which is the column name we need for the plot. <code>selected</code> sets the starting value.</p>
 <p>The two <code>ui.input_slider()</code> calls control the transparency (<code>alpha</code>) and size of the points. The <code>alpha</code> slider uses <code>step=0.05</code> to move in small increments between <code>0.0</code> and <code>1.0</code>.</p>
 <p>The last two inputs work together. <code>ui.input_text()</code> creates a text box for the plot title, and <code>ui.input_action_button()</code> creates a button that applies it. We’ll see how the server connects them below.</p>
@@ -970,23 +1020,23 @@ flowchart TB
 <section id="ui-text" class="level3" data-number="2.4.4">
 <h3 data-number="2.4.4" class="anchored" data-anchor-id="ui-text"><span class="header-section-number">2.4.4</span> UI text</h3>
 <p>The main area holds more than the plot output. <code>ui.p()</code>, <code>ui.a()</code>, <code>ui.em()</code>, and <code>ui.hr()</code> create HTML paragraph, link, emphasis, and horizontal rule tags. Positional arguments become the tag’s contents, and keyword arguments (like <code>href</code>) become its attributes:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>ui.p(</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"These data were obtained from "</span>,</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    ui.a(<span class="st">"IMDB"</span>, href<span class="op">=</span><span class="st">"http://www.imdb.com/"</span>),</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">" and "</span>,</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    ui.a(<span class="st">"Rotten Tomatoes"</span>, href<span class="op">=</span><span class="st">"https://www.rottentomatoes.com/"</span>),</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"."</span>,</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>),</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>ui.p(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"These data were obtained from "</span>,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    ui.a(<span class="st">"IMDB"</span>, href<span class="op">=</span><span class="st">"http://www.imdb.com/"</span>),</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">" and "</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    ui.a(<span class="st">"Rotten Tomatoes"</span>, href<span class="op">=</span><span class="st">"https://www.rottentomatoes.com/"</span>),</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"."</span>,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>),</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The second paragraph uses an <a href="https://docs.python.org/3/tutorial/inputoutput.html#formatted-string-literals">f-string</a> to insert the number of rows in <code>movies</code> with <code>len(movies)</code>. Because the UI is built once when the app starts, this number is computed once too (it isn’t reactive).</p>
 </section>
 <section id="reactive-outputs" class="level3" data-number="2.4.5">
 <h3 data-number="2.4.5" class="anchored" data-anchor-id="reactive-outputs"><span class="header-section-number">2.4.5</span> Reactive outputs</h3>
 <p>The server has two functions. <code>scatterplot()</code> is the output, and it follows the same pattern as <code>distPlot()</code> in the Old Faithful app: the <code>@render.plot</code> decorator, a function name that matches the <code>ui.output_plot("scatterplot")</code> id, and calls to <code>input.x()</code>, <code>input.y()</code>, and the other inputs. Each input read inside <code>scatterplot()</code> is a reactive dependency, so changing any dropdown or slider redraws the plot.</p>
 <p>The plot title works differently. We don’t want the title to change with every keystroke in the text box, only when the button is clicked. <code>new_plot_title()</code> handles this with two decorators from the <code>reactive</code> module:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="at">@reactive.calc</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="at">@reactive.event</span>(<span class="bu">input</span>.update_plot_title, ignore_none<span class="op">=</span><span class="va">False</span>, ignore_init<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> new_plot_title():</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">input</span>.plot_title().title()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="at">@reactive.calc</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="at">@reactive.event</span>(<span class="bu">input</span>.update_plot_title, ignore_none<span class="op">=</span><span class="va">False</span>, ignore_init<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> new_plot_title():</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">input</span>.plot_title().title()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Decorators are applied from the bottom up, so we’ll read them in that order:</p>
 <ol type="1">
 <li><code>@reactive.event()</code> limits when the function runs. It only responds to <code>input.update_plot_title</code> (the button), and it ignores changes to <code>input.plot_title()</code> even though the function reads it.</li>
@@ -998,86 +1048,112 @@ flowchart TB
 <section id="utility-functions" class="level3" data-number="2.4.6">
 <h3 data-number="2.4.6" class="anchored" data-anchor-id="utility-functions"><span class="header-section-number">2.4.6</span> Utility functions</h3>
 <p><code>app.py</code> doesn’t build the plot itself. The plotting code lives in <code>scatter_plot()</code>, a function in <code>utils.py</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title<span class="op">=</span><span class="st">""</span>):</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Create a scatter plot of df colored by a categorical variable."""</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots()</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    categories <span class="op">=</span> <span class="bu">sorted</span>(df[col_var].dropna().unique())</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    cmap <span class="op">=</span> plt.get_cmap(<span class="st">"tab10"</span>)</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, cat <span class="kw">in</span> <span class="bu">enumerate</span>(categories):</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>        subset <span class="op">=</span> df[df[col_var] <span class="op">==</span> cat]</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>        ax.scatter(</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>            subset[x_var],</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>            subset[y_var],</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>            alpha<span class="op">=</span>alpha_var,</span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>            s<span class="op">=</span>size_var <span class="op">**</span> <span class="dv">2</span> <span class="op">*</span> <span class="dv">10</span>,</span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span>cmap(i <span class="op">%</span> <span class="dv">10</span>),</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="bu">str</span>(cat),</span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(x_var.replace(<span class="st">"_"</span>, <span class="st">" "</span>).title())</span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(y_var.replace(<span class="st">"_"</span>, <span class="st">" "</span>).title())</span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> title:</span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>        ax.set_title(title)</span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    ax.legend(</span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span>col_var.replace(<span class="st">"_"</span>, <span class="st">" "</span>).title(),</span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>        bbox_to_anchor<span class="op">=</span>(<span class="fl">1.05</span>, <span class="dv">1</span>),</span>
-<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>        loc<span class="op">=</span><span class="st">"upper left"</span>,</span>
-<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title<span class="op">=</span><span class="st">""</span>):</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Create a scatter plot of df colored by a categorical variable."""</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    categories <span class="op">=</span> <span class="bu">sorted</span>(df[col_var].dropna().unique())</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    cmap <span class="op">=</span> plt.get_cmap(<span class="st">"tab10"</span>)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, cat <span class="kw">in</span> <span class="bu">enumerate</span>(categories):</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>        subset <span class="op">=</span> df[df[col_var] <span class="op">==</span> cat]</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>        ax.scatter(</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>            subset[x_var],</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>            subset[y_var],</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>            alpha<span class="op">=</span>alpha_var,</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>            s<span class="op">=</span>size_var <span class="op">**</span> <span class="dv">2</span> <span class="op">*</span> <span class="dv">10</span>,</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span>cmap(i <span class="op">%</span> <span class="dv">10</span>),</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="bu">str</span>(cat),</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(x_var.replace(<span class="st">"_"</span>, <span class="st">" "</span>).title())</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(y_var.replace(<span class="st">"_"</span>, <span class="st">" "</span>).title())</span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> title:</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>        ax.set_title(title)</span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>    ax.legend(</span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span>col_var.replace(<span class="st">"_"</span>, <span class="st">" "</span>).title(),</span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>        bbox_to_anchor<span class="op">=</span>(<span class="fl">1.05</span>, <span class="dv">1</span>),</span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>        loc<span class="op">=</span><span class="st">"upper left"</span>,</span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>matplotlib</code> doesn’t map a categorical variable to colors automatically, so <code>scatter_plot()</code> loops over each category in <code>col_var</code> and draws its points with a color from the <code>tab10</code> palette. The <code>s</code> argument sets the marker area, so <code>size_var ** 2 * 10</code> scales the slider’s 1 to 5 range into visible point sizes. The axis and legend labels are built from the column names (<code>critics_score</code> becomes “Critics Score”), and the legend is placed outside the plot area so it doesn’t cover any points.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Filtering with polars">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Filtering with polars
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The code blocks below show the two <code>pandas</code> operations in <code>scatter_plot()</code> next to their <code>polars</code> and <code>dplyr</code> equivalents (selecting the rows in a category, and the unique values with no missing entries):</p>
+<p><code>pandas</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df[df[col_var] <span class="op">==</span> cat]</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>df[col_var].dropna().unique()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>polars</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>df.<span class="bu">filter</span>(pl.col(col_var) <span class="op">==</span> cat)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>df[col_var].drop_nulls().unique()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>R (dplyr):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(df, .data[[col_var]] <span class="sc">==</span> cat)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(<span class="fu">na.omit</span>(df[[col_var]]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>pl.col(col_var)</code> refers to a column by name inside an expression, much like <code>.data[[col_var]]</code> in <code>dplyr</code>. Using it requires <code>import polars as pl</code> at the top of <code>utils.py</code>. <code>polars</code> doesn’t preserve the order of <code>unique()</code> results by default, but <code>scatter_plot()</code> already wraps them in <code>sorted()</code>.</p>
+</div>
+</div>
+</div>
 <p>Moving this code out of <code>app.py</code> keeps the server short, and it gives us a plain Python function we can call (and test) without running the app. <code>app.py</code> imports it with <code>from utils import scatter_plot</code>, which works because <code>utils.py</code> sits in the same folder as <code>app.py</code>. This is the same idea behind the <code>geyser_waiting()</code> function we added in the <a href="./whole_game.html">Whole Game</a> chapter, and it’s where the package structure in later chapters starts to pay off.</p>
 </section>
 <section id="run-the-movies-app" class="level3" data-number="2.4.7">
 <h3 data-number="2.4.7" class="anchored" data-anchor-id="run-the-movies-app"><span class="header-section-number">2.4.7</span> Run the movies app</h3>
 <p>We launch the movies app the same way we launched the Old Faithful app, from the folder that holds <code>app.py</code> and <code>movies.csv</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">shiny</span> run <span class="at">--reload</span> <span class="at">--launch-browser</span> app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="ex">shiny</span> run <span class="at">--reload</span> <span class="at">--launch-browser</span> app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>We can confirm the app is working by changing the x axis, y axis, and color dropdowns and watching the scatter plot update. Typing a title in the text box should leave the plot unchanged until we click Update plot title.</p>
 </section>
 </section>
 <section id="project-structure" class="level2" data-number="2.5">
 <h2 data-number="2.5" class="anchored" data-anchor-id="project-structure"><span class="header-section-number">2.5</span> Project structure</h2>
 <p>The movies app runs, but nothing in the folder tells another developer (or our future selves) which packages it needs or how the editor should be configured. The <code>02.3_proj-app</code> branch adds these files:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout 02.3_proj-app</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>pyap/</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>├── .gitignore</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>├── .vscode/</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>│   └── settings.json</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>├── README.md</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>├── app.py</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>├── movies.csv</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>├── requirements.txt</span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>└── utils.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout 02.3_proj-app</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>pyap/</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>├── .gitignore</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>├── .vscode/</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>│   └── settings.json</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>├── README.md</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>├── app.py</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>├── movies.csv</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>├── requirements.txt</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>└── utils.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The app code (<code>app.py</code>, <code>utils.py</code>, and <code>movies.csv</code>) is unchanged. The branch adds <code>requirements.txt</code> and <code>.vscode/settings.json</code>, and it updates <code>README.md</code> and <code>.gitignore</code>.</p>
 <section id="requirements.txt" class="level3" data-number="2.5.1">
 <h3 data-number="2.5.1" class="anchored" data-anchor-id="requirements.txt"><span class="header-section-number">2.5.1</span> requirements.txt</h3>
 <p><code>requirements.txt</code> lists the packages the app depends on, one per line:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>shiny&gt;=1.2.0</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>matplotlib&gt;=3.8.0</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>pandas&gt;=2.1.0</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>numpy&gt;=1.26.0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>shiny&gt;=1.2.0</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>matplotlib&gt;=3.8.0</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>pandas&gt;=2.1.0</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>numpy&gt;=1.26.0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Each line sets a minimum version (<code>&gt;=</code>), not an exact one. This makes <code>requirements.txt</code> a looser record than a lockfile: it guarantees a version that’s new enough, but two people installing from it on different days can end up with different versions.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
 <p>Anyone who clones the branch can create a virtual environment and install everything in <code>requirements.txt</code> with <code>-r</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> venv</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install <span class="at">-r</span> requirements.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> venv</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install <span class="at">-r</span> requirements.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If you’re using Python’s built-in <code>venv</code>, the equivalent install command is <code>pip install -r requirements.txt</code>. Once we turn the app into a package, the dependencies will move into <code>pyproject.toml</code> and the exact versions will be recorded in <code>uv.lock</code> (we saw both in the <a href="./whole_game.html">Whole Game</a> chapter, and the <a href="./dependencies.html">Dependencies</a> chapter covers them in detail).</p>
 </section>
 <section id="ide-settings" class="level3" data-number="2.5.2">
 <h3 data-number="2.5.2" class="anchored" data-anchor-id="ide-settings"><span class="header-section-number">2.5.2</span> IDE settings</h3>
 <p>VS Code (and Positron, which is built on the same open source code base) reads project settings from <code>.vscode/settings.json</code>. The settings in this branch are below:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"python.defaultInterpreterPath"</span><span class="fu">:</span> <span class="st">".venv/bin/python"</span><span class="fu">,</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"python.terminal.activateEnvironment"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"editor.formatOnSave"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"editor.rulers"</span><span class="fu">:</span> <span class="ot">[</span><span class="dv">88</span><span class="ot">]</span><span class="fu">,</span></span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"[python]"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"editor.defaultFormatter"</span><span class="fu">:</span> <span class="st">"ms-python.black-formatter"</span></span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"python.defaultInterpreterPath"</span><span class="fu">:</span> <span class="st">".venv/bin/python"</span><span class="fu">,</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"python.terminal.activateEnvironment"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"editor.formatOnSave"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"editor.rulers"</span><span class="fu">:</span> <span class="ot">[</span><span class="dv">88</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"[python]"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"editor.defaultFormatter"</span><span class="fu">:</span> <span class="st">"ms-python.black-formatter"</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>python.defaultInterpreterPath</code> points the editor at the Python inside <code>.venv/</code>, and <code>python.terminal.activateEnvironment</code> activates the virtual environment whenever we open a new terminal. The remaining settings format Python files with <a href="https://black.readthedocs.io/">Black</a> every time we save, and draw a ruler at 88 characters (Black’s default line length). The Black formatter setting requires the <a href="https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter">Black Formatter extension</a>.</p>
 <div class="callout callout-style-default callout-note no-icon callout-titled" title="Sharing editor settings">
 <div class="callout-header d-flex align-content-center">
