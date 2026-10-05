@@ -20,10 +20,10 @@ co_box(
 
 A standalone `app.py` file is a fine place to start. But as an app grows, packaging it offers real benefits:
 
-- **Reusability** — share utility functions, modules, and data across projects  
-- **Testability** — `pytest` can test code that lives in an importable package
-- **Reproducibility** — `pyproject.toml` files make dependencies explicit and installable   
-- **Deployability** — properly packaged apps are easier to containerize and deploy  
+- **Reusability**: share utility functions, modules, and data across projects  
+- **Testability**: `pytest` can test code that lives in an importable package
+- **Reproducibility**: `pyproject.toml` files make dependencies explicit and installable   
+- **Deployability**: properly packaged apps are easier to containerize and deploy  
 
 
 ## Primary resources

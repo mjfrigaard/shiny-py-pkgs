@@ -14,5 +14,444 @@ co_box(
 )
 ```
 
-This chapter walks through the complete workflow — from a bare `app.py` to a working app inside an installable package. I'll highlight each area of the development workflow used throughout the rest of the book so you can see how all the pieces fit together before diving into each topic in detail.
+This chapter walks through the complete workflow, from a bare `app.py` to a working app inside an installable package. It's modeled on the [Whole Game](https://r-pkgs.org/whole-game.html) chapter of [R Packages, 2ed](https://r-pkgs.org).
 
+I'll touch on each area of the development workflow used throughout the rest of the book, so you can see how the pieces fit together before we cover each topic in detail.
+
+## The starting app
+
+We'll start with a single `app.py` file stored in the [`pyap`](https://github.com/mjfrigaard/pyap) repository. The app simulates the Old Faithful geyser waiting times and displays them in a histogram, with a slider that controls the number of bins:
+
+```python
+# This is a Shiny for Python application.
+# Run it with: shiny run app.py
+
+from shiny import App, ui, render
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Old Faithful geyser waiting time data (bimodal distribution)
+rng = np.random.default_rng(42)
+waiting = np.concatenate([
+    rng.normal(54, 5, 100),   # short-wait eruption cluster
+    rng.normal(80, 6, 172),   # long-wait eruption cluster
+])
+
+app_ui = ui.page_sidebar(
+    ui.sidebar(
+        ui.input_slider(
+            "bins",
+            "Number of bins:",
+            min=1,
+            max=50,
+            value=30,
+        ),
+    ),
+    ui.output_plot("distPlot"),
+    title="Old Faithful Geyser Data",
+)
+
+
+def server(input, output, session):
+    @render.plot
+    def distPlot():
+        fig, ax = plt.subplots()
+        ax.hist(waiting, bins=input.bins(), color="darkgray", edgecolor="white")
+        ax.set_xlabel("Waiting time to next eruption (in mins)")
+        ax.set_title("Histogram of waiting times")
+        return fig
+
+
+app = App(app_ui, server)
+```
+
+The app uses the Shiny Core API: `app_ui` defines the layout, `server()` defines the outputs, and `App()` combines them into the `app` object. The [Shiny for Python](shiny.qmd) chapter covers each of these components in detail.
+
+## Create the project
+
+The first step is turning the folder that holds `app.py` into a uv project. From inside that folder, `uv init --package` creates the package scaffolding, and `--python 3.12` pins the Python version we're using in this book:[^wg-create-package]
+
+[^wg-create-package]: `uv init --package` plays the same role as `usethis::create_package()`.
+
+```bash
+cd pyap
+uv init --package --python 3.12
+```
+
+```default
+Initialized project `pyap`
+```
+
+uv takes the project name from the folder name, so the package is named `pyap`. The folder now looks like this:
+
+```default
+pyap/
+├── .python-version
+├── README.md
+├── app.py
+├── pyproject.toml
+└── src/
+    └── pyap/
+        └── __init__.py
+```
+
+`.python-version` records the Python version uv will use for the project, and `src/pyap/` is the importable package. uv won't overwrite an existing `README.md`. If the folder isn't already a Git repository, `uv init` also runs `git init` and writes a `.gitignore` (we'll come back to Git at the end of the chapter).
+
+## Package metadata
+
+Every Python package needs a `pyproject.toml` file. This is where the package name, version, description, authors, dependencies, and build settings live.[^wg-description] The file `uv init --package` created is shown below:
+
+[^wg-description]: `pyproject.toml` is the Python equivalent of the `DESCRIPTION` file in an R package.
+
+```toml
+[project]
+name = "pyap"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Jane Doe", email = "jane.doe@email.io" }
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+pyap = "pyap:main"
+
+[build-system]
+requires = ["uv_build>=0.12.23,<0.13.0"]
+build-backend = "uv_build"
+```
+
+uv fills in `authors` from your Git configuration, and the version range under `[build-system]` depends on which version of uv you have installed. The `[project.scripts]` table registers a terminal command (we'll replace it when we add a launch function below).
+
+The only field we'll edit right now is `description`:
+
+```toml
+description = "A Shiny for Python app-package"
+```
+
+The [Python Packages](packages.qmd) chapter covers the rest of the fields in `pyproject.toml`.
+
+## Move the app into the package
+
+Code in a package lives inside the package directory, so we'll move `app.py` into `src/pyap/`:
+
+```bash
+mv app.py src/pyap/app.py
+```
+
+```default
+pyap/
+├── .python-version
+├── README.md
+├── pyproject.toml
+└── src/
+    └── pyap/
+        ├── __init__.py
+        └── app.py
+```
+
+Keeping the package under `src/` means Python can only import `pyap` after it's installed. This sounds like a restriction, but it guarantees our tests run against the installed package (not whatever files happen to be in the working directory). The [src/ Layout](src_layout.qmd) chapter explains why this matters.
+
+## Add dependencies
+
+`app.py` imports `shiny`, `matplotlib`, and `numpy`, so all three need to be listed as package dependencies. `uv add` records them in `pyproject.toml` and installs them in one step:
+
+```bash
+uv add matplotlib numpy shiny
+```
+
+The `dependencies` field in `pyproject.toml` now lists each package with a lower version bound (your versions will match whatever was current when you ran the command):
+
+```toml
+dependencies = [
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.3",
+    "shiny>=1.8.0",
+]
+```
+
+The first `uv add` also creates two new items in the project folder. `.venv/` is the project's virtual environment, and `uv.lock` records the exact version of every package installed in it. The [Dependencies](dependencies.qmd) chapter covers how to declare, pin, and update dependencies.
+
+## Install in editable mode
+
+uv installs the project itself into `.venv/` whenever it syncs the environment, and it uses an editable install by default. An editable install points Python at the files in `src/pyap/` instead of copying them, so any changes we make to the package are available the next time it's imported (without reinstalling).[^wg-load-all]
+
+[^wg-load-all]: An editable install gives us the same quick feedback loop as `devtools::load_all()`.
+
+`uv add` already synced the environment, but we can run `uv sync` any time to bring `.venv/` in line with `pyproject.toml` and `uv.lock`:
+
+```bash
+uv sync
+```
+
+We can verify `pyap` is installed (and points to our source files) by importing it with `uv run`, which runs a command inside the project's environment without activating it first:
+
+```bash
+uv run python -c "import pyap; print(pyap.__file__)"
+```
+
+```default
+/path/to/pyap/src/pyap/__init__.py
+```
+
+::: {.callout-tip title="Positron"}
+
+Positron detects the `.venv/` folder in the project. Select it from the interpreter picker so the console, the editor, and the test runner all use the same environment as `uv run`.
+
+:::
+
+The [Development Workflow](development.qmd) chapter covers the edit, sync, and run loop in more detail.
+
+## Run the app
+
+With the dependencies installed, we can launch the app from its new location. The `--reload` flag restarts the app whenever we save a change to the code, and `--launch-browser` opens it in a browser:
+
+```bash
+uv run shiny run --reload --launch-browser src/pyap/app.py
+```
+
+The app looks exactly the same as it did before we moved it. Press <kbd>Ctrl</kbd> + <kbd>C</kbd> in the terminal to stop it.
+
+## Add a function
+
+Right now the data are created at the top of `app.py`, which makes them hard to reuse or test. We'll move that code into a function in a new module, `src/pyap/data.py`:
+
+```python
+"""Data for the pyap app."""
+
+import numpy as np
+
+
+def geyser_waiting(seed: int = 42) -> np.ndarray:
+    """Simulate Old Faithful geyser waiting times.
+
+    Draws from two normal distributions (short and long waits) to
+    mimic the bimodal shape of the original geyser data.
+
+    Args:
+        seed: Seed for the random number generator.
+
+    Returns:
+        A 1D array of 272 waiting times (in minutes).
+    """
+    rng = np.random.default_rng(seed)
+    return np.concatenate([
+        rng.normal(54, 5, 100),
+        rng.normal(80, 6, 172),
+    ])
+```
+
+In `src/pyap/app.py`, we'll replace the `numpy` import and the data code with a call to the new function:
+
+```python
+from shiny import App, ui, render
+import matplotlib.pyplot as plt
+
+from pyap.data import geyser_waiting
+
+waiting = geyser_waiting()
+```
+
+The import uses the full package path (`pyap.data`), which works because `pyap` is installed in editable mode. If the app is still running with `--reload`, saving both files should restart it with the same histogram.
+
+## Document
+
+The text between the triple quotes in `geyser_waiting()` is a docstring. Docstrings are the primary way to document Python code, and they're stored on the object itself, so there's no separate step to generate help files.[^wg-roxygen2] We can read it in the Python console:
+
+[^wg-roxygen2]: Docstrings fill the same role as `roxygen2` comments, but there's no `devtools::document()` step.
+
+```python
+>>> from pyap.data import geyser_waiting
+>>> help(geyser_waiting)
+```
+
+The docstring above follows the [Google style](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings) (`Args:` and `Returns:` sections). The [Documentation](document.qmd) chapter covers docstring conventions and how to build a documentation site from them.
+
+## Test
+
+[`pytest`](https://docs.pytest.org/) is the most common Python testing framework. We only need it while developing the package (not when running the app), so we'll add it to the `dev` dependency group with `--dev`:
+
+```bash
+uv add --dev pytest
+```
+
+```toml
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+```
+
+Tests go in a `tests/` folder at the root of the project, in files whose names start with `test_`. The tests below check that `geyser_waiting()` returns the expected number of values and that the same seed always produces the same data. We'll save them in `tests/test_data.py`:
+
+```python
+import numpy as np
+
+from pyap.data import geyser_waiting
+
+
+def test_geyser_waiting_length():
+    assert len(geyser_waiting()) == 272
+
+
+def test_geyser_waiting_reproducible():
+    np.testing.assert_array_equal(geyser_waiting(seed=1), geyser_waiting(seed=1))
+```
+
+`uv run pytest` finds and runs every test in `tests/`:
+
+```bash
+uv run pytest
+```
+
+The output (trimmed) tells us both tests passed:
+
+```default
+collected 2 items
+
+tests/test_data.py ..                                                    [100%]
+
+============================== 2 passed in 0.15s ===============================
+```
+
+The [Test Suite](test_suite.qmd) chapter covers configuring `pytest` and running tests in Positron, and the rest of the Testing section covers fixtures, module tests, and end-to-end tests.
+
+## Add a launch function
+
+Users of our package shouldn't need to know the path to `app.py` to run the app. We'll add `run_app` to the `shiny` import at the top of `src/pyap/app.py`, then add a `run()` function at the bottom of the file that calls it:
+
+```python
+from shiny import App, ui, render, run_app
+
+# ... app_ui, server(), and app are unchanged ...
+
+
+def run() -> None:
+    """Launch the pyap Shiny app in a browser."""
+    run_app("pyap.app:app", launch_browser=True)
+```
+
+The `"pyap.app:app"` string tells Shiny to import the `app` object from the `pyap.app` module.
+
+Next we'll register `run()` as a terminal command by replacing the `[project.scripts]` entry `uv init` created:
+
+```toml
+[project.scripts]
+pyap = "pyap.app:run"
+```
+
+The original entry pointed to a placeholder `main()` function in `src/pyap/__init__.py`. Nothing refers to it anymore, so we can replace the contents of `__init__.py` with a one-line docstring:
+
+```python
+"""A Shiny for Python app-package."""
+```
+
+After syncing the environment, the `pyap` command launches the app:
+
+```bash
+uv sync
+uv run pyap
+```
+
+We can also launch the app from the Python console with `from pyap.app import run` and `run()`. The [Launch](launch.qmd) chapter covers entry points in more detail (including running the package with `python -m pyap`, which requires a `src/pyap/__main__.py` file containing `from pyap.app import run; run()`).
+
+## Build
+
+`uv build` packages the project into a source distribution and a wheel (a pre-built, installable archive) in a new `dist/` folder:
+
+```bash
+uv build
+```
+
+```default
+dist/
+├── pyap-0.1.0-py3-none-any.whl
+└── pyap-0.1.0.tar.gz
+```
+
+The wheel is the installable package. Anyone with Python 3.12 or later can install it (along with `shiny`, `matplotlib`, and `numpy`) and launch the app with the `pyap` command:
+
+```bash
+pip install dist/pyap-0.1.0-py3-none-any.whl
+pyap
+```
+
+The [PyPI](pypi.qmd) chapter covers publishing the package so it can be installed by name.
+
+## README
+
+The `README.md` is the first thing users and contributors see in the repository, so it should explain what the package does and how to install and run it. A minimal version for `pyap` is below:
+
+````markdown
+# pyap
+
+A Shiny for Python app-package.
+
+## Installation
+
+```bash
+pip install git+https://github.com/<username>/pyap.git
+```
+
+## Usage
+
+Launch the app from the terminal:
+
+```bash
+pyap
+```
+````
+
+## Git and GitHub
+
+The last step is committing the project to Git. Because `pyap` is already a Git repository, uv doesn't generate a `.gitignore`, so make sure yours lists the virtual environment (`.venv/`), `dist/`, and Python cache files (`__pycache__/`) before committing everything else:
+
+```bash
+git add .
+git commit -m "Create pyap app-package"
+```
+
+`uv.lock` should be committed with the rest of the project. It guarantees everyone who runs `uv sync` gets the exact same package versions.
+
+If you have the [GitHub CLI](https://cli.github.com/) installed, `gh repo create` creates the repository on GitHub and pushes the local commits in one step:
+
+```bash
+gh repo create pyap --public --source=. --push
+```
+
+The [GitHub Setup](github.qmd) appendix covers creating the repository, configuring `.gitignore`, and protecting the `main` branch.
+
+## Recap
+
+In this chapter we turned a single `app.py` file into an installable Python package. The final project is shown below:
+
+```default
+pyap/
+├── .gitignore
+├── .python-version
+├── .venv/
+├── README.md
+├── dist/
+├── pyproject.toml
+├── src/
+│   └── pyap/
+│       ├── __init__.py
+│       ├── app.py
+│       └── data.py
+├── tests/
+│   └── test_data.py
+└── uv.lock
+```
+
+The workflow followed these steps:
+
+1. Create the project with `uv init --package` and edit the metadata in `pyproject.toml`.
+2. Move `app.py` into the `src/pyap/` package.
+3. Add dependencies with `uv add` (which also installs the package in editable mode).
+4. Move code into documented functions, then test them with `pytest`.
+5. Add a launch function and register it as a command under `[project.scripts]`.
+6. Build the package with `uv build`, write a `README.md`, and commit the project to Git.
+
+The rest of the book covers each of these steps in detail, starting with the [Shiny for Python](shiny.qmd) chapter.
