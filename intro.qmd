@@ -14,7 +14,7 @@ co_box(
 )
 ```
 
- This section will introduce the two main resources the book is built around, how to set up Python development tools on your local machine, and common integrated development environments (IDEs) for Shiny for Python applications. 
+ This section will introduce the main resources the book is built around, how to set up Python development tools on your local machine, and common integrated development environments (IDEs) for Shiny for Python applications. 
 
 ## Why put an app in a package?
 
@@ -28,7 +28,7 @@ A standalone `app.py` file is a fine place to start. But as an app grows, packag
 
 ## Primary resources
 
-This section will introduce the two main resources the book is built around: [Shiny for Python](https://shiny.posit.co/py/) and [Python packages](https://py-pkgs.org/welcome).
+This section will introduce the main resources the book is built around: [Shiny for Python](https://shiny.posit.co/py/), [Python packages](https://py-pkgs.org/welcome), and the [Python Packaging User Guide](https://packaging.python.org/en/latest/).
 
 ### Shiny for Python 
 
@@ -39,6 +39,10 @@ You'll notice Shiny for Python has two syntax modes, express and core.
 ### Python Packages 
 
 The [Python Packages](https://py-pkgs.org/welcome) book is an excellent resource for understanding how to package a Python project. It's also written in the same basic style and structure of [R Packages, 2ed](https://r-pkgs.org/index.html), so if you're coming from the R development world (as I am), these similarities should be comforting.
+
+### Python Packaging User Guide
+
+The [Python Packaging User Guide](https://packaging.python.org/en/latest/) is the official reference for packaging Python projects, maintained by the Python Packaging Authority (PyPA). When a tool or file format in this book needs a more authoritative explanation (like `pyproject.toml`, build backends, or publishing to PyPI), this is where I'll point you.
 
 ## System setup
 

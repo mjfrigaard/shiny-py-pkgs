@@ -13,11 +13,11 @@ The diagram below shows the three branches we'll build in this chapter, starting
 %%| fig-align: center
 %%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', "fontSize":"14px"}}}%%
 
-flowchart LR
-    B0["<code>02.3_proj-app</code><br/>loose files +<br/><code>requirements.txt</code>"]
-    B1["<code>03.1_pyproject</code><br/><code>pyproject.toml</code><br/>replaces <code>requirements.txt</code>"]
-    B2["<code>03.2_uv</code><br/>uv manages<br/><code>.venv/</code> and <code>uv.lock</code>"]
-    B3["<code>03.3_create-package</code><br/><code>[build-system]</code> +<br/><code>src/pyap/</code>"]
+flowchart TB
+    B0["<strong>02.3_proj-app</strong><br/>loose files +<br/><code>requirements.txt</code>"]
+    B1["<strong>03.1_pyproject</strong><br/><code>pyproject.toml</code><br/>replaces <code>requirements.txt</code>"]
+    B2["<strong>03.2_uv</strong><br/>uv manages<br/><code>.venv/</code> and <code>uv.lock</code>"]
+    B3["<strong>03.3_create-package</strong><br/><code>[build-system]</code> +<br/><code>src/pyap/</code>"]
 
     B0 --> B1 --> B2 --> B3
 
@@ -40,9 +40,9 @@ In R, the word "package" covers everything at once. `sap` is the folder we devel
 
 The [Python Packaging User Guide glossary](https://packaging.python.org/en/latest/glossary/) defines the three terms below:
 
-* Module: a single `.py` file. `utils.py` is a module, and `from utils import scatter_plot` imports a function from it.
-* Import package: a folder of modules with an `__init__.py` file. In the `03.3_create-package` branch, `src/pyap/` becomes an import package, and the import changes to `from pyap.utils import scatter_plot`.
-* Distribution package: the installable archive built from a project (and described by its `pyproject.toml`). When we run `pip install shiny`, we're installing a distribution.
+* **Module**: a single `.py` file. `utils.py` is a module, and `from utils import scatter_plot` imports a function from it.
+* **Import package**: a folder of modules with an `__init__.py` file. In the `03.3_create-package` branch, `src/pyap/` becomes an import package, and the import changes to `from pyap.utils import scatter_plot`.
+* **Distribution package**: the installable archive built from a project (and described by its `pyproject.toml`). When we run `pip install shiny`, we're installing a distribution.
 
 The names of an import package and a distribution package usually match, but they don't have to. For example, we install [scikit-learn](https://scikit-learn.org/) with `pip install scikit-learn`, but we import it with `import sklearn`. Shiny keeps them the same (`pip install shiny` and `import shiny`), and so will `pyap`.
 
@@ -50,7 +50,7 @@ Distributions come in two formats. A source distribution (or sdist) is a `.tar.g
 
 [^pkgs-dist-formats]: An sdist is roughly the Python version of a bundled R package (the `.tar.gz` file from `devtools::build()`), and a wheel is roughly a binary package.
 
-By these definitions, the `02.3_proj-app` branch holds two modules (`app.py` and `utils.py`) and no packages of either kind. By the end of this chapter, it will hold one import package (`pyap`) that uv can build into a distribution (also `pyap`).
+By these definitions, the `02.3_proj-app` branch holds two *modules* (`app.py` and `utils.py`) and *no packages* of either kind. By the end of this chapter, it will hold one import package (`pyap`) that `uv` can build into a distribution (also `pyap`).
 
 ### Anatomy of an app-package
 
@@ -63,25 +63,25 @@ The diagram below maps the files and folders in an R app-package to their Python
 
 flowchart LR
     subgraph RPkg["R app-package"]
-        RDesc["<code>DESCRIPTION</code>"]
-        RNs["<code>NAMESPACE</code>"]
-        RDir["<code>R/</code>"]
-        RMan["<code>man/</code>"]
-        RTests["<code>tests/testthat/</code>"]
-        RInst["<code>inst/</code>"]
-        RLock["<code>renv.lock</code>"]
-        RIgnore["<code>.Rbuildignore</code>"]
+        RDesc("<code>DESCRIPTION</code>")
+        RNs("<code>NAMESPACE</code>")
+        RDir("<code>R/</code>")
+        RMan("<code>man/</code>")
+        RTests("<code>tests/testthat/</code>")
+        RInst("<code>inst/</code>")
+        RLock("<code>renv.lock</code>")
+        RIgnore("<code>.Rbuildignore</code>")
     end
 
     subgraph PyPkg["Python app-package"]
-        PyProj["<code>pyproject.toml</code>"]
-        PyInit["<code>__init__.py</code>"]
-        PySrc["<code>src/pyap/</code>"]
-        PyDoc["docstrings"]
-        PyTests["<code>tests/</code>"]
-        PyData["data files in<br/><code>src/pyap/</code>"]
-        PyLock["<code>uv.lock</code>"]
-        PyBuild["build backend<br/>settings"]
+        PyProj("<code>pyproject.toml</code>")
+        PyInit("<code>__init__.py</code>")
+        PySrc("<code>src/pyap/</code>")
+        PyDoc("docstrings")
+        PyTests("<code>tests/</code>")
+        PyData("data files in<br/><code>src/pyap/</code>")
+        PyLock("<code>uv.lock</code>")
+        PyBuild("build backend<br/>settings")
     end
 
     RDesc --> PyProj
@@ -100,22 +100,25 @@ flowchart LR
     class PyProj,PyInit,PySrc,PyDoc,PyTests,PyData,PyLock,PyBuild pyStyle
 ```
 
-The rough mappings deserve a sentence each:
+The 'rough' mappings above deserve at least a sentence of explanation (to the best of my knowledge):
 
-* `NAMESPACE` and `__init__.py`: Python doesn't have a file that lists exports. Every name in a module is importable unless it starts with an underscore, and `__init__.py` controls what's available directly from `pyap` (along with the optional `__all__` list). Imports from other packages are declared in `pyproject.toml`, not `__init__.py`.
-* `man/` and docstrings: docstrings live on the objects themselves, so there's no generated help folder. The [Documentation](document.qmd) chapter covers them.
-* `inst/` and package data: non-Python files (like `movies.csv`) can live inside `src/pyap/` and be installed with the code. The [Data](data.qmd) chapter covers how to read them.
-* `.Rbuildignore` and build settings: the build backend decides which files go into a distribution, and most backends accept include and exclude settings in a `[tool.*]` table.
+* **`NAMESPACE` and `__init__.py`**: Python doesn't have a file that lists exports. Every name in a module is importable unless it starts with an underscore, and `__init__.py` controls what's available directly from `pyap` (along with the optional `__all__` list). Imports from other packages are declared in `pyproject.toml`, not `__init__.py`.
+
+* **`man/` and docstrings**: docstrings live *on the objects themselves*, so there's no generated help folder. The [Documentation](document.qmd) chapter covers them.
+
+* **`inst/` and package data**: non-Python files (like `movies.csv`) can live inside `src/pyap/` and be installed with the code. The [Data](data.qmd) chapter covers how to read them.
+
+* **`.Rbuildignore` and build settings**: the build backend decides which files go into a distribution, and most backends accept include and exclude settings in a `[tool.*]` table.
 
 This chapter covers the top row of the diagram (`pyproject.toml`, `__init__.py`, and `src/pyap/`) and the lockfile. The remaining rows have their own chapters.
 
-## What is pyproject.toml?
+## What is `pyproject.toml`?
 
-`pyproject.toml` is the file that tells Python tools what a project is, what it depends on, and how to build it.[^pkgs-description] Every modern Python packaging tool reads it, including `pip`, uv, and the build backends we'll cover below.
+`pyproject.toml` is the file that tells Python tools what a project is, what it depends on, and how to build it.[^pkgs-description] Every modern Python packaging tool reads it, including `pip`, `uv`, and the build backends we'll cover below.
 
 [^pkgs-description]: `pyproject.toml` is the closest Python equivalent of the `DESCRIPTION` file. It also absorbs some of the jobs we'd hand to `.Rproj` build settings and package configuration in R.
 
-### Why it replaced setup.py
+### Why it replaced `setup.py`
 
 For most of Python's history, package metadata lived in a `setup.py` file. `setup.py` is a Python script that calls `setuptools.setup()` with the package name, version, and dependencies. Because it's executable code, tools had to run it to learn anything about the package, and they couldn't run it without first installing `setuptools`. A static `setup.cfg` file was added later, but it only worked with `setuptools`.
 
@@ -187,7 +190,7 @@ dev = [
 ]
 ```
 
-Dependency groups aren't included in the package metadata, so installing `pyap` never installs `pytest`.[^pkgs-suggests] uv installs the `dev` group by default when it syncs the project. The [Dependencies](dependencies.qmd) chapter covers groups in more detail.
+Dependency groups aren't included in the package metadata, so installing `pyap` never installs `pytest`.[^pkgs-suggests] `uv` installs the `dev` group by default when it syncs the project. The [Dependencies](dependencies.qmd) chapter covers groups in more detail.
 
 [^pkgs-suggests]: `[dependency-groups]` is roughly the `Suggests` field, which is where R packages list `testthat`. The difference is that `Suggests` is published with the package and dependency groups are not.
 
@@ -299,9 +302,9 @@ Positron watches for `pyproject.toml` and `requirements.txt` files. If it finds 
 
 :::
 
-## Managing the project with uv
+## Managing the project with `uv`
 
-In the `03.1_pyproject` branch, uv is only acting as a faster `pip`: we create the environment, activate it, and tell it what to install. The `03.2_uv` branch hands the whole job to uv's project commands. uv is also the first option listed on the [Shiny for Python install page](https://shiny.posit.co/py/get-started/install.html). Check out the `03.2_uv` branch to follow along:
+In the `03.1_pyproject` branch, `uv` is only acting as a faster `pip`: we create the environment, activate it, and tell it what to install. The `03.2_uv` branch hands the whole job to uv's project commands. `uv` is also the first option listed on the [Shiny for Python install page](https://shiny.posit.co/py/get-started/install.html). Check out the `03.2_uv` branch to follow along:
 
 ```bash
 git checkout 03.2_uv
@@ -325,10 +328,16 @@ pyap/
 
 ### Pinning Python
 
-`requires-python` in `pyproject.toml` sets the range of Python versions the project supports, but it doesn't choose one. `uv python pin` records the exact version uv should use for this project in a `.python-version` file:
+`requires-python` in `pyproject.toml` sets the range of Python versions the project supports, but it doesn't choose one. `uv python pin` records the exact version `uv` should use for this project in a `.python-version` file:
 
 ```bash
 uv python pin 3.12
+```
+
+Returns: 
+
+```default
+Pinned `.python-version` to `3.12`
 ```
 
 The file holds a single line:
@@ -337,7 +346,7 @@ The file holds a single line:
 3.12
 ```
 
-If Python 3.12 isn't installed, uv downloads it the first time it needs it (we covered `uv python install` in the [Introduction](intro.qmd)).
+If Python 3.12 isn't installed, `uv` downloads it the first time it needs it (we covered `uv python install` in the [Introduction](intro.qmd)).
 
 ### Syncing the environment
 
@@ -347,7 +356,12 @@ If Python 3.12 isn't installed, uv downloads it the first time it needs it (we c
 uv sync
 ```
 
-This one command does the work of the three we ran in the previous branch. uv creates `.venv/` if it doesn't exist (or reuses it if it does), writes `uv.lock`, and installs the locked versions into the environment. We don't need to activate the environment first, and we don't need to tell uv which file to read.
+```default
+Resolved 45 packages in 127ms
+Checked 43 packages in 0.48ms
+```
+
+This one command does the work of the three we ran in the previous branch. `uv` creates `.venv/` if it doesn't exist (or reuses it if it does), writes `uv.lock`, and installs the locked versions into the environment. We don't need to activate the environment first, and we don't need to tell `uv` which file to read.
 
 ::: {.callout-warning title="uv sync removes packages"}
 
@@ -363,7 +377,7 @@ uv run shiny run --reload --launch-browser app.py
 
 `uv run` checks that `.venv/` is in sync with `uv.lock` before running the command, so most of the time we don't need to call `uv sync` ourselves.
 
-### uv.lock
+### `uv.lock`
 
 `uv.lock` records the exact version of every package in the environment, including the dependencies of our dependencies. `pyproject.toml` says `pandas>=2.1.0`, and `uv.lock` says which `pandas` was installed. uv writes the lockfile for every platform at once, so a lockfile created on macOS installs the same versions on Windows or Linux.
 
@@ -374,8 +388,9 @@ We don't edit `uv.lock` by hand, but it's worth knowing what's in it. The diagra
 %%| fig-align: center
 %%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', "fontSize":"14px"}}}%%
 
-flowchart LR
+flowchart TB
     subgraph RDeps["R"]
+    direction TB
         RDesc["<code>DESCRIPTION</code><br/><code>Imports</code>"]
         RLib[("project library<br/><code>renv/library/</code>")]
         RLock["<code>renv.lock</code>"]
@@ -384,6 +399,7 @@ flowchart LR
     end
 
     subgraph PyDeps["Python"]
+    direction TB
         PyProj["<code>pyproject.toml</code><br/><code>dependencies</code>"]
         PyLock["<code>uv.lock</code>"]
         PyVenv[("project environment<br/><code>.venv/</code>")]
@@ -398,7 +414,7 @@ flowchart LR
     class PyProj,PyLock,PyVenv pyStyle
 ```
 
-The order of the last two steps is the important difference. `renv::snapshot()` records whatever is already installed in the project library, so the lockfile follows the environment. uv resolves `uv.lock` from `pyproject.toml` first and then installs from it, so the environment follows the lockfile.[^pkgs-renv-restore] `uv sync` runs the `uv lock` step for us whenever `pyproject.toml` changes.
+The order of the last two steps is the important difference. `renv::snapshot()` records whatever is already installed in the project library, so the lockfile follows the environment. `uv` resolves `uv.lock` from `pyproject.toml` first and then installs from it, so the environment follows the lockfile.[^pkgs-renv-restore] `uv sync` runs the `uv lock` step for us whenever `pyproject.toml` changes.
 
 [^pkgs-renv-restore]: `uv sync` on a fresh clone is the equivalent of `renv::restore()`.
 
@@ -410,9 +426,9 @@ The `.gitignore` in earlier branches listed `.python-version` and `uv.lock`. The
 
 ### Non-package projects
 
-The `pyproject.toml` in this branch still doesn't have a `[build-system]` table, and uv notices. uv treats a project without a build system as a non-package project: it installs the dependencies into `.venv/`, but it doesn't install the project itself.[^pkgs-tool-uv-package] The lockfile entry for `pyap` reflects this with a `virtual` source (trimmed below):
+The `pyproject.toml` in this branch still doesn't have a `[build-system]` table, and `uv` notices. `uv` treats a project without a build system as a non-package project: it installs the dependencies into `.venv/`, but it doesn't install the project itself.[^pkgs-tool-uv-package] The lockfile entry for `pyap` reflects this with a `virtual` source (trimmed below):
 
-[^pkgs-tool-uv-package]: uv lets us override this choice with `package = true` or `package = false` in a `[tool.uv]` table, but the `[build-system]` table is the standard signal.
+[^pkgs-tool-uv-package]: `uv` lets us override this choice with `package = true` or `package = false` in a `[tool.uv]` table, but the `[build-system]` table is the standard signal.
 
 ```toml
 [[package]]
@@ -441,7 +457,7 @@ This error is expected. A non-package project is a perfectly good way to manage 
 
 ## Build backends
 
-A build backend is the tool that turns a project's source files into a distribution. When an installer like `pip` or uv needs to build a package, it reads `[build-system]`, installs the packages listed in `requires` into a temporary environment, and asks the `build-backend` to produce a wheel or an sdist.[^pkgs-r-cmd-build] Installers and backends only talk through the interface defined in PEP 517, so any installer works with any backend.
+A build backend is the tool that turns a project's source files into a distribution. When an installer like `pip` or `uv` needs to build a package, it reads `[build-system]`, installs the packages listed in `requires` into a temporary environment, and asks the `build-backend` to produce a wheel or an sdist.[^pkgs-r-cmd-build] Installers and backends only talk through the interface defined in PEP 517, so any installer works with any backend.
 
 [^pkgs-r-cmd-build]: R has one build tool built into the language (`R CMD build` and `R CMD INSTALL`, which `devtools` calls for us). Python lets each project choose its own.
 
@@ -456,7 +472,7 @@ The `[build-system]` table for four common backends is below:
 
 For a pure Python package like `pyap`, these backends produce nearly the same wheel. They differ in their defaults (where they look for the package, which files they include) and in how much they can be configured. `setuptools` is the oldest and the one you'll find in most older projects. Hatchling is the first option in the [Python Packaging User Guide tutorial](https://packaging.python.org/en/latest/tutorials/packaging-projects/), and Flit is intentionally minimal.
 
-This book uses `uv_build`, the default backend for `uv init --package` (it's the backend in the [Whole Game](whole_game.qmd) `pyproject.toml`). It's built by the same team as uv, it expects the `src/` layout we'll use below, and it needs no configuration for a package like `pyap`. The version range in `requires` should match the version of uv you have installed (check it with `uv --version`), so yours may differ from the one in this chapter.
+This book uses `uv_build`, the default backend for `uv init --package` (it's the backend in the [Whole Game](whole_game.qmd) `pyproject.toml`). It's built by the same team as `uv`, it expects the `src/` layout we'll use below, and it needs no configuration for a package like `pyap`. The version range in `requires` should match the version of uv you have installed (check it with `uv --version`), so yours may differ from the one in this chapter.
 
 ## Creating the package
 
@@ -513,7 +529,7 @@ requires = ["uv_build>=0.12.23,<0.13.0"]
 build-backend = "uv_build"
 ```
 
-With this table in place, uv stops treating `pyap` as a non-package project. It also tells `uv_build` what to build: by default, `uv_build` looks for an import package with the same name as the project in `src/` (so `src/pyap/__init__.py`).
+With this table in place, `uv` stops treating `pyap` as a non-package project. It also tells `uv_build` what to build: by default, `uv_build` looks for an import package with the same name as the project in `src/` (so `src/pyap/__init__.py`).
 
 ### Moving the code into src/pyap/
 
@@ -566,7 +582,15 @@ With a build system and an import package in place, `uv sync` now installs `pyap
 uv sync
 ```
 
-uv installs the project in editable mode by default. An editable install points Python at the files in `src/pyap/` instead of copying them into `.venv/`, so changes to the code are picked up the next time `pyap` is imported (without reinstalling).[^pkgs-load-all] We only need to sync again when `pyproject.toml` changes. The `pyap` entry in `uv.lock` changes from a `virtual` source to an `editable` one:
+```default
+Resolved 45 packages in 411ms
+      Built pyap @ file:///home/path/to/projects/apps/python/pyap                                 
+Prepared 1 package in 10ms
+Installed 1 package in 0.96ms
+ + pyap==0.1.0 (from file:///home/path/to/projects/apps/python/pyap)
+```
+
+`uv` installs the project in editable mode by default. An editable install points Python at the files in `src/pyap/` instead of copying them into `.venv/`, so changes to the code are picked up the next time `pyap` is imported (without reinstalling).[^pkgs-load-all] We only need to sync again when `pyproject.toml` changes. The `pyap` entry in `uv.lock` changes from a `virtual` source to an `editable` one:
 
 [^pkgs-load-all]: An editable install gives us the same quick feedback loop as `devtools::load_all()`.
 
@@ -605,7 +629,7 @@ The app looks and behaves exactly as it did in the `02.3_proj-app` branch. We ca
 
 ## The development loop
 
-Now that `pyap` is a package, the day to day loop of editing, documenting, testing, and building looks different from the R workflow. The diagram below maps the `devtools` functions from the R book to the uv and `pytest` commands we'll use in this one:
+Now that `pyap` is a package, the day to day loop of editing, documenting, testing, and building looks different from the R workflow. The diagram below maps the `devtools` functions from the R book to the `uv` and `pytest` commands we'll use in this one:
 
 ```{mermaid}
 %%| fig-cap: 'devtools functions and their uv and pytest counterparts'
@@ -652,9 +676,11 @@ The [Development Workflow](development.qmd) chapter covers this loop in practice
 
 In this chapter we turned the loose files from the [Shiny for Python](shiny.qmd) chapter into an installable package, one branch at a time:
 
-1. `03.1_pyproject`: a hand written `pyproject.toml` with a `[project]` table replaced `requirements.txt`, and `uv pip install -r pyproject.toml` installed the dependencies.
-2. `03.2_uv`: `uv python pin` and `uv sync` handed the environment to uv, which created `.python-version`, `.venv/`, and `uv.lock`. Without a `[build-system]` table, uv treated `pyap` as a non-package project and installed only its dependencies.
-3. `03.3_create-package`: a `[build-system]` table with `uv_build`, an import package in `src/pyap/`, and package imports (`from pyap.utils import scatter_plot`) made `pyap` installable, and `uv sync` installed it in editable mode.
+1. **03.1_pyproject**: a hand written `pyproject.toml` with a `[project]` table replaced `requirements.txt`, and `uv pip install -r pyproject.toml` installed the dependencies.
+
+2. **03.2_uv**: `uv python pin` and `uv sync` handed the environment to `uv`, which created `.python-version`, `.venv/`, and `uv.lock`. Without a `[build-system]` table, `uv` treated `pyap` as a non-package project and installed only its dependencies.
+
+3. **03.3_create-package**: a `[build-system]` table with `uv_build`, an import package in `src/pyap/`, and package imports (`from pyap.utils import scatter_plot`) made `pyap` installable, and `uv sync` installed it in editable mode.
 
 Along the way, we separated modules, import packages, and distributions (which R folds into a single word), and saw why `pyproject.toml` replaced `setup.py`, `setup.cfg`, and `requirements.txt`. The project still reads `movies.csv` from the working directory, which we'll fix in the [Data](data.qmd) chapter. In the [Development Workflow](development.qmd) chapter we'll put the package to work with the edit, sync, and run loop.
 

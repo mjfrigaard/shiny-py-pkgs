@@ -359,7 +359,7 @@ We can also launch the app from the Python console with `from pyap.app import ru
 
 ## Build
 
-`uv build` packages the project into a source distribution and a wheel (a pre-built, installable archive) in a new `dist/` folder:
+`uv build` packages the project into a source distribution and a [wheel](packages.qmd#modules-packages-and-distributions) (a pre-built, installable archive) in a new `dist/` folder:
 
 ```bash
 uv build

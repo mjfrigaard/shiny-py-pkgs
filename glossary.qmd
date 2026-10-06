@@ -11,3 +11,5 @@ Key terms used throughout the book.
 | Editable install | Installing a package with `pip install -e .` so code changes take effect without reinstalling |
 | Reactive expression | A `reactive.Calc` that caches its result and re-executes only when its dependencies change |
 | Module | A self-contained pair of `ui` and `server` functions that can be embedded in a larger Shiny app |
+| Wheel | A pre-built `.whl` archive of a package that can be installed without a build step (see [Python Packages](packages.qmd#modules-packages-and-distributions)) |
+| Source distribution (sdist) | A `.tar.gz` archive of a project's source files that must be built before it can be installed (see [Python Packages](packages.qmd#modules-packages-and-distributions)) |
