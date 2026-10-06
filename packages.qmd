@@ -118,7 +118,7 @@ This chapter covers the top row of the diagram (`pyproject.toml`, `__init__.py`,
 
 [^pkgs-description]: `pyproject.toml` is the closest Python equivalent of the `DESCRIPTION` file. It also absorbs some of the jobs we'd hand to `.Rproj` build settings and package configuration in R.
 
-### Why it replaced `setup.py`
+::: {.callout-note title="Why pyproject.toml replaced setup.py" collapse="true"}
 
 For most of Python's history, package metadata lived in a `setup.py` file. `setup.py` is a Python script that calls `setuptools.setup()` with the package name, version, and dependencies. Because it's executable code, tools had to run it to learn anything about the package, and they couldn't run it without first installing `setuptools`. A static `setup.cfg` file was added later, but it only worked with `setuptools`.
 
@@ -131,6 +131,8 @@ Three Python Enhancement Proposals (PEPs) replaced these files with a single dec
 * [PEP 621](https://peps.python.org/pep-0621/): standardized the `[project]` table for metadata, so any backend reads the name, version, and dependencies from the same place.
 
 You'll still find `setup.py` in older projects, and `requirements.txt` is still common for deployment (we'll come back to this below). New packages only need `pyproject.toml`. The [Writing your pyproject.toml](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/) guide in the Python Packaging User Guide is the canonical reference for the file.
+
+:::
 
 ### Reading TOML
 
@@ -230,7 +232,7 @@ The `[project]` dependencies provide the dependency list, and a pinned `uv.lock`
 
 :::
 
-## Writing pyproject.toml
+## Writing `pyproject.toml`
 
 The first branch replaces `requirements.txt` with a hand written `pyproject.toml`. Check out the `03.1_pyproject` branch to follow along:
 
@@ -531,7 +533,7 @@ build-backend = "uv_build"
 
 With this table in place, `uv` stops treating `pyap` as a non-package project. It also tells `uv_build` what to build: by default, `uv_build` looks for an import package with the same name as the project in `src/` (so `src/pyap/__init__.py`).
 
-### Moving the code into src/pyap/
+### Moving the code into `src/pyap/`
 
 Next, we'll create the package folder and move both modules into it:
 
@@ -638,20 +640,20 @@ Now that `pyap` is a package, the day to day loop of editing, documenting, testi
 
 flowchart LR
     subgraph RLoop["R (devtools)"]
-        LA["<code>load_all()</code>"]
-        DOC["<code>document()</code>"]
-        TST["<code>test()</code>"]
-        CHK["<code>check()</code>"]
-        INS["<code>install()</code>"]
-        BLD["<code>build()</code>"]
+        LA("<code>load_all()</code>")
+        DOC("<code>document()</code>")
+        TST("<code>test()</code>")
+        CHK("<code>check()</code>")
+        INS("<code>install()</code>")
+        BLD("<code>build()</code>")
     end
 
     subgraph PyLoop["Python (uv + pytest)"]
-        SYNC["<code>uv sync</code><br/>(editable install)"]
-        DS["docstrings<br/>(no build step)"]
-        PT["<code>uv run pytest</code>"]
-        NONE["no single<br/>command"]
-        UB["<code>uv build</code>"]
+        SYNC("<code>uv sync</code><br/>(editable install)")
+        DS("docstrings<br/>(no build step)")
+        PT("<code>uv run pytest</code>")
+        NONE("no single<br/>command")
+        UB("<code>uv build</code>")
     end
 
     LA --> SYNC
