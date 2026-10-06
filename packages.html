@@ -504,9 +504,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#modules-packages-and-distributions" id="toc-modules-packages-and-distributions" class="nav-link" data-scroll-target="#modules-packages-and-distributions"><span class="header-section-number">3.1.1</span> Modules, packages, and distributions</a></li>
   <li><a href="#anatomy-of-an-app-package" id="toc-anatomy-of-an-app-package" class="nav-link" data-scroll-target="#anatomy-of-an-app-package"><span class="header-section-number">3.1.2</span> Anatomy of an app-package</a></li>
   </ul></li>
-  <li><a href="#what-is-pyproject.toml" id="toc-what-is-pyproject.toml" class="nav-link" data-scroll-target="#what-is-pyproject.toml"><span class="header-section-number">3.2</span> What is pyproject.toml?</a>
+  <li><a href="#what-is-pyproject.toml" id="toc-what-is-pyproject.toml" class="nav-link" data-scroll-target="#what-is-pyproject.toml"><span class="header-section-number">3.2</span> What is <code>pyproject.toml</code>?</a>
   <ul>
-  <li><a href="#why-it-replaced-setup.py" id="toc-why-it-replaced-setup.py" class="nav-link" data-scroll-target="#why-it-replaced-setup.py"><span class="header-section-number">3.2.1</span> Why it replaced setup.py</a></li>
+  <li><a href="#why-it-replaced-setup.py" id="toc-why-it-replaced-setup.py" class="nav-link" data-scroll-target="#why-it-replaced-setup.py"><span class="header-section-number">3.2.1</span> Why it replaced <code>setup.py</code></a></li>
   <li><a href="#reading-toml" id="toc-reading-toml" class="nav-link" data-scroll-target="#reading-toml"><span class="header-section-number">3.2.2</span> Reading TOML</a></li>
   <li><a href="#project" id="toc-project" class="nav-link" data-scroll-target="#project"><span class="header-section-number">3.2.3</span> <code>[project]</code></a></li>
   <li><a href="#build-system" id="toc-build-system" class="nav-link" data-scroll-target="#build-system"><span class="header-section-number">3.2.4</span> <code>[build-system]</code></a></li>
@@ -519,11 +519,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#adding-project-metadata" id="toc-adding-project-metadata" class="nav-link" data-scroll-target="#adding-project-metadata"><span class="header-section-number">3.3.1</span> Adding project metadata</a></li>
   <li><a href="#installing-from-pyproject.toml" id="toc-installing-from-pyproject.toml" class="nav-link" data-scroll-target="#installing-from-pyproject.toml"><span class="header-section-number">3.3.2</span> Installing from pyproject.toml</a></li>
   </ul></li>
-  <li><a href="#managing-the-project-with-uv" id="toc-managing-the-project-with-uv" class="nav-link" data-scroll-target="#managing-the-project-with-uv"><span class="header-section-number">3.4</span> Managing the project with uv</a>
+  <li><a href="#managing-the-project-with-uv" id="toc-managing-the-project-with-uv" class="nav-link" data-scroll-target="#managing-the-project-with-uv"><span class="header-section-number">3.4</span> Managing the project with <code>uv</code></a>
   <ul>
   <li><a href="#pinning-python" id="toc-pinning-python" class="nav-link" data-scroll-target="#pinning-python"><span class="header-section-number">3.4.1</span> Pinning Python</a></li>
   <li><a href="#syncing-the-environment" id="toc-syncing-the-environment" class="nav-link" data-scroll-target="#syncing-the-environment"><span class="header-section-number">3.4.2</span> Syncing the environment</a></li>
-  <li><a href="#uv.lock" id="toc-uv.lock" class="nav-link" data-scroll-target="#uv.lock"><span class="header-section-number">3.4.3</span> uv.lock</a></li>
+  <li><a href="#uv.lock" id="toc-uv.lock" class="nav-link" data-scroll-target="#uv.lock"><span class="header-section-number">3.4.3</span> <code>uv.lock</code></a></li>
   <li><a href="#non-package-projects" id="toc-non-package-projects" class="nav-link" data-scroll-target="#non-package-projects"><span class="header-section-number">3.4.4</span> Non-package projects</a></li>
   </ul></li>
   <li><a href="#build-backends" id="toc-build-backends" class="nav-link" data-scroll-target="#build-backends"><span class="header-section-number">3.5</span> Build backends</a></li>
@@ -579,11 +579,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div>
 <pre class="mermaid mermaid-js">%%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', "fontSize":"14px"}}}%%
 
-flowchart LR
-    B0["&lt;code&gt;02.3_proj-app&lt;/code&gt;&lt;br/&gt;loose files +&lt;br/&gt;&lt;code&gt;requirements.txt&lt;/code&gt;"]
-    B1["&lt;code&gt;03.1_pyproject&lt;/code&gt;&lt;br/&gt;&lt;code&gt;pyproject.toml&lt;/code&gt;&lt;br/&gt;replaces &lt;code&gt;requirements.txt&lt;/code&gt;"]
-    B2["&lt;code&gt;03.2_uv&lt;/code&gt;&lt;br/&gt;uv manages&lt;br/&gt;&lt;code&gt;.venv/&lt;/code&gt; and &lt;code&gt;uv.lock&lt;/code&gt;"]
-    B3["&lt;code&gt;03.3_create-package&lt;/code&gt;&lt;br/&gt;&lt;code&gt;[build-system]&lt;/code&gt; +&lt;br/&gt;&lt;code&gt;src/pyap/&lt;/code&gt;"]
+flowchart TB
+    B0["&lt;strong&gt;02.3_proj-app&lt;/strong&gt;&lt;br/&gt;loose files +&lt;br/&gt;&lt;code&gt;requirements.txt&lt;/code&gt;"]
+    B1["&lt;strong&gt;03.1_pyproject&lt;/strong&gt;&lt;br/&gt;&lt;code&gt;pyproject.toml&lt;/code&gt;&lt;br/&gt;replaces &lt;code&gt;requirements.txt&lt;/code&gt;"]
+    B2["&lt;strong&gt;03.2_uv&lt;/strong&gt;&lt;br/&gt;uv manages&lt;br/&gt;&lt;code&gt;.venv/&lt;/code&gt; and &lt;code&gt;uv.lock&lt;/code&gt;"]
+    B3["&lt;strong&gt;03.3_create-package&lt;/strong&gt;&lt;br/&gt;&lt;code&gt;[build-system]&lt;/code&gt; +&lt;br/&gt;&lt;code&gt;src/pyap/&lt;/code&gt;"]
 
     B0 --&gt; B1 --&gt; B2 --&gt; B3
 
@@ -608,13 +608,13 @@ flowchart LR
 <h3 data-number="3.1.1" class="anchored" data-anchor-id="modules-packages-and-distributions"><span class="header-section-number">3.1.1</span> Modules, packages, and distributions</h3>
 <p>The <a href="https://packaging.python.org/en/latest/glossary/">Python Packaging User Guide glossary</a> defines the three terms below:</p>
 <ul>
-<li>Module: a single <code>.py</code> file. <code>utils.py</code> is a module, and <code>from utils import scatter_plot</code> imports a function from it.</li>
-<li>Import package: a folder of modules with an <code>__init__.py</code> file. In the <code>03.3_create-package</code> branch, <code>src/pyap/</code> becomes an import package, and the import changes to <code>from pyap.utils import scatter_plot</code>.</li>
-<li>Distribution package: the installable archive built from a project (and described by its <code>pyproject.toml</code>). When we run <code>pip install shiny</code>, we’re installing a distribution.</li>
+<li><strong>Module</strong>: a single <code>.py</code> file. <code>utils.py</code> is a module, and <code>from utils import scatter_plot</code> imports a function from it.</li>
+<li><strong>Import package</strong>: a folder of modules with an <code>__init__.py</code> file. In the <code>03.3_create-package</code> branch, <code>src/pyap/</code> becomes an import package, and the import changes to <code>from pyap.utils import scatter_plot</code>.</li>
+<li><strong>Distribution package</strong>: the installable archive built from a project (and described by its <code>pyproject.toml</code>). When we run <code>pip install shiny</code>, we’re installing a distribution.</li>
 </ul>
 <p>The names of an import package and a distribution package usually match, but they don’t have to. For example, we install <a href="https://scikit-learn.org/">scikit-learn</a> with <code>pip install scikit-learn</code>, but we import it with <code>import sklearn</code>. Shiny keeps them the same (<code>pip install shiny</code> and <code>import shiny</code>), and so will <code>pyap</code>.</p>
 <p>Distributions come in two formats. A source distribution (or sdist) is a <code>.tar.gz</code> archive of the project’s source files, and a wheel is a pre-built <code>.whl</code> archive that can be installed without a build step.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> We saw both in the <code>dist/</code> folder at the end of the <a href="./whole_game.html">Whole Game</a> chapter.</p>
-<p>By these definitions, the <code>02.3_proj-app</code> branch holds two modules (<code>app.py</code> and <code>utils.py</code>) and no packages of either kind. By the end of this chapter, it will hold one import package (<code>pyap</code>) that uv can build into a distribution (also <code>pyap</code>).</p>
+<p>By these definitions, the <code>02.3_proj-app</code> branch holds two <em>modules</em> (<code>app.py</code> and <code>utils.py</code>) and <em>no packages</em> of either kind. By the end of this chapter, it will hold one import package (<code>pyap</code>) that <code>uv</code> can build into a distribution (also <code>pyap</code>).</p>
 </section>
 <section id="anatomy-of-an-app-package" class="level3" data-number="3.1.2">
 <h3 data-number="3.1.2" class="anchored" data-anchor-id="anatomy-of-an-app-package"><span class="header-section-number">3.1.2</span> Anatomy of an app-package</h3>
@@ -628,25 +628,25 @@ flowchart LR
 
 flowchart LR
     subgraph RPkg["R app-package"]
-        RDesc["&lt;code&gt;DESCRIPTION&lt;/code&gt;"]
-        RNs["&lt;code&gt;NAMESPACE&lt;/code&gt;"]
-        RDir["&lt;code&gt;R/&lt;/code&gt;"]
-        RMan["&lt;code&gt;man/&lt;/code&gt;"]
-        RTests["&lt;code&gt;tests/testthat/&lt;/code&gt;"]
-        RInst["&lt;code&gt;inst/&lt;/code&gt;"]
-        RLock["&lt;code&gt;renv.lock&lt;/code&gt;"]
-        RIgnore["&lt;code&gt;.Rbuildignore&lt;/code&gt;"]
+        RDesc("&lt;code&gt;DESCRIPTION&lt;/code&gt;")
+        RNs("&lt;code&gt;NAMESPACE&lt;/code&gt;")
+        RDir("&lt;code&gt;R/&lt;/code&gt;")
+        RMan("&lt;code&gt;man/&lt;/code&gt;")
+        RTests("&lt;code&gt;tests/testthat/&lt;/code&gt;")
+        RInst("&lt;code&gt;inst/&lt;/code&gt;")
+        RLock("&lt;code&gt;renv.lock&lt;/code&gt;")
+        RIgnore("&lt;code&gt;.Rbuildignore&lt;/code&gt;")
     end
 
     subgraph PyPkg["Python app-package"]
-        PyProj["&lt;code&gt;pyproject.toml&lt;/code&gt;"]
-        PyInit["&lt;code&gt;__init__.py&lt;/code&gt;"]
-        PySrc["&lt;code&gt;src/pyap/&lt;/code&gt;"]
-        PyDoc["docstrings"]
-        PyTests["&lt;code&gt;tests/&lt;/code&gt;"]
-        PyData["data files in&lt;br/&gt;&lt;code&gt;src/pyap/&lt;/code&gt;"]
-        PyLock["&lt;code&gt;uv.lock&lt;/code&gt;"]
-        PyBuild["build backend&lt;br/&gt;settings"]
+        PyProj("&lt;code&gt;pyproject.toml&lt;/code&gt;")
+        PyInit("&lt;code&gt;__init__.py&lt;/code&gt;")
+        PySrc("&lt;code&gt;src/pyap/&lt;/code&gt;")
+        PyDoc("docstrings")
+        PyTests("&lt;code&gt;tests/&lt;/code&gt;")
+        PyData("data files in&lt;br/&gt;&lt;code&gt;src/pyap/&lt;/code&gt;")
+        PyLock("&lt;code&gt;uv.lock&lt;/code&gt;")
+        PyBuild("build backend&lt;br/&gt;settings")
     end
 
     RDesc --&gt; PyProj
@@ -669,21 +669,21 @@ flowchart LR
 </div>
 </div>
 </div>
-<p>The rough mappings deserve a sentence each:</p>
+<p>The ‘rough’ mappings above deserve at least a sentence of explanation (to the best of my knowledge):</p>
 <ul>
-<li><code>NAMESPACE</code> and <code>__init__.py</code>: Python doesn’t have a file that lists exports. Every name in a module is importable unless it starts with an underscore, and <code>__init__.py</code> controls what’s available directly from <code>pyap</code> (along with the optional <code>__all__</code> list). Imports from other packages are declared in <code>pyproject.toml</code>, not <code>__init__.py</code>.</li>
-<li><code>man/</code> and docstrings: docstrings live on the objects themselves, so there’s no generated help folder. The <a href="./document.html">Documentation</a> chapter covers them.</li>
-<li><code>inst/</code> and package data: non-Python files (like <code>movies.csv</code>) can live inside <code>src/pyap/</code> and be installed with the code. The <a href="./data.html">Data</a> chapter covers how to read them.</li>
-<li><code>.Rbuildignore</code> and build settings: the build backend decides which files go into a distribution, and most backends accept include and exclude settings in a <code>[tool.*]</code> table.</li>
+<li><p><strong><code>NAMESPACE</code> and <code>__init__.py</code></strong>: Python doesn’t have a file that lists exports. Every name in a module is importable unless it starts with an underscore, and <code>__init__.py</code> controls what’s available directly from <code>pyap</code> (along with the optional <code>__all__</code> list). Imports from other packages are declared in <code>pyproject.toml</code>, not <code>__init__.py</code>.</p></li>
+<li><p><strong><code>man/</code> and docstrings</strong>: docstrings live <em>on the objects themselves</em>, so there’s no generated help folder. The <a href="./document.html">Documentation</a> chapter covers them.</p></li>
+<li><p><strong><code>inst/</code> and package data</strong>: non-Python files (like <code>movies.csv</code>) can live inside <code>src/pyap/</code> and be installed with the code. The <a href="./data.html">Data</a> chapter covers how to read them.</p></li>
+<li><p><strong><code>.Rbuildignore</code> and build settings</strong>: the build backend decides which files go into a distribution, and most backends accept include and exclude settings in a <code>[tool.*]</code> table.</p></li>
 </ul>
 <p>This chapter covers the top row of the diagram (<code>pyproject.toml</code>, <code>__init__.py</code>, and <code>src/pyap/</code>) and the lockfile. The remaining rows have their own chapters.</p>
 </section>
 </section>
 <section id="what-is-pyproject.toml" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="what-is-pyproject.toml"><span class="header-section-number">3.2</span> What is pyproject.toml?</h2>
-<p><code>pyproject.toml</code> is the file that tells Python tools what a project is, what it depends on, and how to build it.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Every modern Python packaging tool reads it, including <code>pip</code>, uv, and the build backends we’ll cover below.</p>
+<h2 data-number="3.2" class="anchored" data-anchor-id="what-is-pyproject.toml"><span class="header-section-number">3.2</span> What is <code>pyproject.toml</code>?</h2>
+<p><code>pyproject.toml</code> is the file that tells Python tools what a project is, what it depends on, and how to build it.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Every modern Python packaging tool reads it, including <code>pip</code>, <code>uv</code>, and the build backends we’ll cover below.</p>
 <section id="why-it-replaced-setup.py" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="why-it-replaced-setup.py"><span class="header-section-number">3.2.1</span> Why it replaced setup.py</h3>
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="why-it-replaced-setup.py"><span class="header-section-number">3.2.1</span> Why it replaced <code>setup.py</code></h3>
 <p>For most of Python’s history, package metadata lived in a <code>setup.py</code> file. <code>setup.py</code> is a Python script that calls <code>setuptools.setup()</code> with the package name, version, and dependencies. Because it’s executable code, tools had to run it to learn anything about the package, and they couldn’t run it without first installing <code>setuptools</code>. A static <code>setup.cfg</code> file was added later, but it only worked with <code>setuptools</code>.</p>
 <p><code>requirements.txt</code> was never a package metadata file at all. It’s a list of packages for <code>pip</code> to install into an environment, which is why we used it in the <a href="./shiny.html">Shiny for Python</a> chapter. It can’t tell anyone the name or version of our project, and nothing in it describes how to build a distribution.</p>
 <p>Three Python Enhancement Proposals (PEPs) replaced these files with a single declarative one:</p>
@@ -738,7 +738,7 @@ flowchart LR
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">dev</span> <span class="op">=</span> <span class="op">[</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pytest&gt;=9.1.1"</span><span class="op">,</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Dependency groups aren’t included in the package metadata, so installing <code>pyap</code> never installs <code>pytest</code>.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> uv installs the <code>dev</code> group by default when it syncs the project. The <a href="./dependencies.html">Dependencies</a> chapter covers groups in more detail.</p>
+<p>Dependency groups aren’t included in the package metadata, so installing <code>pyap</code> never installs <code>pytest</code>.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> <code>uv</code> installs the <code>dev</code> group by default when it syncs the project. The <a href="./dependencies.html">Dependencies</a> chapter covers groups in more detail.</p>
 </section>
 <section id="project.scripts" class="level3" data-number="3.2.6">
 <h3 data-number="3.2.6" class="anchored" data-anchor-id="project.scripts"><span class="header-section-number">3.2.6</span> <code>[project.scripts]</code></h3>
@@ -835,8 +835,8 @@ flowchart LR
 </section>
 </section>
 <section id="managing-the-project-with-uv" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="managing-the-project-with-uv"><span class="header-section-number">3.4</span> Managing the project with uv</h2>
-<p>In the <code>03.1_pyproject</code> branch, uv is only acting as a faster <code>pip</code>: we create the environment, activate it, and tell it what to install. The <code>03.2_uv</code> branch hands the whole job to uv’s project commands. uv is also the first option listed on the <a href="https://shiny.posit.co/py/get-started/install.html">Shiny for Python install page</a>. Check out the <code>03.2_uv</code> branch to follow along:</p>
+<h2 data-number="3.4" class="anchored" data-anchor-id="managing-the-project-with-uv"><span class="header-section-number">3.4</span> Managing the project with <code>uv</code></h2>
+<p>In the <code>03.1_pyproject</code> branch, <code>uv</code> is only acting as a faster <code>pip</code>: we create the environment, activate it, and tell it what to install. The <code>03.2_uv</code> branch hands the whole job to uv’s project commands. <code>uv</code> is also the first option listed on the <a href="https://shiny.posit.co/py/get-started/install.html">Shiny for Python install page</a>. Check out the <code>03.2_uv</code> branch to follow along:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout 03.2_uv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The app code and <code>pyproject.toml</code> are unchanged. The branch adds <code>.python-version</code> and <code>uv.lock</code>, removes both from <code>.gitignore</code> so they’re committed, and updates the commands in <code>README.md</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>pyap/</span>
@@ -852,17 +852,21 @@ flowchart LR
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>└── uv.lock</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="pinning-python" class="level3" data-number="3.4.1">
 <h3 data-number="3.4.1" class="anchored" data-anchor-id="pinning-python"><span class="header-section-number">3.4.1</span> Pinning Python</h3>
-<p><code>requires-python</code> in <code>pyproject.toml</code> sets the range of Python versions the project supports, but it doesn’t choose one. <code>uv python pin</code> records the exact version uv should use for this project in a <code>.python-version</code> file:</p>
+<p><code>requires-python</code> in <code>pyproject.toml</code> sets the range of Python versions the project supports, but it doesn’t choose one. <code>uv python pin</code> records the exact version <code>uv</code> should use for this project in a <code>.python-version</code> file:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> python pin 3.12</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Returns:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Pinned `.python-version` to `3.12`</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The file holds a single line:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>3.12</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>If Python 3.12 isn’t installed, uv downloads it the first time it needs it (we covered <code>uv python install</code> in the <a href="./intro.html">Introduction</a>).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>3.12</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If Python 3.12 isn’t installed, <code>uv</code> downloads it the first time it needs it (we covered <code>uv python install</code> in the <a href="./intro.html">Introduction</a>).</p>
 </section>
 <section id="syncing-the-environment" class="level3" data-number="3.4.2">
 <h3 data-number="3.4.2" class="anchored" data-anchor-id="syncing-the-environment"><span class="header-section-number">3.4.2</span> Syncing the environment</h3>
 <p><code>uv sync</code> reads <code>pyproject.toml</code>, resolves the dependencies, and makes <code>.venv/</code> match the result:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This one command does the work of the three we ran in the previous branch. uv creates <code>.venv/</code> if it doesn’t exist (or reuses it if it does), writes <code>uv.lock</code>, and installs the locked versions into the environment. We don’t need to activate the environment first, and we don’t need to tell uv which file to read.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Resolved 45 packages in 127ms</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>Checked 43 packages in 0.48ms</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This one command does the work of the three we ran in the previous branch. <code>uv</code> creates <code>.venv/</code> if it doesn’t exist (or reuses it if it does), writes <code>uv.lock</code>, and installs the locked versions into the environment. We don’t need to activate the environment first, and we don’t need to tell <code>uv</code> which file to read.</p>
 <div class="callout callout-style-default callout-warning no-icon callout-titled" title="uv sync removes packages">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -877,11 +881,11 @@ flowchart LR
 </div>
 </div>
 <p>To run a command inside the environment, we prefix it with <code>uv run</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run shiny run <span class="at">--reload</span> <span class="at">--launch-browser</span> app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run shiny run <span class="at">--reload</span> <span class="at">--launch-browser</span> app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>uv run</code> checks that <code>.venv/</code> is in sync with <code>uv.lock</code> before running the command, so most of the time we don’t need to call <code>uv sync</code> ourselves.</p>
 </section>
 <section id="uv.lock" class="level3" data-number="3.4.3">
-<h3 data-number="3.4.3" class="anchored" data-anchor-id="uv.lock"><span class="header-section-number">3.4.3</span> uv.lock</h3>
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="uv.lock"><span class="header-section-number">3.4.3</span> <code>uv.lock</code></h3>
 <p><code>uv.lock</code> records the exact version of every package in the environment, including the dependencies of our dependencies. <code>pyproject.toml</code> says <code>pandas&gt;=2.1.0</code>, and <code>uv.lock</code> says which <code>pandas</code> was installed. uv writes the lockfile for every platform at once, so a lockfile created on macOS installs the same versions on Windows or Linux.</p>
 <p>We don’t edit <code>uv.lock</code> by hand, but it’s worth knowing what’s in it. The diagram below compares how a dependency moves from declaration to installation in R (with <code>renv</code>) and in Python (with uv):</p>
 <div class="cell" data-layout-align="center">
@@ -891,8 +895,9 @@ flowchart LR
 <div>
 <pre class="mermaid mermaid-js">%%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', "fontSize":"14px"}}}%%
 
-flowchart LR
+flowchart TB
     subgraph RDeps["R"]
+    direction TB
         RDesc["&lt;code&gt;DESCRIPTION&lt;/code&gt;&lt;br/&gt;&lt;code&gt;Imports&lt;/code&gt;"]
         RLib[("project library&lt;br/&gt;&lt;code&gt;renv/library/&lt;/code&gt;")]
         RLock["&lt;code&gt;renv.lock&lt;/code&gt;"]
@@ -901,6 +906,7 @@ flowchart LR
     end
 
     subgraph PyDeps["Python"]
+    direction TB
         PyProj["&lt;code&gt;pyproject.toml&lt;/code&gt;&lt;br/&gt;&lt;code&gt;dependencies&lt;/code&gt;"]
         PyLock["&lt;code&gt;uv.lock&lt;/code&gt;"]
         PyVenv[("project environment&lt;br/&gt;&lt;code&gt;.venv/&lt;/code&gt;")]
@@ -919,7 +925,7 @@ flowchart LR
 </div>
 </div>
 </div>
-<p>The order of the last two steps is the important difference. <code>renv::snapshot()</code> records whatever is already installed in the project library, so the lockfile follows the environment. uv resolves <code>uv.lock</code> from <code>pyproject.toml</code> first and then installs from it, so the environment follows the lockfile.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> <code>uv sync</code> runs the <code>uv lock</code> step for us whenever <code>pyproject.toml</code> changes.</p>
+<p>The order of the last two steps is the important difference. <code>renv::snapshot()</code> records whatever is already installed in the project library, so the lockfile follows the environment. <code>uv</code> resolves <code>uv.lock</code> from <code>pyproject.toml</code> first and then installs from it, so the environment follows the lockfile.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> <code>uv sync</code> runs the <code>uv lock</code> step for us whenever <code>pyproject.toml</code> changes.</p>
 <div class="callout callout-style-default callout-note no-icon callout-titled" title="Commit uv.lock and .python-version">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -936,26 +942,26 @@ flowchart LR
 </section>
 <section id="non-package-projects" class="level3" data-number="3.4.4">
 <h3 data-number="3.4.4" class="anchored" data-anchor-id="non-package-projects"><span class="header-section-number">3.4.4</span> Non-package projects</h3>
-<p>The <code>pyproject.toml</code> in this branch still doesn’t have a <code>[build-system]</code> table, and uv notices. uv treats a project without a build system as a non-package project: it installs the dependencies into <code>.venv/</code>, but it doesn’t install the project itself.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> The lockfile entry for <code>pyap</code> reflects this with a <code>virtual</code> source (trimmed below):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[[package]]</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"pyap"</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"0.1.0"</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="dt">source</span> <span class="op">=</span> <span class="op">{ </span><span class="dt">virtual</span><span class="op"> =</span> <span class="st">"."</span><span class="op"> }</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="dt">dependencies</span> <span class="op">=</span> <span class="op">[</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">{ </span><span class="dt">name</span><span class="op"> =</span> <span class="st">"matplotlib"</span><span class="op"> },</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">{ </span><span class="dt">name</span><span class="op"> =</span> <span class="st">"numpy"</span><span class="op"> },</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">{ </span><span class="dt">name</span><span class="op"> =</span> <span class="st">"pandas"</span><span class="op"> },</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">{ </span><span class="dt">name</span><span class="op"> =</span> <span class="st">"shiny"</span><span class="op"> },</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>pyproject.toml</code> in this branch still doesn’t have a <code>[build-system]</code> table, and <code>uv</code> notices. <code>uv</code> treats a project without a build system as a non-package project: it installs the dependencies into <code>.venv/</code>, but it doesn’t install the project itself.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> The lockfile entry for <code>pyap</code> reflects this with a <code>virtual</code> source (trimmed below):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[[package]]</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"pyap"</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"0.1.0"</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="dt">source</span> <span class="op">=</span> <span class="op">{ </span><span class="dt">virtual</span><span class="op"> =</span> <span class="st">"."</span><span class="op"> }</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="dt">dependencies</span> <span class="op">=</span> <span class="op">[</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">{ </span><span class="dt">name</span><span class="op"> =</span> <span class="st">"matplotlib"</span><span class="op"> },</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">{ </span><span class="dt">name</span><span class="op"> =</span> <span class="st">"numpy"</span><span class="op"> },</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">{ </span><span class="dt">name</span><span class="op"> =</span> <span class="st">"pandas"</span><span class="op"> },</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">{ </span><span class="dt">name</span><span class="op"> =</span> <span class="st">"shiny"</span><span class="op"> },</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>We can confirm <code>pyap</code> isn’t installed by trying to import it:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-c</span> <span class="st">"import pyap"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>ModuleNotFoundError: No module named 'pyap'</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-c</span> <span class="st">"import pyap"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>ModuleNotFoundError: No module named 'pyap'</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This error is expected. A non-package project is a perfectly good way to manage an app that only ever runs from its own folder, and many Shiny for Python apps never need more. We want <code>pyap</code> to be importable (and testable, and installable), though, so the next step is giving it something to build.</p>
 </section>
 </section>
 <section id="build-backends" class="level2" data-number="3.5">
 <h2 data-number="3.5" class="anchored" data-anchor-id="build-backends"><span class="header-section-number">3.5</span> Build backends</h2>
-<p>A build backend is the tool that turns a project’s source files into a distribution. When an installer like <code>pip</code> or uv needs to build a package, it reads <code>[build-system]</code>, installs the packages listed in <code>requires</code> into a temporary environment, and asks the <code>build-backend</code> to produce a wheel or an sdist.<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> Installers and backends only talk through the interface defined in PEP 517, so any installer works with any backend.</p>
+<p>A build backend is the tool that turns a project’s source files into a distribution. When an installer like <code>pip</code> or <code>uv</code> needs to build a package, it reads <code>[build-system]</code>, installs the packages listed in <code>requires</code> into a temporary environment, and asks the <code>build-backend</code> to produce a wheel or an sdist.<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> Installers and backends only talk through the interface defined in PEP 517, so any installer works with any backend.</p>
 <p>The <code>[build-system]</code> table for four common backends is below:</p>
 <table class="caption-top table">
 <thead>
@@ -989,69 +995,69 @@ flowchart LR
 </tbody>
 </table>
 <p>For a pure Python package like <code>pyap</code>, these backends produce nearly the same wheel. They differ in their defaults (where they look for the package, which files they include) and in how much they can be configured. <code>setuptools</code> is the oldest and the one you’ll find in most older projects. Hatchling is the first option in the <a href="https://packaging.python.org/en/latest/tutorials/packaging-projects/">Python Packaging User Guide tutorial</a>, and Flit is intentionally minimal.</p>
-<p>This book uses <code>uv_build</code>, the default backend for <code>uv init --package</code> (it’s the backend in the <a href="./whole_game.html">Whole Game</a> <code>pyproject.toml</code>). It’s built by the same team as uv, it expects the <code>src/</code> layout we’ll use below, and it needs no configuration for a package like <code>pyap</code>. The version range in <code>requires</code> should match the version of uv you have installed (check it with <code>uv --version</code>), so yours may differ from the one in this chapter.</p>
+<p>This book uses <code>uv_build</code>, the default backend for <code>uv init --package</code> (it’s the backend in the <a href="./whole_game.html">Whole Game</a> <code>pyproject.toml</code>). It’s built by the same team as <code>uv</code>, it expects the <code>src/</code> layout we’ll use below, and it needs no configuration for a package like <code>pyap</code>. The version range in <code>requires</code> should match the version of uv you have installed (check it with <code>uv --version</code>), so yours may differ from the one in this chapter.</p>
 </section>
 <section id="creating-the-package" class="level2" data-number="3.6">
 <h2 data-number="3.6" class="anchored" data-anchor-id="creating-the-package"><span class="header-section-number">3.6</span> Creating the package</h2>
 <p>The <code>03.3_create-package</code> branch turns <code>pyap</code> into a package. Check it out to follow along:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout 03.3_create-package</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout 03.3_create-package</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The branch makes three changes: it adds a <code>[build-system]</code> table to <code>pyproject.toml</code>, it moves the Python code into <code>src/pyap/</code>, and it updates the import in <code>app.py</code>. The new project structure is below:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>pyap/</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>├── .gitignore</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>├── .python-version</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>├── .vscode/</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>│   └── settings.json</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>├── README.md</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>├── movies.csv</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>├── pyproject.toml</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>├── src/</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>│   └── pyap/</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>│       ├── __init__.py</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>│       ├── app.py</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>│       └── utils.py</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>└── uv.lock</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>pyap/</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>├── .gitignore</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>├── .python-version</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>├── .vscode/</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>│   └── settings.json</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>├── README.md</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>├── movies.csv</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>├── pyproject.toml</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>├── src/</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>│   └── pyap/</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>│       ├── __init__.py</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>│       ├── app.py</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>│       └── utils.py</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>└── uv.lock</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>R packages need two things to be packages: a <code>DESCRIPTION</code> file with the mandatory fields and an <code>R/</code> folder. A Python package needs three: a <code>pyproject.toml</code> with <code>name</code> and <code>version</code>, a <code>[build-system]</code> table, and an import package for the backend to build. We already have the first, so the sections below add the other two.</p>
 <section id="adding-a-build-system" class="level3" data-number="3.6.1">
 <h3 data-number="3.6.1" class="anchored" data-anchor-id="adding-a-build-system"><span class="header-section-number">3.6.1</span> Adding a build system</h3>
 <p>We’ll add the <code>[build-system]</code> table to the bottom of <code>pyproject.toml</code>. The complete file is below:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[project]</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"pyap"</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"0.1.0"</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="dt">description</span> <span class="op">=</span> <span class="st">"A Shiny for Python app-package"</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="dt">readme</span> <span class="op">=</span> <span class="st">"README.md"</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="dt">authors</span> <span class="op">=</span> <span class="op">[</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">{ </span><span class="dt">name</span><span class="op"> =</span> <span class="st">"Martin Frigaard"</span><span class="op"> }</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="dt">requires-python</span> <span class="op">=</span> <span class="st">"&gt;=3.12"</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="dt">dependencies</span> <span class="op">=</span> <span class="op">[</span></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"matplotlib&gt;=3.8.0"</span><span class="op">,</span></span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"numpy&gt;=1.26.0"</span><span class="op">,</span></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pandas&gt;=2.1.0"</span><span class="op">,</span></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"shiny&gt;=1.2.0"</span><span class="op">,</span></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="kw">[build-system]</span></span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="dt">requires</span> <span class="op">=</span> <span class="op">[</span><span class="st">"uv_build&gt;=0.12.23,&lt;0.13.0"</span><span class="op">]</span></span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="dt">build-backend</span> <span class="op">=</span> <span class="st">"uv_build"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>With this table in place, uv stops treating <code>pyap</code> as a non-package project. It also tells <code>uv_build</code> what to build: by default, <code>uv_build</code> looks for an import package with the same name as the project in <code>src/</code> (so <code>src/pyap/__init__.py</code>).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[project]</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"pyap"</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"0.1.0"</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="dt">description</span> <span class="op">=</span> <span class="st">"A Shiny for Python app-package"</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="dt">readme</span> <span class="op">=</span> <span class="st">"README.md"</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="dt">authors</span> <span class="op">=</span> <span class="op">[</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">{ </span><span class="dt">name</span><span class="op"> =</span> <span class="st">"Martin Frigaard"</span><span class="op"> }</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="dt">requires-python</span> <span class="op">=</span> <span class="st">"&gt;=3.12"</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="dt">dependencies</span> <span class="op">=</span> <span class="op">[</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"matplotlib&gt;=3.8.0"</span><span class="op">,</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"numpy&gt;=1.26.0"</span><span class="op">,</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pandas&gt;=2.1.0"</span><span class="op">,</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"shiny&gt;=1.2.0"</span><span class="op">,</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="kw">[build-system]</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="dt">requires</span> <span class="op">=</span> <span class="op">[</span><span class="st">"uv_build&gt;=0.12.23,&lt;0.13.0"</span><span class="op">]</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="dt">build-backend</span> <span class="op">=</span> <span class="st">"uv_build"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>With this table in place, <code>uv</code> stops treating <code>pyap</code> as a non-package project. It also tells <code>uv_build</code> what to build: by default, <code>uv_build</code> looks for an import package with the same name as the project in <code>src/</code> (so <code>src/pyap/__init__.py</code>).</p>
 </section>
 <section id="moving-the-code-into-srcpyap" class="level3" data-number="3.6.2">
 <h3 data-number="3.6.2" class="anchored" data-anchor-id="moving-the-code-into-srcpyap"><span class="header-section-number">3.6.2</span> Moving the code into src/pyap/</h3>
 <p>Next, we’ll create the package folder and move both modules into it:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> src/pyap</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> app.py utils.py src/pyap/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> src/pyap</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> app.py utils.py src/pyap/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>src/pyap/</code> needs an <code>__init__.py</code> file to be an import package. Python runs <code>__init__.py</code> the first time <code>pyap</code> is imported, so anything defined or imported in it is available as <code>pyap.&lt;name&gt;</code>. We don’t need to expose anything yet, so the file only holds a docstring describing the package:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">"""A Shiny for Python app-package."""</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">"""A Shiny for Python app-package."""</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Putting the package under <code>src/</code> (instead of a <code>pyap/</code> folder at the project root) means Python can only import <code>pyap</code> after it’s installed, not just because it happens to be in the working directory. The <a href="./src_layout.html">src/ Layout</a> chapter explains why this protects our tests, and the <a href="./flat_layout.html">Flat Layout</a> chapter covers the alternative.</p>
 </section>
 <section id="updating-imports" class="level3" data-number="3.6.3">
 <h3 data-number="3.6.3" class="anchored" data-anchor-id="updating-imports"><span class="header-section-number">3.6.3</span> Updating imports</h3>
 <p><code>app.py</code> imported <code>scatter_plot()</code> with <code>from utils import scatter_plot</code>, which worked because <code>utils.py</code> was in the same folder as <code>app.py</code>. Inside a package, modules import each other using the full package path:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run with: uv run shiny run src/pyap/app.py</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> shiny <span class="im">import</span> App, ui, render, reactive</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyap.utils <span class="im">import</span> scatter_plot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run with: uv run shiny run src/pyap/app.py</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> shiny <span class="im">import</span> App, ui, render, reactive</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyap.utils <span class="im">import</span> scatter_plot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The rest of <code>app.py</code> (including <code>import pandas as pd</code>) is unchanged, and so is <code>utils.py</code>. <code>pandas</code>, <code>matplotlib</code>, and <code>shiny</code> are installed distributions, so they’re imported by name exactly as before. Only imports of our own code change.</p>
 <div class="callout callout-style-default callout-warning no-icon callout-titled" title="Why not keep from utils import?">
 <div class="callout-header d-flex align-content-center">
@@ -1075,15 +1081,20 @@ flowchart LR
 <section id="installing-in-editable-mode" class="level3" data-number="3.6.5">
 <h3 data-number="3.6.5" class="anchored" data-anchor-id="installing-in-editable-mode"><span class="header-section-number">3.6.5</span> Installing in editable mode</h3>
 <p>With a build system and an import package in place, <code>uv sync</code> now installs <code>pyap</code> itself along with its dependencies:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>uv installs the project in editable mode by default. An editable install points Python at the files in <code>src/pyap/</code> instead of copying them into <code>.venv/</code>, so changes to the code are picked up the next time <code>pyap</code> is imported (without reinstalling).<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> We only need to sync again when <code>pyproject.toml</code> changes. The <code>pyap</code> entry in <code>uv.lock</code> changes from a <code>virtual</code> source to an <code>editable</code> one:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[[package]]</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"pyap"</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"0.1.0"</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="dt">source</span> <span class="op">=</span> <span class="op">{ </span><span class="dt">editable</span><span class="op"> =</span> <span class="st">"."</span><span class="op"> }</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Resolved 45 packages in 411ms</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>      Built pyap @ file:///home/path/to/projects/apps/python/pyap                                 </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>Prepared 1 package in 10ms</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>Installed 1 package in 0.96ms</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a> + pyap==0.1.0 (from file:///home/path/to/projects/apps/python/pyap)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>uv</code> installs the project in editable mode by default. An editable install points Python at the files in <code>src/pyap/</code> instead of copying them into <code>.venv/</code>, so changes to the code are picked up the next time <code>pyap</code> is imported (without reinstalling).<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> We only need to sync again when <code>pyproject.toml</code> changes. The <code>pyap</code> entry in <code>uv.lock</code> changes from a <code>virtual</code> source to an <code>editable</code> one:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[[package]]</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"pyap"</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"0.1.0"</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="dt">source</span> <span class="op">=</span> <span class="op">{ </span><span class="dt">editable</span><span class="op"> =</span> <span class="st">"."</span><span class="op"> }</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The import that failed in the previous branch now works, and <code>__file__</code> shows Python is reading <code>pyap</code> from our source folder:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-c</span> <span class="st">"import pyap; print(pyap.__file__)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>/path/to/pyap/src/pyap/__init__.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-c</span> <span class="st">"import pyap; print(pyap.__file__)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>/path/to/pyap/src/pyap/__init__.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-note no-icon callout-titled" title="Editable installs in the Posit docs">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1101,13 +1112,13 @@ flowchart LR
 <section id="running-the-app" class="level3" data-number="3.6.6">
 <h3 data-number="3.6.6" class="anchored" data-anchor-id="running-the-app"><span class="header-section-number">3.6.6</span> Running the app</h3>
 <p>The app now lives at <code>src/pyap/app.py</code>, so we pass that path to <code>shiny run</code>. We’ll run it from the project root, so <code>movies.csv</code> is found:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run shiny run <span class="at">--reload</span> <span class="at">--launch-browser</span> src/pyap/app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run shiny run <span class="at">--reload</span> <span class="at">--launch-browser</span> src/pyap/app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The app looks and behaves exactly as it did in the <code>02.3_proj-app</code> branch. We can confirm the package import is working by changing the x axis dropdown and watching the scatter plot update (the plot comes from <code>pyap.utils</code>, so it wouldn’t render if the import failed).</p>
 </section>
 </section>
 <section id="the-development-loop" class="level2" data-number="3.7">
 <h2 data-number="3.7" class="anchored" data-anchor-id="the-development-loop"><span class="header-section-number">3.7</span> The development loop</h2>
-<p>Now that <code>pyap</code> is a package, the day to day loop of editing, documenting, testing, and building looks different from the R workflow. The diagram below maps the <code>devtools</code> functions from the R book to the uv and <code>pytest</code> commands we’ll use in this one:</p>
+<p>Now that <code>pyap</code> is a package, the day to day loop of editing, documenting, testing, and building looks different from the R workflow. The diagram below maps the <code>devtools</code> functions from the R book to the <code>uv</code> and <code>pytest</code> commands we’ll use in this one:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div>
@@ -1158,9 +1169,9 @@ flowchart LR
 <h2 data-number="3.8" class="anchored" data-anchor-id="recap"><span class="header-section-number">3.8</span> Recap</h2>
 <p>In this chapter we turned the loose files from the <a href="./shiny.html">Shiny for Python</a> chapter into an installable package, one branch at a time:</p>
 <ol type="1">
-<li><code>03.1_pyproject</code>: a hand written <code>pyproject.toml</code> with a <code>[project]</code> table replaced <code>requirements.txt</code>, and <code>uv pip install -r pyproject.toml</code> installed the dependencies.</li>
-<li><code>03.2_uv</code>: <code>uv python pin</code> and <code>uv sync</code> handed the environment to uv, which created <code>.python-version</code>, <code>.venv/</code>, and <code>uv.lock</code>. Without a <code>[build-system]</code> table, uv treated <code>pyap</code> as a non-package project and installed only its dependencies.</li>
-<li><code>03.3_create-package</code>: a <code>[build-system]</code> table with <code>uv_build</code>, an import package in <code>src/pyap/</code>, and package imports (<code>from pyap.utils import scatter_plot</code>) made <code>pyap</code> installable, and <code>uv sync</code> installed it in editable mode.</li>
+<li><p><strong>03.1_pyproject</strong>: a hand written <code>pyproject.toml</code> with a <code>[project]</code> table replaced <code>requirements.txt</code>, and <code>uv pip install -r pyproject.toml</code> installed the dependencies.</p></li>
+<li><p><strong>03.2_uv</strong>: <code>uv python pin</code> and <code>uv sync</code> handed the environment to <code>uv</code>, which created <code>.python-version</code>, <code>.venv/</code>, and <code>uv.lock</code>. Without a <code>[build-system]</code> table, <code>uv</code> treated <code>pyap</code> as a non-package project and installed only its dependencies.</p></li>
+<li><p><strong>03.3_create-package</strong>: a <code>[build-system]</code> table with <code>uv_build</code>, an import package in <code>src/pyap/</code>, and package imports (<code>from pyap.utils import scatter_plot</code>) made <code>pyap</code> installable, and <code>uv sync</code> installed it in editable mode.</p></li>
 </ol>
 <p>Along the way, we separated modules, import packages, and distributions (which R folds into a single word), and saw why <code>pyproject.toml</code> replaced <code>setup.py</code>, <code>setup.cfg</code>, and <code>requirements.txt</code>. The project still reads <code>movies.csv</code> from the working directory, which we’ll fix in the <a href="./data.html">Data</a> chapter. In the <a href="./development.html">Development Workflow</a> chapter we’ll put the package to work with the edit, sync, and run loop.</p>
 <p>For more depth on the topics in this chapter, see:</p>
@@ -1180,7 +1191,7 @@ flowchart LR
 <li id="fn3"><p><code>dependencies</code> plays the role of <code>Imports</code> in <code>DESCRIPTION</code>, and <code>requires-python</code> plays the role of <code>Depends: R (&gt;= 4.1.0)</code>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p><code>[dependency-groups]</code> is roughly the <code>Suggests</code> field, which is where R packages list <code>testthat</code>. The difference is that <code>Suggests</code> is published with the package and dependency groups are not.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn5"><p><code>uv sync</code> on a fresh clone is the equivalent of <code>renv::restore()</code>.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn6"><p>uv lets us override this choice with <code>package = true</code> or <code>package = false</code> in a <code>[tool.uv]</code> table, but the <code>[build-system]</code> table is the standard signal.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p><code>uv</code> lets us override this choice with <code>package = true</code> or <code>package = false</code> in a <code>[tool.uv]</code> table, but the <code>[build-system]</code> table is the standard signal.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn7"><p>R has one build tool built into the language (<code>R CMD build</code> and <code>R CMD INSTALL</code>, which <code>devtools</code> calls for us). Python lets each project choose its own.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn8"><p>An editable install gives us the same quick feedback loop as <code>devtools::load_all()</code>.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
