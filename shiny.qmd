@@ -201,6 +201,8 @@ The branch contains a single `app.py` file (along with a `README.md` and a `.git
 uv pip install matplotlib numpy
 ```
 
+The `.venv/` folder isn't tracked by Git, so the same virtual environment stays in place when we switch branches. Each time we check out a new branch, we install whatever new packages that branch needs (the chapter will point these out).
+
 ### app.py
 
 The full contents of `app.py` are below:
