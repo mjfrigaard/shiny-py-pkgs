@@ -506,15 +506,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#what-is-pyproject.toml" id="toc-what-is-pyproject.toml" class="nav-link" data-scroll-target="#what-is-pyproject.toml"><span class="header-section-number">3.2</span> What is <code>pyproject.toml</code>?</a>
   <ul>
-  <li><a href="#why-it-replaced-setup.py" id="toc-why-it-replaced-setup.py" class="nav-link" data-scroll-target="#why-it-replaced-setup.py"><span class="header-section-number">3.2.1</span> Why it replaced <code>setup.py</code></a></li>
-  <li><a href="#reading-toml" id="toc-reading-toml" class="nav-link" data-scroll-target="#reading-toml"><span class="header-section-number">3.2.2</span> Reading TOML</a></li>
-  <li><a href="#project" id="toc-project" class="nav-link" data-scroll-target="#project"><span class="header-section-number">3.2.3</span> <code>[project]</code></a></li>
-  <li><a href="#build-system" id="toc-build-system" class="nav-link" data-scroll-target="#build-system"><span class="header-section-number">3.2.4</span> <code>[build-system]</code></a></li>
-  <li><a href="#dependency-groups" id="toc-dependency-groups" class="nav-link" data-scroll-target="#dependency-groups"><span class="header-section-number">3.2.5</span> <code>[dependency-groups]</code></a></li>
-  <li><a href="#project.scripts" id="toc-project.scripts" class="nav-link" data-scroll-target="#project.scripts"><span class="header-section-number">3.2.6</span> <code>[project.scripts]</code></a></li>
-  <li><a href="#tool." id="toc-tool." class="nav-link" data-scroll-target="#tool."><span class="header-section-number">3.2.7</span> <code>[tool.*]</code></a></li>
+  <li><a href="#reading-toml" id="toc-reading-toml" class="nav-link" data-scroll-target="#reading-toml"><span class="header-section-number">3.2.1</span> Reading TOML</a></li>
+  <li><a href="#project" id="toc-project" class="nav-link" data-scroll-target="#project"><span class="header-section-number">3.2.2</span> <code>[project]</code></a></li>
+  <li><a href="#build-system" id="toc-build-system" class="nav-link" data-scroll-target="#build-system"><span class="header-section-number">3.2.3</span> <code>[build-system]</code></a></li>
+  <li><a href="#dependency-groups" id="toc-dependency-groups" class="nav-link" data-scroll-target="#dependency-groups"><span class="header-section-number">3.2.4</span> <code>[dependency-groups]</code></a></li>
+  <li><a href="#project.scripts" id="toc-project.scripts" class="nav-link" data-scroll-target="#project.scripts"><span class="header-section-number">3.2.5</span> <code>[project.scripts]</code></a></li>
+  <li><a href="#tool." id="toc-tool." class="nav-link" data-scroll-target="#tool."><span class="header-section-number">3.2.6</span> <code>[tool.*]</code></a></li>
   </ul></li>
-  <li><a href="#writing-pyproject.toml" id="toc-writing-pyproject.toml" class="nav-link" data-scroll-target="#writing-pyproject.toml"><span class="header-section-number">3.3</span> Writing pyproject.toml</a>
+  <li><a href="#writing-pyproject.toml" id="toc-writing-pyproject.toml" class="nav-link" data-scroll-target="#writing-pyproject.toml"><span class="header-section-number">3.3</span> Writing <code>pyproject.toml</code></a>
   <ul>
   <li><a href="#adding-project-metadata" id="toc-adding-project-metadata" class="nav-link" data-scroll-target="#adding-project-metadata"><span class="header-section-number">3.3.1</span> Adding project metadata</a></li>
   <li><a href="#installing-from-pyproject.toml" id="toc-installing-from-pyproject.toml" class="nav-link" data-scroll-target="#installing-from-pyproject.toml"><span class="header-section-number">3.3.2</span> Installing from pyproject.toml</a></li>
@@ -530,7 +529,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#creating-the-package" id="toc-creating-the-package" class="nav-link" data-scroll-target="#creating-the-package"><span class="header-section-number">3.6</span> Creating the package</a>
   <ul>
   <li><a href="#adding-a-build-system" id="toc-adding-a-build-system" class="nav-link" data-scroll-target="#adding-a-build-system"><span class="header-section-number">3.6.1</span> Adding a build system</a></li>
-  <li><a href="#moving-the-code-into-srcpyap" id="toc-moving-the-code-into-srcpyap" class="nav-link" data-scroll-target="#moving-the-code-into-srcpyap"><span class="header-section-number">3.6.2</span> Moving the code into src/pyap/</a></li>
+  <li><a href="#moving-the-code-into-srcpyap" id="toc-moving-the-code-into-srcpyap" class="nav-link" data-scroll-target="#moving-the-code-into-srcpyap"><span class="header-section-number">3.6.2</span> Moving the code into <code>src/pyap/</code></a></li>
   <li><a href="#updating-imports" id="toc-updating-imports" class="nav-link" data-scroll-target="#updating-imports"><span class="header-section-number">3.6.3</span> Updating imports</a></li>
   <li><a href="#where-the-data-file-goes" id="toc-where-the-data-file-goes" class="nav-link" data-scroll-target="#where-the-data-file-goes"><span class="header-section-number">3.6.4</span> Where the data file goes</a></li>
   <li><a href="#installing-in-editable-mode" id="toc-installing-in-editable-mode" class="nav-link" data-scroll-target="#installing-in-editable-mode"><span class="header-section-number">3.6.5</span> Installing in editable mode</a></li>
@@ -682,8 +681,18 @@ flowchart LR
 <section id="what-is-pyproject.toml" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="what-is-pyproject.toml"><span class="header-section-number">3.2</span> What is <code>pyproject.toml</code>?</h2>
 <p><code>pyproject.toml</code> is the file that tells Python tools what a project is, what it depends on, and how to build it.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Every modern Python packaging tool reads it, including <code>pip</code>, <code>uv</code>, and the build backends we’ll cover below.</p>
-<section id="why-it-replaced-setup.py" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="why-it-replaced-setup.py"><span class="header-section-number">3.2.1</span> Why it replaced <code>setup.py</code></h3>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Why pyproject.toml replaced setup.py">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Why pyproject.toml replaced setup.py
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>For most of Python’s history, package metadata lived in a <code>setup.py</code> file. <code>setup.py</code> is a Python script that calls <code>setuptools.setup()</code> with the package name, version, and dependencies. Because it’s executable code, tools had to run it to learn anything about the package, and they couldn’t run it without first installing <code>setuptools</code>. A static <code>setup.cfg</code> file was added later, but it only worked with <code>setuptools</code>.</p>
 <p><code>requirements.txt</code> was never a package metadata file at all. It’s a list of packages for <code>pip</code> to install into an environment, which is why we used it in the <a href="./shiny.html">Shiny for Python</a> chapter. It can’t tell anyone the name or version of our project, and nothing in it describes how to build a distribution.</p>
 <p>Three Python Enhancement Proposals (PEPs) replaced these files with a single declarative one:</p>
@@ -693,9 +702,11 @@ flowchart LR
 <li><a href="https://peps.python.org/pep-0621/">PEP 621</a>: standardized the <code>[project]</code> table for metadata, so any backend reads the name, version, and dependencies from the same place.</li>
 </ul>
 <p>You’ll still find <code>setup.py</code> in older projects, and <code>requirements.txt</code> is still common for deployment (we’ll come back to this below). New packages only need <code>pyproject.toml</code>. The <a href="https://packaging.python.org/en/latest/guides/writing-pyproject-toml/">Writing your pyproject.toml</a> guide in the Python Packaging User Guide is the canonical reference for the file.</p>
-</section>
-<section id="reading-toml" class="level3" data-number="3.2.2">
-<h3 data-number="3.2.2" class="anchored" data-anchor-id="reading-toml"><span class="header-section-number">3.2.2</span> Reading TOML</h3>
+</div>
+</div>
+</div>
+<section id="reading-toml" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="reading-toml"><span class="header-section-number">3.2.1</span> Reading TOML</h3>
 <p>You don’t have to learn a new configuration language to read <code>pyproject.toml</code>, but it helps to know three rules of <a href="https://toml.io/en/">TOML</a> (Tom’s Obvious Minimal Language):</p>
 <ol type="1">
 <li>A name in square brackets (like <code>[project]</code>) starts a table, and everything below it belongs to that table until the next one starts.</li>
@@ -704,8 +715,8 @@ flowchart LR
 </ol>
 <p>TOML is just a stricter version of the <code>Field: value</code> format in a <code>DESCRIPTION</code> file. The sections below cover the tables we’ll see in this book.</p>
 </section>
-<section id="project" class="level3" data-number="3.2.3">
-<h3 data-number="3.2.3" class="anchored" data-anchor-id="project"><span class="header-section-number">3.2.3</span> <code>[project]</code></h3>
+<section id="project" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="project"><span class="header-section-number">3.2.2</span> <code>[project]</code></h3>
 <p>The <code>[project]</code> table holds the package metadata. The <code>pyproject.toml</code> from the <a href="./whole_game.html">Whole Game</a> chapter is a good example:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[project]</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"pyap"</span></span>
@@ -723,16 +734,16 @@ flowchart LR
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Only <code>name</code> is strictly required, and <code>version</code> is required unless a tool computes it for us. That’s a much shorter list than the seven mandatory fields in an R <code>DESCRIPTION</code> file.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> <code>requires-python</code> sets the Python versions the package supports, and <code>dependencies</code> lists the distributions it needs at runtime, using the same version specifiers as <code>requirements.txt</code>.</p>
 </section>
-<section id="build-system" class="level3" data-number="3.2.4">
-<h3 data-number="3.2.4" class="anchored" data-anchor-id="build-system"><span class="header-section-number">3.2.4</span> <code>[build-system]</code></h3>
+<section id="build-system" class="level3" data-number="3.2.3">
+<h3 data-number="3.2.3" class="anchored" data-anchor-id="build-system"><span class="header-section-number">3.2.3</span> <code>[build-system]</code></h3>
 <p>The <code>[build-system]</code> table tells installers which build backend to use and how to install it:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[build-system]</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">requires</span> <span class="op">=</span> <span class="op">[</span><span class="st">"uv_build&gt;=0.12.23,&lt;0.13.0"</span><span class="op">]</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">build-backend</span> <span class="op">=</span> <span class="st">"uv_build"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>requires</code> lists the packages needed to build the project, and <code>build-backend</code> names the object that does the building. We’ll cover backends in their own section below. For now, the important point is what this table signals: a <code>pyproject.toml</code> with a <code>[build-system]</code> table describes something that can be built and installed as a package.</p>
 </section>
-<section id="dependency-groups" class="level3" data-number="3.2.5">
-<h3 data-number="3.2.5" class="anchored" data-anchor-id="dependency-groups"><span class="header-section-number">3.2.5</span> <code>[dependency-groups]</code></h3>
+<section id="dependency-groups" class="level3" data-number="3.2.4">
+<h3 data-number="3.2.4" class="anchored" data-anchor-id="dependency-groups"><span class="header-section-number">3.2.4</span> <code>[dependency-groups]</code></h3>
 <p>The <code>[dependency-groups]</code> table (<a href="https://peps.python.org/pep-0735/">PEP 735</a>) holds dependencies we need while developing the package, but that users don’t need to run it:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[dependency-groups]</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">dev</span> <span class="op">=</span> <span class="op">[</span></span>
@@ -740,21 +751,21 @@ flowchart LR
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Dependency groups aren’t included in the package metadata, so installing <code>pyap</code> never installs <code>pytest</code>.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> <code>uv</code> installs the <code>dev</code> group by default when it syncs the project. The <a href="./dependencies.html">Dependencies</a> chapter covers groups in more detail.</p>
 </section>
-<section id="project.scripts" class="level3" data-number="3.2.6">
-<h3 data-number="3.2.6" class="anchored" data-anchor-id="project.scripts"><span class="header-section-number">3.2.6</span> <code>[project.scripts]</code></h3>
+<section id="project.scripts" class="level3" data-number="3.2.5">
+<h3 data-number="3.2.5" class="anchored" data-anchor-id="project.scripts"><span class="header-section-number">3.2.5</span> <code>[project.scripts]</code></h3>
 <p>The <code>[project.scripts]</code> table registers terminal commands that are created when the package is installed. Each key is a command name, and each value points to a function as <code>module:function</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[project.scripts]</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">pyap</span> <span class="op">=</span> <span class="st">"pyap.app:run"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This is the entry we added in the <a href="./whole_game.html">Whole Game</a> chapter so that typing <code>pyap</code> in a terminal launches the app. R packages don’t have a direct equivalent. We won’t add a launch function in this chapter, and the <a href="./launch.html">Launch</a> chapter covers entry points in detail.</p>
 </section>
-<section id="tool." class="level3" data-number="3.2.7">
-<h3 data-number="3.2.7" class="anchored" data-anchor-id="tool."><span class="header-section-number">3.2.7</span> <code>[tool.*]</code></h3>
+<section id="tool." class="level3" data-number="3.2.6">
+<h3 data-number="3.2.6" class="anchored" data-anchor-id="tool."><span class="header-section-number">3.2.6</span> <code>[tool.*]</code></h3>
 <p>Any table that starts with <code>tool.</code> belongs to a specific tool, and every other tool ignores it. This lets a project keep its configuration in one file instead of a folder of dotfiles. For example, <code>pytest</code> reads its settings from <code>[tool.pytest.ini_options]</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[tool.pytest.ini_options]</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">testpaths</span> <span class="op">=</span> <span class="op">[</span><span class="st">"tests"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>We’ll add <code>[tool.*]</code> tables as we adopt new tools throughout the book. For a real world example of all these tables working together, the <a href="https://github.com/posit-dev/py-shiny/blob/main/pyproject.toml"><code>pyproject.toml</code> for <code>py-shiny</code></a> is worth skimming. It’s much longer than ours, but it’s built from the same pieces.</p>
 <div class="callout callout-style-default callout-note no-icon callout-titled" title="pyproject.toml and Posit Connect">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -763,7 +774,7 @@ flowchart LR
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><code>rsconnect-python</code> can deploy directly from a <code>pyproject.toml</code>. <a href="https://docs.posit.co/rsconnect-python/deploying/"><code>rsconnect deploy pyproject</code></a> reads a <code>[tool.rsconnect]</code> table for the app settings:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[tool.rsconnect]</span></span>
@@ -776,7 +787,7 @@ flowchart LR
 </section>
 </section>
 <section id="writing-pyproject.toml" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="writing-pyproject.toml"><span class="header-section-number">3.3</span> Writing pyproject.toml</h2>
+<h2 data-number="3.3" class="anchored" data-anchor-id="writing-pyproject.toml"><span class="header-section-number">3.3</span> Writing <code>pyproject.toml</code></h2>
 <p>The first branch replaces <code>requirements.txt</code> with a hand written <code>pyproject.toml</code>. Check out the <code>03.1_pyproject</code> branch to follow along:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout 03.1_pyproject</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The app code doesn’t change. The branch deletes <code>requirements.txt</code>, adds <code>pyproject.toml</code>, and updates the install instructions in <code>README.md</code>:</p>
@@ -1042,7 +1053,7 @@ flowchart TB
 <p>With this table in place, <code>uv</code> stops treating <code>pyap</code> as a non-package project. It also tells <code>uv_build</code> what to build: by default, <code>uv_build</code> looks for an import package with the same name as the project in <code>src/</code> (so <code>src/pyap/__init__.py</code>).</p>
 </section>
 <section id="moving-the-code-into-srcpyap" class="level3" data-number="3.6.2">
-<h3 data-number="3.6.2" class="anchored" data-anchor-id="moving-the-code-into-srcpyap"><span class="header-section-number">3.6.2</span> Moving the code into src/pyap/</h3>
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="moving-the-code-into-srcpyap"><span class="header-section-number">3.6.2</span> Moving the code into <code>src/pyap/</code></h3>
 <p>Next, we’ll create the package folder and move both modules into it:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> src/pyap</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> app.py utils.py src/pyap/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1128,20 +1139,20 @@ flowchart TB
 
 flowchart LR
     subgraph RLoop["R (devtools)"]
-        LA["&lt;code&gt;load_all()&lt;/code&gt;"]
-        DOC["&lt;code&gt;document()&lt;/code&gt;"]
-        TST["&lt;code&gt;test()&lt;/code&gt;"]
-        CHK["&lt;code&gt;check()&lt;/code&gt;"]
-        INS["&lt;code&gt;install()&lt;/code&gt;"]
-        BLD["&lt;code&gt;build()&lt;/code&gt;"]
+        LA("&lt;code&gt;load_all()&lt;/code&gt;")
+        DOC("&lt;code&gt;document()&lt;/code&gt;")
+        TST("&lt;code&gt;test()&lt;/code&gt;")
+        CHK("&lt;code&gt;check()&lt;/code&gt;")
+        INS("&lt;code&gt;install()&lt;/code&gt;")
+        BLD("&lt;code&gt;build()&lt;/code&gt;")
     end
 
     subgraph PyLoop["Python (uv + pytest)"]
-        SYNC["&lt;code&gt;uv sync&lt;/code&gt;&lt;br/&gt;(editable install)"]
-        DS["docstrings&lt;br/&gt;(no build step)"]
-        PT["&lt;code&gt;uv run pytest&lt;/code&gt;"]
-        NONE["no single&lt;br/&gt;command"]
-        UB["&lt;code&gt;uv build&lt;/code&gt;"]
+        SYNC("&lt;code&gt;uv sync&lt;/code&gt;&lt;br/&gt;(editable install)")
+        DS("docstrings&lt;br/&gt;(no build step)")
+        PT("&lt;code&gt;uv run pytest&lt;/code&gt;")
+        NONE("no single&lt;br/&gt;command")
+        UB("&lt;code&gt;uv build&lt;/code&gt;")
     end
 
     LA --&gt; SYNC
