@@ -13,31 +13,52 @@ uv sync
 
 ## Running commands in the environment
 
-Every step in the loop (launching the app, opening a Python console, running tests) needs to use the Python inside `.venv/`. There are two ways to make sure it does: prefix each command with `uv run`, or activate the environment once per terminal session.
+Every step in the loop (launching the app, opening a Python console, running tests) needs to use the Python inside the `.venv/` folder. There are two ways to make sure this happens: 1) prefix each command with `uv run`, or 2) activate the environment once per terminal session (with `source .venv/bin/activate`). 
 
 ### With `uv run`
 
-`uv run` runs a command inside the project environment without activating it. We've used it since the `03.2_uv` branch:
+`uv run` runs a command *inside* the project environment without activating it. We've used it since the `03.2_uv` branch:
 
 ```bash
 uv run shiny run --reload --launch-browser src/pyap/app.py
 ```
 
-Before running the command, `uv run` checks that `uv.lock` matches `pyproject.toml` and that `.venv/` matches `uv.lock`, and it updates whichever one is out of date. This is the main reason I reach for `uv run` first: it's hard to run code against a stale environment by accident.
+Before running the command, `uv run` checks that `uv.lock` matches `pyproject.toml` and that `.venv/` matches `uv.lock`, and it updates whichever one is out of date. 
+
+I tend to reach for `uv run` first because it's hard to run code against a stale environment by accident.
 
 The same prefix works for any command installed in the environment. The first line below opens a Python console, and the second confirms Python is reading `pyap` from our source folder:
 
 ```bash
 uv run python
+```
+
+```default
+Python 3.12.15 (main, Oct  3 2026, 01:03:07) [Clang 22.1.3 ] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 
+```
+
+
+```bash
 uv run python -c "import pyap; print(pyap.__file__)"
+```
+
+```default
+/home/path/to/pyap/src/pyap/__init__.py
 ```
 
 ### With an activated `.venv/`
 
-We activated `.venv/` in the [Shiny for Python](shiny.qmd) chapter, and activation still works in a uv project. Activating puts the environment's `bin/` folder at the front of the terminal's `PATH`, so `python`, `shiny`, and (later) `pytest` resolve to the copies in `.venv/`:
+We activated `.venv/` in the [Shiny for Python](shiny.qmd) chapter, and activation still works in a `uv` project. 
+
+Activating puts the environment's `bin/` folder at the front of the terminal's `PATH`, so `python`, `shiny`, and (later) `pytest` resolve to the copies in `.venv/`:
 
 ```bash
 source .venv/bin/activate
+```
+
+```bash
 shiny run --reload --launch-browser src/pyap/app.py
 ```
 
@@ -49,7 +70,7 @@ The tradeoff is that an activated environment doesn't check anything. `shiny run
 
 ### Which should you use?
 
-You don't have to commit to one approach, but it helps to know what each one guarantees. The table below summarizes the differences:
+It's not necessary to commit to one approach, but it helps to know what each one guarantees. I've summarized some of the differences in the table below:
 
 | | `uv run` | Activated `.venv/` |
 |---|---|---|
@@ -58,11 +79,11 @@ You don't have to commit to one approach, but it helps to know what each one gua
 | Scope | One command | The current terminal session |
 | Works in scripts and CI | Yes | Only after activating |
 
-This book uses `uv run` in every command, so the examples work in any terminal. Activating is fine for a long interactive session, as long as you remember the `uv sync` step. Positron activates `.venv/` in new terminals for us (we'll cover this below), so both styles end up available.
+I'll be using `uv run` in most of the commands in this book, so the examples work in any terminal. Activating is fine for a long interactive session, as long as you remember the `uv sync` step. Positron activates `.venv/` in new terminals for us (we'll cover this below), so both styles end up available.
 
 ## The edit, run, check loop
 
-The diagram below shows the loop. Each pass starts with an edit, and the kind of file we changed decides what (if anything) has to happen before we can check the result:
+The diagram below shows the 'edit, run, check' loop. Each pass starts with an edit, and the kind of file we changed decides what (if anything) has to happen before we can check the result. Most passes take the **No action** path. **Edits** to Python code in `src/pyap/` need nothing beyond saving the file, because the editable install means `.venv/` already points at our source files. The **Sync** path covers changes to what's installed in `.venv/`, and the **Restart** path covers anything a running Python process has already loaded. 
 
 ```{mermaid}
 %%| fig-cap: 'What each kind of change needs before the next check'
@@ -115,9 +136,9 @@ flowchart TB
     class Console,App restartStyle
 ```
 
-Most passes take the No action path. Edits to Python code in `src/pyap/` need nothing beyond saving the file, because the editable install means `.venv/` already points at our source files. The Sync path covers changes to what's installed in `.venv/`, and the Restart path covers anything a running Python process has already loaded. The dotted arrows mark the cases where one path leads into another. The sections below cover each path in turn.
+The dotted arrows mark the cases where one path leads into another. The sections below cover each path in turn.
 
-## Changes that need no action
+## Changes that need 'No action'
 
 Editing a module in `src/pyap/` is the most common change in the loop, and it's also the simplest. An editable install puts a pointer to our `src/` folder into `.venv/` instead of a copy of the code (the [Python Packages](packages.qmd#installing-in-editable-mode) chapter covers the setup). The next time Python imports `pyap`, it reads our current files.
 
@@ -159,10 +180,39 @@ A sync is needed when a change affects what's installed in `.venv/`, rather than
 
 ```bash
 uv add polars
+```
+
+```default
+Resolved 47 packages in 418ms
+      Built pyap @ file:///path/to/pyap/                                                         
+Prepared 1 package in 10ms
+Uninstalled 1 package in 0.86ms
+Installed 3 packages in 6ms
+ + polars==2.0.0
+ + polars-runtime-32==2.0.0
+ ~ pyap==0.1.0 (from file:///path/to/pyap)
+```
+
+After `uv add`, `polars` appears in the `dependencies` list with a lower bound, and `uv run python -c "import polars"` succeeds. 
+
+`uv remove` takes it back out of all three places, so `uv.lock` is back where it started, and `pyproject.toml` only differs by whitespace (`uv` may add a trailing newline when it rewrites the file). 
+
+```bash
 uv remove polars
 ```
 
-After `uv add`, `polars` appears in the `dependencies` list with a lower bound, and `uv run python -c "import polars"` succeeds. `uv remove` takes it back out of all three places, so `uv.lock` is back where it started, and `pyproject.toml` only differs by whitespace (uv may add a trailing newline when it rewrites the file). Development tools go in the `dev` dependency group with `--dev`, as `pytest` did in the [Whole Game](whole_game.qmd) chapter. The [Dependencies](dependencies.qmd) chapter covers version constraints, groups, and upgrades.
+```default
+Resolved 45 packages in 15ms
+      Built pyap @ file:///path/to/pyap                                                            
+Prepared 1 package in 3ms
+Uninstalled 3 packages in 3ms
+Installed 1 package in 0.53ms
+ - polars==2.0.0
+ - polars-runtime-32==2.0.0
+ ~ pyap==0.1.0 (from file:///path/to/pyap)
+```
+
+Development tools go in the `dev` dependency group with `--dev`, as `pytest` did in the [Whole Game](whole_game.qmd) chapter. The [Dependencies](dependencies.qmd) chapter covers version constraints, groups, and upgrades.
 
 ### Editing `pyproject.toml` by hand
 
@@ -172,6 +222,9 @@ The package version is a good example, because Python reads it from metadata wri
 
 ```bash
 source .venv/bin/activate
+```
+
+```bash
 python -c "from importlib.metadata import version; print(version('pyap'))"
 ```
 
@@ -183,6 +236,9 @@ Next, we'll make another illustrative edit and change `version = "0.1.0"` to `ve
 
 ```bash
 uv sync
+```
+
+```bash
 python -c "from importlib.metadata import version; print(version('pyap'))"
 ```
 
@@ -194,6 +250,9 @@ python -c "from importlib.metadata import version; print(version('pyap'))"
 
 ```bash
 git restore pyproject.toml uv.lock
+```
+
+```bash
 uv sync
 ```
 
