@@ -62,7 +62,13 @@ source .venv/bin/activate
 shiny run --reload --launch-browser src/pyap/app.py
 ```
 
-On Windows (PowerShell), the activation script is `.venv\Scripts\Activate.ps1`. Running `deactivate` returns the terminal to its previous state.
+Running `deactivate` returns the terminal to its previous state.
+
+::: {.callout-tip title="On Windows" collapse="true"}
+
+On Windows (PowerShell), the activation script is `.venv\Scripts\Activate.ps1`.
+
+:::
 
 The tradeoff is that an activated environment doesn't check anything. `shiny run` uses whatever is installed in `.venv/` at that moment, so after a change to `pyproject.toml` or `uv.lock`, we have to run `uv sync` ourselves.[^dev-renv-activate]
 
@@ -146,7 +152,13 @@ The pointer is to the folder, not to individual files, so new modules work the s
 
 ### Reloading the app
 
-The editable install only matters the next time `pyap` is imported. `--reload` is what makes the next import happen right away. `shiny run --reload` watches the folder that holds `app.py` and restarts the app whenever a watched file changes. Because `app.py` and `utils.py` both live in `src/pyap/`, saving either one triggers a restart, and the browser tab refreshes itself when the new app is ready.
+The editable install only matters the next time `pyap` is imported.
+
+* `--reload` is what makes the next import happen right away  
+
+* `shiny run --reload` watches the folder that holds `app.py` and restarts the app whenever a watched file changes
+
+Because `app.py` and `utils.py` both live in `src/pyap/`, saving either one triggers a restart, and the browser tab refreshes itself when the new app is ready.
 
 We can see this with a small edit to `scatter_plot()` in `src/pyap/utils.py`. With the app running, we'll add a grid to the plot just before the call to `plt.tight_layout()` (this line is already in the `04_dev` branch, so delete it, save the file, and add it back to watch the reload happen):
 
