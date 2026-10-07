@@ -374,8 +374,10 @@ This one command does the work of the three we ran in the previous branch. `uv` 
 To run a command inside the environment, we prefix it with `uv run`:
 
 ```bash
-uv run shiny run --reload --launch-browser app.py
+uv run shiny run --reload app.py
 ```
+
+![](images/packages-03.2-uv.png){width="100%" fig-align="center"}
 
 `uv run` checks that `.venv/` is in sync with `uv.lock` before running the command, so most of the time we don't need to call `uv sync` ourselves.
 
@@ -474,7 +476,9 @@ The `[build-system]` table for four common backends is below:
 
 For a pure Python package like `pyap`, these backends produce nearly the same wheel. They differ in their defaults (where they look for the package, which files they include) and in how much they can be configured. `setuptools` is the oldest and the one you'll find in most older projects. Hatchling is the first option in the [Python Packaging User Guide tutorial](https://packaging.python.org/en/latest/tutorials/packaging-projects/), and Flit is intentionally minimal.
 
-This book uses `uv_build`, the default backend for `uv init --package` (it's the backend in the [Whole Game](whole_game.qmd) `pyproject.toml`). It's built by the same team as `uv`, it expects the `src/` layout we'll use below, and it needs no configuration for a package like `pyap`. The version range in `requires` should match the version of uv you have installed (check it with `uv --version`), so yours may differ from the one in this chapter.
+This book uses `uv_build`, the default backend for `uv init --package` (it's the backend in the [Whole Game](whole_game.qmd) `pyproject.toml`). It's built by the same team as `uv`, it expects the `src/` layout we'll use below, and it needs no configuration for a package like `pyap`. The version range in `requires` should match the version of `uv` you have installed (check it with `uv --version`), so yours may differ from the one in this chapter.
+
+
 
 ## Creating the package
 
@@ -627,7 +631,11 @@ The app now lives at `src/pyap/app.py`, so we pass that path to `shiny run`. We'
 uv run shiny run --reload --launch-browser src/pyap/app.py
 ```
 
-The app looks and behaves exactly as it did in the `02.3_proj-app` branch. We can confirm the package import is working by changing the x axis dropdown and watching the scatter plot update (the plot comes from `pyap.utils`, so it wouldn't render if the import failed).
+The app looks and behaves exactly as it did in the `02.3_proj-app` branch. 
+
+![](images/packages-03.3-create-package.png){width="100%" fig-align="center"}
+
+We can confirm the package import is working by changing the x axis dropdown and watching the scatter plot update (the plot comes from `pyap.utils`, so it wouldn't render if the import failed).
 
 ## The development loop
 
