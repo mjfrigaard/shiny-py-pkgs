@@ -2,4 +2,389 @@
 title: "Development Workflow"
 ---
 
-This chapter covers the day-to-day Python development workflow: creating a virtual environment, installing a package in editable mode (`pip install -e .`), and iterating on code without reinstalling.
+In the [Python Packages](packages.qmd) chapter, `pyap` became an installable package, and `uv sync` installed it into `.venv/` in editable mode. This chapter covers what happens after that: the day to day loop of editing code, running the app, and checking the result. Most passes through this loop need no special commands at all. I've found the harder part (especially coming from R) is knowing which changes do need one, and which command fixes them.
+
+We'll use the `04_dev` branch for the whole chapter. It builds on `03.3_create-package` and adds one lasting change (a light grid on the scatter plot, which we'll walk through below). The other edits shown are illustrative, so we'll undo each of those before moving on. If you're starting fresh, check out the branch and sync the environment:
+
+```bash
+git checkout 04_dev
+uv sync
+```
+
+## Running commands in the environment
+
+Every step in the loop (launching the app, opening a Python console, running tests) needs to use the Python inside `.venv/`. There are two ways to make sure it does: prefix each command with `uv run`, or activate the environment once per terminal session.
+
+### With `uv run`
+
+`uv run` runs a command inside the project environment without activating it. We've used it since the `03.2_uv` branch:
+
+```bash
+uv run shiny run --reload --launch-browser src/pyap/app.py
+```
+
+Before running the command, `uv run` checks that `uv.lock` matches `pyproject.toml` and that `.venv/` matches `uv.lock`, and it updates whichever one is out of date. This is the main reason I reach for `uv run` first: it's hard to run code against a stale environment by accident.
+
+The same prefix works for any command installed in the environment. The first line below opens a Python console, and the second confirms Python is reading `pyap` from our source folder:
+
+```bash
+uv run python
+uv run python -c "import pyap; print(pyap.__file__)"
+```
+
+### With an activated `.venv/`
+
+We activated `.venv/` in the [Shiny for Python](shiny.qmd) chapter, and activation still works in a uv project. Activating puts the environment's `bin/` folder at the front of the terminal's `PATH`, so `python`, `shiny`, and (later) `pytest` resolve to the copies in `.venv/`:
+
+```bash
+source .venv/bin/activate
+shiny run --reload --launch-browser src/pyap/app.py
+```
+
+On Windows (PowerShell), the activation script is `.venv\Scripts\Activate.ps1`. Running `deactivate` returns the terminal to its previous state.
+
+The tradeoff is that an activated environment doesn't check anything. `shiny run` uses whatever is installed in `.venv/` at that moment, so after a change to `pyproject.toml` or `uv.lock`, we have to run `uv sync` ourselves.[^dev-renv-activate]
+
+[^dev-renv-activate]: `renv` activates the project library automatically through the `.Rprofile` file it writes, which makes it closer to `uv run` than to `source .venv/bin/activate`.
+
+### Which should you use?
+
+You don't have to commit to one approach, but it helps to know what each one guarantees. The table below summarizes the differences:
+
+| | `uv run` | Activated `.venv/` |
+|---|---|---|
+| Syncs before running | Yes | No (run `uv sync` yourself) |
+| Command | `uv run shiny run ...` | `shiny run ...` |
+| Scope | One command | The current terminal session |
+| Works in scripts and CI | Yes | Only after activating |
+
+This book uses `uv run` in every command, so the examples work in any terminal. Activating is fine for a long interactive session, as long as you remember the `uv sync` step. Positron activates `.venv/` in new terminals for us (we'll cover this below), so both styles end up available.
+
+## The edit, run, check loop
+
+The diagram below shows the loop. Each pass starts with an edit, and the kind of file we changed decides what (if anything) has to happen before we can check the result:
+
+```{mermaid}
+%%| fig-cap: 'What each kind of change needs before the next check'
+%%| fig-align: center
+%%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', "fontSize":"14px"}}}%%
+
+flowchart TB
+    Edit(["<strong>i. Edit</strong><br/>save a file"])
+    What{"What<br/>changed?"}
+
+    subgraph Respond["<strong>ii. Respond to the change</strong>"]
+        subgraph NoAction["<strong>No action</strong>"]
+            Code("nothing to do<br/>(editable install)")
+            Reload("<code>--reload</code><br/>restarts the app")
+        end
+        subgraph Sync["<strong>Sync</strong>"]
+            Deps("<code>uv add</code> or<br/><code>uv remove</code>")
+            UvSync("<code>uv sync</code><br/>(or the next<br/><code>uv run</code>)")
+        end
+        subgraph Restart["<strong>Restart</strong>"]
+            Console("console: restart or<br/><code>importlib.reload()</code>")
+            App("app: Ctrl + C,<br/>then run it again")
+        end
+    end
+
+    Check(["<strong>iii. Check</strong><br/>browser or<br/><code>uv run pytest</code>"])
+
+    Edit --> What
+    What -->|"<code>.py</code> file in<br/><code>src/pyap/</code>"| Code
+    What -->|"dependency"| Deps
+    What -->|"<code>pyproject.toml</code><br/>or <code>uv.lock</code>"| UvSync
+    What -->|"<code>movies.csv</code>"| App
+    Code --> Reload
+    Code -.->|"in a console"| Console
+    Deps -.->|"already<br/>imported"| Console
+    UvSync -.->|"app<br/>running"| App
+    Reload --> Check
+    Deps --> Check
+    UvSync --> Check
+    Console --> Check
+    App --> Check
+    Check -->|"next change"| Edit
+
+    classDef noStyle fill:#2d3748,stroke:#48bb78,color:#fff
+    classDef uvStyle fill:#744210,stroke:#f6ad55,color:#fff
+    classDef restartStyle fill:#553c9a,stroke:#b794f4,color:#fff
+
+    class Code,Reload noStyle
+    class Deps,UvSync uvStyle
+    class Console,App restartStyle
+```
+
+Most passes take the No action path. Edits to Python code in `src/pyap/` need nothing beyond saving the file, because the editable install means `.venv/` already points at our source files. The Sync path covers changes to what's installed in `.venv/`, and the Restart path covers anything a running Python process has already loaded. The dotted arrows mark the cases where one path leads into another. The sections below cover each path in turn.
+
+## Changes that need no action
+
+Editing a module in `src/pyap/` is the most common change in the loop, and it's also the simplest. An editable install puts a pointer to our `src/` folder into `.venv/` instead of a copy of the code (the [Python Packages](packages.qmd#installing-in-editable-mode) chapter covers the setup). The next time Python imports `pyap`, it reads our current files.
+
+The pointer is to the folder, not to individual files, so new modules work the same way. If we added a `src/pyap/data.py` module (as we did in the [Whole Game](whole_game.qmd) chapter), `from pyap.data import ...` would work without reinstalling anything.
+
+### Reloading the app
+
+The editable install only matters the next time `pyap` is imported. `--reload` is what makes the next import happen right away. `shiny run --reload` watches the folder that holds `app.py` and restarts the app whenever a watched file changes. Because `app.py` and `utils.py` both live in `src/pyap/`, saving either one triggers a restart, and the browser tab refreshes itself when the new app is ready.
+
+We can see this with a small edit to `scatter_plot()` in `src/pyap/utils.py`. With the app running, we'll add a grid to the plot just before the call to `plt.tight_layout()` (this line is already in the `04_dev` branch, so delete it, save the file, and add it back to watch the reload happen):
+
+```python
+    ax.legend(
+        title=col_var.replace("_", " ").title(),
+        bbox_to_anchor=(1.05, 1),
+        loc="upper left",
+    )
+    ax.grid(alpha=0.3)
+    plt.tight_layout()
+```
+
+After we save the file, the terminal shows the app restarting, and the scatter plot in the browser redraws with light grid lines. We didn't stop the app, reinstall `pyap`, or refresh the page. This is the one edit in the chapter we keep, and it's committed on the `04_dev` branch.
+
+Each reload restarts the app's Python process, so every session starts over and any inputs we changed go back to their default values. For an app the size of `pyap`, this takes a second or two.
+
+::: {.callout-note title="What --reload watches" collapse="true"}
+
+By default, `--reload` only reacts to certain file types (such as `.py`, `.css`, `.js`, and `.html` files) inside the folder that holds the app. `movies.csv` fails both tests: it's a `.csv` file, and it sits at the project root instead of in `src/pyap/`. Running `shiny run --help` lists the `--reload-dir`, `--reload-includes`, and `--reload-excludes` options for changing what's watched.
+
+:::
+
+## Changes that need a sync
+
+A sync is needed when a change affects what's installed in `.venv/`, rather than the code `.venv/` points to. In practice, that means changes to `pyproject.toml` and `uv.lock`.
+
+### Adding and removing dependencies
+
+`uv add` and `uv remove` cover most of these changes. Each one updates `pyproject.toml`, re-resolves `uv.lock`, and syncs `.venv/` in a single step, so there's nothing left for us to run afterwards. For example, the commands below add `polars` (from the callout in the [Shiny for Python](shiny.qmd) chapter) and then remove it again:
+
+```bash
+uv add polars
+uv remove polars
+```
+
+After `uv add`, `polars` appears in the `dependencies` list with a lower bound, and `uv run python -c "import polars"` succeeds. `uv remove` takes it back out of all three places, so `uv.lock` is back where it started, and `pyproject.toml` only differs by whitespace (uv may add a trailing newline when it rewrites the file). Development tools go in the `dev` dependency group with `--dev`, as `pytest` did in the [Whole Game](whole_game.qmd) chapter. The [Dependencies](dependencies.qmd) chapter covers version constraints, groups, and upgrades.
+
+### Editing `pyproject.toml` by hand
+
+Editing `pyproject.toml` directly (instead of with `uv add`) leaves `uv.lock` and `.venv/` behind until something syncs them. `uv run` catches up on the next command, but an activated environment won't.
+
+The package version is a good example, because Python reads it from metadata written at install time, not from `pyproject.toml`. With the environment activated, we can print the installed version with `importlib.metadata`:
+
+```bash
+source .venv/bin/activate
+python -c "from importlib.metadata import version; print(version('pyap'))"
+```
+
+```default
+0.1.0
+```
+
+Next, we'll make another illustrative edit and change `version = "0.1.0"` to `version = "0.1.1"` in `pyproject.toml`. Running the same command still prints `0.1.0`. The editable install points at our code, but the package metadata is a snapshot from the last sync. `uv sync` rebuilds it:
+
+```bash
+uv sync
+python -c "from importlib.metadata import version; print(version('pyap'))"
+```
+
+```default
+0.1.1
+```
+
+`uv run python -c "..."` would have printed `0.1.1` without the explicit `uv sync`, because `uv run` syncs first. We'll undo the edit (along with the lockfile change the sync made) and sync again:
+
+```bash
+git restore pyproject.toml uv.lock
+uv sync
+```
+
+The same rule applies to the rest of `[project]` (such as `requires-python`, `dependencies`, and the `[project.scripts]` commands we'll add in the [Launch](launch.qmd) chapter), and to the `[build-system]` table. All of them are read when the package is installed, so a change only takes effect after a sync.
+
+### Switching branches
+
+Each `pyap` branch carries its own `pyproject.toml` and `uv.lock`, but `.venv/` isn't tracked by Git, so it stays put when we switch branches. After a `git checkout`, a `git pull`, or a fresh clone, `uv sync` brings `.venv/` in line with whatever the branch declares (and the next `uv run` does the same thing on its own).
+
+### `uv lock` and `uv sync`
+
+`uv sync` runs `uv lock` for us whenever `pyproject.toml` has changed, so we rarely need `uv lock` by itself. It's useful when we want to update the lockfile without touching `.venv/`, such as confirming that a hand edit to `pyproject.toml` still resolves:
+
+```bash
+uv lock
+```
+
+The table below summarizes which command handles each change:
+
+| Change | Command | Updates |
+|---|---|---|
+| Edit code in `src/pyap/` | None | Nothing (editable install) |
+| Add or remove a dependency | `uv add` or `uv remove` | `pyproject.toml`, `uv.lock`, and `.venv/` |
+| Edit `pyproject.toml` by hand | `uv sync` | `uv.lock` and `.venv/` |
+| Check out, pull, or clone | `uv sync` | `.venv/` |
+| Update only the lockfile | `uv lock` | `uv.lock` |
+
+## Changes that need a restart
+
+The editable install keeps `.venv/` pointed at our current code, and a sync keeps the installed packages current. Neither one changes code a Python process has already imported. Python imports each module once per process and caches it, so a running process keeps the version it loaded until it's restarted (or told to reload).
+
+`shiny run --reload` handles this for the app by restarting the process on every save. Two cases don't get that treatment: the Python console, and anything the app reads only when it starts.
+
+### The Python console
+
+The console is where the editable install feels least like `load_all()`.[^dev-load-all] Suppose we import `scatter_plot()` into a console (`uv run python`, started from the project root) to try it outside of the app:
+
+[^dev-load-all]: `load_all()` re-sources every file in `R/` each time we call it, so the console always has the latest code. Python has no single command that does this for a whole package.
+
+```python
+>>> import pandas as pd
+>>> from pyap import utils
+>>> movies = pd.read_csv("movies.csv")
+>>> fig = utils.scatter_plot(
+...     movies, "critics_score", "audience_score", "mpaa_rating", 0.4, 3
+... )
+```
+
+If we now edit `utils.py` and call `utils.scatter_plot()` again, we get the old version. Running `from pyap import utils` again doesn't help, because Python finds `pyap.utils` in its module cache and never opens the file.
+
+We have two options. The first is `importlib.reload()`, which re-executes a module that's already been imported:
+
+```python
+>>> import importlib
+>>> importlib.reload(utils)
+>>> fig = utils.scatter_plot(
+...     movies, "critics_score", "audience_score", "mpaa_rating", 0.4, 3
+... )
+```
+
+The second is restarting the console and running the imports again. I've found restarting is the more reliable habit, for the reasons in the warning below.
+
+::: {.callout-warning title="The limits of importlib.reload()"}
+
+`importlib.reload()` is useful for quick checks, but it misses changes in a few common situations:
+
+* One module at a time: reloading `pyap.utils` doesn't reload the modules it imports, and reloading `pyap` doesn't reload `pyap.utils`.
+* Names imported with `from`: after `from pyap.utils import scatter_plot`, the name `scatter_plot` still points to the old function until we run the `from` import again.
+* Third party packages: if `uv add` or `uv sync` upgrades a package the console has already imported (like `pandas`), restart the console.
+
+:::
+
+::: {.callout-note title="IPython autoreload" collapse="true"}
+
+IPython (the enhanced console behind Positron's Python console) includes an [autoreload extension](https://ipython.readthedocs.io/en/stable/config/extensions/autoreload.html) that reloads changed modules before each command:
+
+```python
+%load_ext autoreload
+%autoreload 2
+```
+
+This is convenient for long console sessions, but it can still miss the same edge cases as `importlib.reload()`. When the results don't make sense, restart.
+
+:::
+
+### Data and running apps
+
+`app.py` reads `movies.csv` once, when the module is imported. Editing `movies.csv` doesn't trigger `--reload` (see the note above), so the app keeps showing the old data until it restarts. Press <kbd>Ctrl</kbd> + <kbd>C</kbd> in the terminal and run the app again to pick up the change. The [Data](data.qmd) chapter moves the file into the package.
+
+The same is true after a hand edit to `pyproject.toml` while the app is running. `--reload` doesn't watch `pyproject.toml`, so we stop the app and start it again with `uv run`, which syncs before launching. An app started without `--reload` needs this restart after every change.
+
+## Running tests
+
+Tests close the loop. `pytest` starts a new Python process each time it runs, so it always imports the current code in `src/pyap/` and nothing needs reloading. With the `uv run` prefix, it also runs against a synced environment:
+
+```bash
+uv run pytest
+```
+
+The `04_dev` branch doesn't have a `tests/` folder yet, and `pytest` isn't installed in this branch's environment, so the command above has nothing to run here (and if another copy of `pytest` is on your `PATH`, `uv run` may pick it up instead of failing). We added both in the [Whole Game](whole_game.qmd) chapter (`uv add --dev pytest` and a `tests/test_data.py` file), and the [Test Suite](test_suite.qmd) chapter adds them to `pyap`.
+
+Once tests exist, two variations are worth knowing during development. The first command below runs a single test file, and the second stops at the first failure:
+
+```bash
+uv run pytest tests/test_data.py
+uv run pytest -x
+```
+
+The rest of the Testing section covers fixtures, testing modules, and system tests, starting with the [Test Suite](test_suite.qmd) chapter.
+
+## Using Positron for the loop
+
+You don't have to use Positron for any of this, since every step above is a terminal command. Positron puts the same steps into panes that share one environment, which removes a few of the places where things can drift out of sync.
+
+### Choosing the interpreter
+
+The `.vscode/settings.json` file from the `02.3_proj-app` branch sets `python.defaultInterpreterPath` to `.venv/bin/python`. Positron also detects `.venv/` folders in the project on its own. The interpreter picker in the top right corner of the window should show the Python from `.venv/`; if it doesn't, select it there. If `.venv/` didn't exist when the project was opened, run `uv sync` in the terminal first, then select the new environment.
+
+With `.venv/` selected, the console, the editor, and the test runner all use the same environment as `uv run`.
+
+### The console
+
+The Python console starts in the project folder, so the `pd.read_csv("movies.csv")` example above works without changing directories. The restart button in the Console pane's toolbar starts a fresh session, which is the restart from the [previous section](#the-python-console).
+
+The console behaves like an activated environment: it doesn't sync anything. After a hand edit to `pyproject.toml`, run `uv sync` in the terminal and then restart the console.
+
+### The terminal
+
+The `python.terminal.activateEnvironment` setting in `.vscode/settings.json` activates `.venv/` in every new terminal, so the prompt starts with `(pyap)`. Both styles from the start of this chapter work there: `uv run shiny run ...` and `shiny run ...` launch the same app.
+
+### Running the app
+
+When `src/pyap/app.py` is open in the editor, the Run Shiny App button (from the [Shiny extension](https://open-vsx.org/extension/posit/shiny)) launches the app with reloading turned on and displays it in the Viewer pane. Saving `app.py` or `utils.py` restarts the app, exactly as `--reload` does in the terminal.
+
+`app.py` still reads `movies.csv` with a relative path, though, so the app only finds the file when it's launched from the project root. If the app fails with a `FileNotFoundError`, launch it from the terminal instead:
+
+```bash
+uv run shiny run --reload --launch-browser src/pyap/app.py
+```
+
+The [Data](data.qmd) chapter removes this dependence on the working directory.
+
+## Comparing the loop with R
+
+The [Python Packages](packages.qmd#the-development-loop) chapter mapped each `devtools` function to its Python counterpart. The diagram below compares the shape of the two loops, which is where the day to day difference shows up:
+
+```{mermaid}
+%%| fig-cap: 'One pass through the R and Python development loops'
+%%| fig-align: center
+%%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', "fontSize":"14px"}}}%%
+
+flowchart LR
+    subgraph RLoop["<strong>R app-package (sap)</strong>"]
+        REdit(["i. edit <code>R/</code>"])
+        RLoad("ii. <code>load_all()</code>")
+        RDoc("iii. <code>document()</code>")
+        RInst("iv. <code>install()</code>")
+        RTest("v. <code>test()</code><br/>and <code>check()</code>")
+        REdit --> RLoad --> RDoc --> RInst --> RTest
+        RTest -.->|"next change"| REdit
+    end
+
+    subgraph PyLoop["<strong>Python app-package (pyap)</strong>"]
+        PEdit(["i. edit <code>src/pyap/</code>"])
+        PMeta{"ii. <code>pyproject.toml</code><br/>changed?"}
+        PSync("<code>uv sync</code>")
+        PSave("iii. save<br/>(<code>--reload</code> restarts<br/>the app)")
+        PTest("iv. <code>uv run pytest</code>")
+        PEdit --> PMeta
+        PMeta -->|"no"| PSave
+        PMeta -->|"yes"| PSync --> PSave
+        PSave --> PTest
+        PTest -.->|"next change"| PEdit
+    end
+
+    classDef rStyle fill:#2c5282,stroke:#63b3ed,color:#fff
+    classDef pyStyle fill:#744210,stroke:#f6ad55,color:#fff
+
+    class REdit,RLoad,RDoc,RInst,RTest rStyle
+    class PEdit,PMeta,PSync,PSave,PTest pyStyle
+```
+
+In R, the load step is something we do on every pass: `load_all()` (or the keyboard shortcut) after each edit, plus `document()` and `install()` as the package changes. In Python, the load step moves into process startup. `--reload` restarts the app on save, `pytest` starts fresh on every run, and `uv sync` only enters the loop when `pyproject.toml` or `uv.lock` changes. The one place we still load code by hand is the Python console, where a restart plays the role `load_all()` plays in R.
+
+## Recap
+
+In this chapter we walked through the development loop for `pyap` on the `04_dev` branch:
+
+1. `uv run` runs a command in `.venv/` and syncs the environment first. An activated `.venv/` works too, but we have to run `uv sync` ourselves.
+2. Edits to Python code in `src/pyap/` need no action, because the editable install points `.venv/` at our source files. `shiny run --reload` restarts the app whenever we save.
+3. Changes to dependencies or metadata need a sync. `uv add` and `uv remove` sync for us, a hand edit to `pyproject.toml` or a new branch needs `uv sync` (or the next `uv run`), and `uv lock` updates only the lockfile.
+4. Code a process has already imported needs a restart. In the console, that means restarting (or `importlib.reload()` for quick checks), and data read at startup means restarting the app.
+
+Tests run in a fresh process with `uv run pytest`, and Positron ties the console, terminal, and app runner to the same `.venv/`. In the next section of the book, starting with the [Documentation](document.qmd) chapter, we'll use this loop to add documentation, dependencies, data, and a launch function to `pyap`.
