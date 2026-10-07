@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-10-06">
+<meta name="dcterms.date" content="2026-10-07">
 <meta name="description" content="Getting your Shiny for Python app into a Python package">
 
 <title>3&nbsp; Python Packages – Shiny for Python App-Packages</title>
@@ -85,6 +85,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-53a3bec4dbb8e52b51227661461c4b19.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -556,7 +559,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2026-10-06</p>
+      <p class="date">2026-10-07</p>
     </div>
   </div>
   
@@ -892,7 +895,12 @@ flowchart LR
 </div>
 </div>
 <p>To run a command inside the environment, we prefix it with <code>uv run</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run shiny run <span class="at">--reload</span> <span class="at">--launch-browser</span> app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run shiny run <span class="at">--reload</span> app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="images/packages-03.2-uv.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="images/packages-03.2-uv.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
 <p><code>uv run</code> checks that <code>.venv/</code> is in sync with <code>uv.lock</code> before running the command, so most of the time we don’t need to call <code>uv sync</code> ourselves.</p>
 </section>
 <section id="uv.lock" class="level3" data-number="3.4.3">
@@ -1006,7 +1014,7 @@ flowchart TB
 </tbody>
 </table>
 <p>For a pure Python package like <code>pyap</code>, these backends produce nearly the same wheel. They differ in their defaults (where they look for the package, which files they include) and in how much they can be configured. <code>setuptools</code> is the oldest and the one you’ll find in most older projects. Hatchling is the first option in the <a href="https://packaging.python.org/en/latest/tutorials/packaging-projects/">Python Packaging User Guide tutorial</a>, and Flit is intentionally minimal.</p>
-<p>This book uses <code>uv_build</code>, the default backend for <code>uv init --package</code> (it’s the backend in the <a href="./whole_game.html">Whole Game</a> <code>pyproject.toml</code>). It’s built by the same team as <code>uv</code>, it expects the <code>src/</code> layout we’ll use below, and it needs no configuration for a package like <code>pyap</code>. The version range in <code>requires</code> should match the version of uv you have installed (check it with <code>uv --version</code>), so yours may differ from the one in this chapter.</p>
+<p>This book uses <code>uv_build</code>, the default backend for <code>uv init --package</code> (it’s the backend in the <a href="./whole_game.html">Whole Game</a> <code>pyproject.toml</code>). It’s built by the same team as <code>uv</code>, it expects the <code>src/</code> layout we’ll use below, and it needs no configuration for a package like <code>pyap</code>. The version range in <code>requires</code> should match the version of <code>uv</code> you have installed (check it with <code>uv --version</code>), so yours may differ from the one in this chapter.</p>
 </section>
 <section id="creating-the-package" class="level2" data-number="3.6">
 <h2 data-number="3.6" class="anchored" data-anchor-id="creating-the-package"><span class="header-section-number">3.6</span> Creating the package</h2>
@@ -1124,7 +1132,13 @@ flowchart TB
 <h3 data-number="3.6.6" class="anchored" data-anchor-id="running-the-app"><span class="header-section-number">3.6.6</span> Running the app</h3>
 <p>The app now lives at <code>src/pyap/app.py</code>, so we pass that path to <code>shiny run</code>. We’ll run it from the project root, so <code>movies.csv</code> is found:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run shiny run <span class="at">--reload</span> <span class="at">--launch-browser</span> src/pyap/app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The app looks and behaves exactly as it did in the <code>02.3_proj-app</code> branch. We can confirm the package import is working by changing the x axis dropdown and watching the scatter plot update (the plot comes from <code>pyap.utils</code>, so it wouldn’t render if the import failed).</p>
+<p>The app looks and behaves exactly as it did in the <code>02.3_proj-app</code> branch.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="images/packages-03.3-create-package.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="images/packages-03.3-create-package.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+<p>We can confirm the package import is working by changing the x axis dropdown and watching the scatter plot update (the plot comes from <code>pyap.utils</code>, so it wouldn’t render if the import failed).</p>
 </section>
 </section>
 <section id="the-development-loop" class="level2" data-number="3.7">
@@ -1661,8 +1675,40 @@ flowchart LR
   </div>
 </nav>
 </div> <!-- /content -->
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/mjfrigaard/shiny-py-pkgs/edit/main/packages.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mjfrigaard/shiny-py-pkgs/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/mjfrigaard/shiny-py-pkgs/edit/main/packages.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mjfrigaard/shiny-py-pkgs/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+</body></html>
