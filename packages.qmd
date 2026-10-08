@@ -242,6 +242,7 @@ git checkout 03.1_pyproject
 
 The app code doesn't change. The branch deletes `requirements.txt`, adds `pyproject.toml`, and updates the install instructions in `README.md`:
 
+<em>
 ```default
 pyap/
 ├── .gitignore
@@ -253,6 +254,7 @@ pyap/
 ├── pyproject.toml
 └── utils.py
 ```
+</em>
 
 ### Adding project metadata
 
@@ -314,6 +316,7 @@ git checkout 03.2_uv
 
 The app code and `pyproject.toml` are unchanged. The branch adds `.python-version` and `uv.lock`, removes both from `.gitignore` so they're committed, and updates the commands in `README.md`:
 
+<em>
 ```default
 pyap/
 ├── .gitignore
@@ -327,6 +330,7 @@ pyap/
 ├── utils.py
 └── uv.lock
 ```
+</em>
 
 ### Pinning Python
 
@@ -338,9 +342,11 @@ uv python pin 3.12
 
 Returns: 
 
+<em>
 ```default
 Pinned `.python-version` to `3.12`
 ```
+</em>
 
 The file holds a single line:
 
@@ -358,10 +364,12 @@ If Python 3.12 isn't installed, `uv` downloads it the first time it needs it (we
 uv sync
 ```
 
+<em>
 ```default
 Resolved 45 packages in 127ms
 Checked 43 packages in 0.48ms
 ```
+</em>
 
 This one command does the work of the three we ran in the previous branch. `uv` creates `.venv/` if it doesn't exist (or reuses it if it does), writes `uv.lock`, and installs the locked versions into the environment. We don't need to activate the environment first, and we don't need to tell `uv` which file to read.
 
@@ -453,9 +461,11 @@ We can confirm `pyap` isn't installed by trying to import it:
 uv run python -c "import pyap"
 ```
 
+<em>
 ```default
 ModuleNotFoundError: No module named 'pyap'
 ```
+</em>
 
 This error is expected. A non-package project is a perfectly good way to manage an app that only ever runs from its own folder, and many Shiny for Python apps never need more. We want `pyap` to be importable (and testable, and installable), though, so the next step is giving it something to build.
 
@@ -490,6 +500,7 @@ git checkout 03.3_create-package
 
 The branch makes three changes: it adds a `[build-system]` table to `pyproject.toml`, it moves the Python code into `src/pyap/`, and it updates the import in `app.py`. The new project structure is below:
 
+<em>
 ```default
 pyap/
 ├── .gitignore
@@ -506,6 +517,7 @@ pyap/
 │       └── utils.py
 └── uv.lock
 ```
+</em>
 
 R packages need two things to be packages: a `DESCRIPTION` file with the mandatory fields and an `R/` folder. A Python package needs three: a `pyproject.toml` with `name` and `version`, a `[build-system]` table, and an import package for the backend to build. We already have the first, so the sections below add the other two.
 
@@ -588,6 +600,7 @@ With a build system and an import package in place, `uv sync` now installs `pyap
 uv sync
 ```
 
+<em>
 ```default
 Resolved 45 packages in 411ms
       Built pyap @ file:///home/path/to/projects/apps/python/pyap                                 
@@ -595,6 +608,7 @@ Prepared 1 package in 10ms
 Installed 1 package in 0.96ms
  + pyap==0.1.0 (from file:///home/path/to/projects/apps/python/pyap)
 ```
+</em>
 
 `uv` installs the project in editable mode by default. An editable install points Python at the files in `src/pyap/` instead of copying them into `.venv/`, so changes to the code are picked up the next time `pyap` is imported (without reinstalling).[^pkgs-load-all] We only need to sync again when `pyproject.toml` changes. The `pyap` entry in `uv.lock` changes from a `virtual` source to an `editable` one:
 
@@ -613,9 +627,11 @@ The import that failed in the previous branch now works, and `__file__` shows Py
 uv run python -c "import pyap; print(pyap.__file__)"
 ```
 
+<em>
 ```default
 /path/to/pyap/src/pyap/__init__.py
 ```
+</em>
 
 ::: {.callout-note title="Editable installs in the Posit docs"}
 
