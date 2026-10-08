@@ -353,12 +353,14 @@ git checkout 02.2_movies-app
 
 The branch replaces the Old Faithful code with three files:
 
+<em>
 ```default
 pyap/
 ├── app.py
 ├── movies.csv
 └── utils.py
 ```
+</em>
 
 The movies app reads the data with `pandas`, so we'll install it into the virtual environment (`shiny` and `matplotlib` are already installed):
 
@@ -690,6 +692,7 @@ The movies app runs, but nothing in the folder tells another developer (or our f
 git checkout 02.3_proj-app
 ```
 
+<em>
 ```default
 pyap/
 ├── .gitignore
@@ -701,6 +704,7 @@ pyap/
 ├── requirements.txt
 └── utils.py
 ```
+</em>
 
 The app code (`app.py`, `utils.py`, and `movies.csv`) is unchanged. The branch adds `requirements.txt` and `.vscode/settings.json`, and it updates `README.md` and `.gitignore`.
 

@@ -33,20 +33,23 @@ The same prefix works for any command installed in the environment. The first li
 uv run python
 ```
 
+<em>
 ```default
 Python 3.12.15 (main, Oct  3 2026, 01:03:07) [Clang 22.1.3 ] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> 
 ```
-
+</em>
 
 ```bash
 uv run python -c "import pyap; print(pyap.__file__)"
 ```
 
+<em>
 ```default
 /home/path/to/pyap/src/pyap/__init__.py
 ```
+</em>
 
 ### With an activated `.venv/`
 
@@ -152,7 +155,7 @@ The pointer is to the folder, not to individual files, so new modules work the s
 
 ### Reloading the app
 
-The editable install only matters the next time `pyap` is imported.
+The editable install only matters the *next time* `pyap` is imported.
 
 * `--reload` is what makes the next import happen right away  
 
@@ -160,7 +163,9 @@ The editable install only matters the next time `pyap` is imported.
 
 Because `app.py` and `utils.py` both live in `src/pyap/`, saving either one triggers a restart, and the browser tab refreshes itself when the new app is ready.
 
-We can see this with a small edit to `scatter_plot()` in `src/pyap/utils.py`. With the app running, we'll add a grid to the plot just before the call to `plt.tight_layout()` (this line is already in the `04_dev` branch, so delete it, save the file, and add it back to watch the reload happen):
+We can see this with a small edit to `scatter_plot()` in `src/pyap/utils.py`. With the app running, we'll simulate adding a grid to the plot just before the call to `plt.tight_layout()`.
+
+![](images/development-ax-legend-code.png){width="100%" fig-align="center"}
 
 ```python
     ax.legend(
@@ -172,13 +177,22 @@ We can see this with a small edit to `scatter_plot()` in `src/pyap/utils.py`. Wi
     plt.tight_layout()
 ```
 
-After we save the file, the terminal shows the app restarting, and the scatter plot in the browser redraws with light grid lines. We didn't stop the app, reinstall `pyap`, or refresh the page. This is the one edit in the chapter we keep, and it's committed on the `04_dev` branch.
+The lines above are already in the `04_dev` branch, so if we delete it, save the file, we will watch how the reload happens:
+
+![](images/development-no-ax-legend-code.png){width="100%" fig-align="center"}
+
+After we saved the file, the terminal showed the app restarting, and the scatter plot in the browser is redrawn with light grid lines. 
+
+
+We didn't stop the app, reinstall `pyap`, or refresh the page. This is the one edit in the chapter we keep, and it's committed on the `04_dev` branch.
 
 Each reload restarts the app's Python process, so every session starts over and any inputs we changed go back to their default values. For an app the size of `pyap`, this takes a second or two.
 
-::: {.callout-note title="What --reload watches" collapse="true"}
+::: {.callout-note title="What `--reload` watches" collapse="true"}
 
-By default, `--reload` only reacts to certain file types (such as `.py`, `.css`, `.js`, and `.html` files) inside the folder that holds the app. `movies.csv` fails both tests: it's a `.csv` file, and it sits at the project root instead of in `src/pyap/`. Running `shiny run --help` lists the `--reload-dir`, `--reload-includes`, and `--reload-excludes` options for changing what's watched.
+By default, `--reload` only reacts to certain file types (such as `.py`, `.css`, `.js`, and `.html` files) inside the folder that holds the app. `movies.csv` fails *both* tests because it's a `.csv` file, and it sits at the *project root* instead of in `src/pyap/`.
+
+Running `shiny run --help` lists the `--reload-dir`, `--reload-includes`, and `--reload-excludes` options for changing what's watched.
 
 :::
 
@@ -194,6 +208,7 @@ A sync is needed when a change affects what's installed in `.venv/`, rather than
 uv add polars
 ```
 
+<em>
 ```default
 Resolved 47 packages in 418ms
       Built pyap @ file:///path/to/pyap/                                                         
@@ -204,6 +219,8 @@ Installed 3 packages in 6ms
  + polars-runtime-32==2.0.0
  ~ pyap==0.1.0 (from file:///path/to/pyap)
 ```
+</em>
+
 
 After `uv add`, `polars` appears in the `dependencies` list with a lower bound, and `uv run python -c "import polars"` succeeds. 
 
@@ -213,6 +230,7 @@ After `uv add`, `polars` appears in the `dependencies` list with a lower bound, 
 uv remove polars
 ```
 
+<em>
 ```default
 Resolved 45 packages in 15ms
       Built pyap @ file:///path/to/pyap                                                            
@@ -223,6 +241,7 @@ Installed 1 package in 0.53ms
  - polars-runtime-32==2.0.0
  ~ pyap==0.1.0 (from file:///path/to/pyap)
 ```
+</em>
 
 Development tools go in the `dev` dependency group with `--dev`, as `pytest` did in the [Whole Game](whole_game.qmd) chapter. The [Dependencies](dependencies.qmd) chapter covers version constraints, groups, and upgrades.
 
@@ -240,23 +259,65 @@ source .venv/bin/activate
 python -c "from importlib.metadata import version; print(version('pyap'))"
 ```
 
+<em>
 ```default
 0.1.0
 ```
+</em>
 
-Next, we'll make another illustrative edit and change `version = "0.1.0"` to `version = "0.1.1"` in `pyproject.toml`. Running the same command still prints `0.1.0`. The editable install points at our code, but the package metadata is a snapshot from the last sync. `uv sync` rebuilds it:
+Next, we'll make another illustrative edit and change `version = "0.1.0"` to `version = "0.1.1"` in `pyproject.toml`. 
+
+```toml
+[project]
+name = "pyap"
+version = "0.1.1" #<1>
+description = "A Shiny for Python app-package"
+readme = "README.md"
+authors = [
+    { name = "Martin Frigaard" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "matplotlib>=3.8.0",
+    "numpy>=1.26.0",
+    "pandas>=2.1.0",
+    "shiny>=1.2.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.23,<0.13.0"]
+build-backend = "uv_build"
+```
+1. Change from "0.1.0" to "0.1.1"
+
+
+Running the same command still prints `0.1.0`. The editable install points at our code, but the package metadata is a snapshot from the last sync. `uv sync` rebuilds it:
 
 ```bash
 uv sync
 ```
 
+<em>
+```default
+Resolved 45 packages in 522ms
+      Built pyap @ file:///path/to/pyap                            
+Prepared 1 package in 9ms
+Uninstalled 1 package in 0.69ms
+Installed 1 package in 0.80ms
+ - pyap==0.1.0 (from file:///path/to/pyap)
+ + pyap==0.1.1 (from file:///path/to/pyap)
+```
+</em>
+
 ```bash
 python -c "from importlib.metadata import version; print(version('pyap'))"
 ```
 
+<em>
 ```default
 0.1.1
 ```
+</em>
 
 `uv run python -c "..."` would have printed `0.1.1` without the explicit `uv sync`, because `uv run` syncs first. We'll undo the edit (along with the lockfile change the sync made) and sync again:
 
@@ -267,6 +328,18 @@ git restore pyproject.toml uv.lock
 ```bash
 uv sync
 ```
+
+<em>
+```default
+Resolved 45 packages in 1ms
+      Built pyap @ file:///path/to/pyap                            
+Prepared 1 package in 4ms
+Uninstalled 1 package in 0.25ms
+Installed 1 package in 0.79ms
+ - pyap==0.1.1 (from file:///path/to/pyap)
+ + pyap==0.1.0 (from file:///path/to/pyap)
+```
+</em>
 
 The same rule applies to the rest of `[project]` (such as `requires-python`, `dependencies`, and the `[project.scripts]` commands we'll add in the [Launch](launch.qmd) chapter), and to the `[build-system]` table. All of them are read when the package is installed, so a change only takes effect after a sync.
 
@@ -286,32 +359,33 @@ The table below summarizes which command handles each change:
 
 | Change | Command | Updates |
 |---|---|---|
-| Edit code in `src/pyap/` | None | Nothing (editable install) |
-| Add or remove a dependency | `uv add` or `uv remove` | `pyproject.toml`, `uv.lock`, and `.venv/` |
-| Edit `pyproject.toml` by hand | `uv sync` | `uv.lock` and `.venv/` |
-| Check out, pull, or clone | `uv sync` | `.venv/` |
-| Update only the lockfile | `uv lock` | `uv.lock` |
+| Editing code in `src/pyap/` | None | Nothing (editable install) |
+| Adding or removing a dependency | `uv add` or `uv remove` | `pyproject.toml`, `uv.lock`, and `.venv/` |
+| Editing `pyproject.toml` by hand | `uv sync` | `uv.lock` and `.venv/` |
+| Checking out, pulling, or cloning | `uv sync` | `.venv/` |
+| Updating only the lockfile | `uv lock` | `uv.lock` |
 
 ## Changes that need a restart
 
-The editable install keeps `.venv/` pointed at our current code, and a sync keeps the installed packages current. Neither one changes code a Python process has already imported. Python imports each module once per process and caches it, so a running process keeps the version it loaded until it's restarted (or told to reload).
+The editable install keeps `.venv/` pointed at our current code, and a sync keeps the installed packages current, and neither changes the code the Python processes have already imported. Python imports each module once per process and caches it, so a running process keeps the version it loaded until it's restarted (or told to reload).
 
-`shiny run --reload` handles this for the app by restarting the process on every save. Two cases don't get that treatment: the Python console, and anything the app reads only when it starts.
+`shiny run --reload` handles this for the app by restarting the process on every save. There are two exceptions to this: commands in the Python console, and basically anything the app reads only when it starts.
 
 ### The Python console
 
-The console is where the editable install feels least like `load_all()`.[^dev-load-all] Suppose we import `scatter_plot()` into a console (`uv run python`, started from the project root) to try it outside of the app:
+The **Console** is where the editable install feels the least like `load_all()`.[^dev-load-all] Suppose we import `scatter_plot()` into a console (`uv run python`, started from the project root) to try it outside of the app. Note--the Python session is the one loaded from `.venv/bin/python*`:
 
-[^dev-load-all]: `load_all()` re-sources every file in `R/` each time we call it, so the console always has the latest code. Python has no single command that does this for a whole package.
+[^dev-load-all]: `load_all()` re-sources every file in `R/` each time we call it, so the **Console** always has the latest code. Python has no single command that does this for a whole package.
 
 ```python
 >>> import pandas as pd
 >>> from pyap import utils
 >>> movies = pd.read_csv("movies.csv")
->>> fig = utils.scatter_plot(
-...     movies, "critics_score", "audience_score", "mpaa_rating", 0.4, 3
-... )
+>>> fig = utils.scatter_plot(movies, "critics_score", "audience_score", "mpaa_rating", 0.4, 3)
 ```
+
+![](images/development-python-console.png){width="100%" fig-align="center"}
+
 
 If we now edit `utils.py` and call `utils.scatter_plot()` again, we get the old version. Running `from pyap import utils` again doesn't help, because Python finds `pyap.utils` in its module cache and never opens the file.
 
@@ -320,19 +394,24 @@ We have two options. The first is `importlib.reload()`, which re-executes a modu
 ```python
 >>> import importlib
 >>> importlib.reload(utils)
->>> fig = utils.scatter_plot(
-...     movies, "critics_score", "audience_score", "mpaa_rating", 0.4, 3
-... )
 ```
+
+<em>
+```default
+<module 'pyap.utils' from '/path/to/pyap/src/pyap/utils.py'>
+```
+</em>
 
 The second is restarting the console and running the imports again. I've found restarting is the more reliable habit, for the reasons in the warning below.
 
-::: {.callout-warning title="The limits of importlib.reload()"}
+::: {.callout-warning title="The limits of `importlib.reload()`" collapse="false"}
 
 `importlib.reload()` is useful for quick checks, but it misses changes in a few common situations:
 
 * One module at a time: reloading `pyap.utils` doesn't reload the modules it imports, and reloading `pyap` doesn't reload `pyap.utils`.
+
 * Names imported with `from`: after `from pyap.utils import scatter_plot`, the name `scatter_plot` still points to the old function until we run the `from` import again.
+
 * Third party packages: if `uv add` or `uv sync` upgrades a package the console has already imported (like `pandas`), restart the console.
 
 :::
@@ -352,9 +431,13 @@ This is convenient for long console sessions, but it can still miss the same edg
 
 ### Data and running apps
 
-`app.py` reads `movies.csv` once, when the module is imported. Editing `movies.csv` doesn't trigger `--reload` (see the note above), so the app keeps showing the old data until it restarts. Press <kbd>Ctrl</kbd> + <kbd>C</kbd> in the terminal and run the app again to pick up the change. The [Data](data.qmd) chapter moves the file into the package.
+`app.py` reads `movies.csv` once, when the module is imported. Editing `movies.csv` doesn't trigger `--reload` (see the note above), so the app keeps showing the old data until it restarts. 
 
-The same is true after a hand edit to `pyproject.toml` while the app is running. `--reload` doesn't watch `pyproject.toml`, so we stop the app and start it again with `uv run`, which syncs before launching. An app started without `--reload` needs this restart after every change.
+If we make changes to `movies.csv`, we have to press <kbd>Ctrl</kbd> + <kbd>C</kbd> in the terminal, then run the app again to pick up the change. The [Data](data.qmd) chapter moves the file into the package.
+
+The same is true after hands edit to `pyproject.toml` while the app is running. `--reload` doesn't watch `pyproject.toml`, so we'd have to stop the app and restart it with `uv run`, which syncs before launching. 
+
+If we launch an app started without `--reload`, we need to restart after every change.
 
 ## Running tests
 
@@ -363,6 +446,22 @@ Tests close the loop. `pytest` starts a new Python process each time it runs, so
 ```bash
 uv run pytest
 ```
+
+<em>
+
+```default
+=================== test session starts ===================
+platform linux -- Python 3.12.3, pytest-9.1.0, pluggy-1.6.0
+rootdir: /path/to/pyap
+configfile: pyproject.toml
+plugins: shiny-1.6.3, anyio-4.14.0
+collected 0 items
+
+=================== no tests ran in 0.00s ===================
+```
+
+</em>
+
 
 The `04_dev` branch doesn't have a `tests/` folder yet, and `pytest` isn't installed in this branch's environment, so the command above has nothing to run here (and if another copy of `pytest` is on your `PATH`, `uv run` may pick it up instead of failing). We added both in the [Whole Game](whole_game.qmd) chapter (`uv add --dev pytest` and a `tests/test_data.py` file), and the [Test Suite](test_suite.qmd) chapter adds them to `pyap`.
 
