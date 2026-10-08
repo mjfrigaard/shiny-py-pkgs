@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-10-07">
+<meta name="dcterms.date" content="2026-10-08">
 <meta name="description" content="Getting your Shiny for Python app into a Python package">
 
 <title>3&nbsp; Python Packages – Shiny for Python App-Packages</title>
@@ -559,7 +559,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2026-10-07</p>
+      <p class="date">2026-10-08</p>
     </div>
   </div>
   
@@ -794,6 +794,7 @@ flowchart LR
 <p>The first branch replaces <code>requirements.txt</code> with a hand written <code>pyproject.toml</code>. Check out the <code>03.1_pyproject</code> branch to follow along:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout 03.1_pyproject</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The app code doesn’t change. The branch deletes <code>requirements.txt</code>, adds <code>pyproject.toml</code>, and updates the install instructions in <code>README.md</code>:</p>
+<p><em></em></p><em>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pyap/</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>├── .gitignore</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>├── .vscode/</span>
@@ -803,6 +804,7 @@ flowchart LR
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>├── movies.csv</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>├── pyproject.toml</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>└── utils.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</em><p><em></em></p>
 <section id="adding-project-metadata" class="level3" data-number="3.3.1">
 <h3 data-number="3.3.1" class="anchored" data-anchor-id="adding-project-metadata"><span class="header-section-number">3.3.1</span> Adding project metadata</h3>
 <p>The full <code>pyproject.toml</code> in this branch is below:</p>
@@ -853,6 +855,7 @@ flowchart LR
 <p>In the <code>03.1_pyproject</code> branch, <code>uv</code> is only acting as a faster <code>pip</code>: we create the environment, activate it, and tell it what to install. The <code>03.2_uv</code> branch hands the whole job to uv’s project commands. <code>uv</code> is also the first option listed on the <a href="https://shiny.posit.co/py/get-started/install.html">Shiny for Python install page</a>. Check out the <code>03.2_uv</code> branch to follow along:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout 03.2_uv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The app code and <code>pyproject.toml</code> are unchanged. The branch adds <code>.python-version</code> and <code>uv.lock</code>, removes both from <code>.gitignore</code> so they’re committed, and updates the commands in <code>README.md</code>:</p>
+<p><em></em></p><em>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>pyap/</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>├── .gitignore</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>├── .python-version</span>
@@ -864,12 +867,15 @@ flowchart LR
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>├── pyproject.toml</span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>├── utils.py</span>
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>└── uv.lock</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</em><p><em></em></p>
 <section id="pinning-python" class="level3" data-number="3.4.1">
 <h3 data-number="3.4.1" class="anchored" data-anchor-id="pinning-python"><span class="header-section-number">3.4.1</span> Pinning Python</h3>
 <p><code>requires-python</code> in <code>pyproject.toml</code> sets the range of Python versions the project supports, but it doesn’t choose one. <code>uv python pin</code> records the exact version <code>uv</code> should use for this project in a <code>.python-version</code> file:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> python pin 3.12</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Returns:</p>
+<p><em></em></p><em>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Pinned `.python-version` to `3.12`</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</em><p><em></em></p>
 <p>The file holds a single line:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>3.12</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If Python 3.12 isn’t installed, <code>uv</code> downloads it the first time it needs it (we covered <code>uv python install</code> in the <a href="./intro.html">Introduction</a>).</p>
@@ -878,8 +884,10 @@ flowchart LR
 <h3 data-number="3.4.2" class="anchored" data-anchor-id="syncing-the-environment"><span class="header-section-number">3.4.2</span> Syncing the environment</h3>
 <p><code>uv sync</code> reads <code>pyproject.toml</code>, resolves the dependencies, and makes <code>.venv/</code> match the result:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em></em></p><em>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Resolved 45 packages in 127ms</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>Checked 43 packages in 0.48ms</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</em><p><em></em></p>
 <p>This one command does the work of the three we ran in the previous branch. <code>uv</code> creates <code>.venv/</code> if it doesn’t exist (or reuses it if it does), writes <code>uv.lock</code>, and installs the locked versions into the environment. We don’t need to activate the environment first, and we don’t need to tell <code>uv</code> which file to read.</p>
 <div class="callout callout-style-default callout-warning no-icon callout-titled" title="uv sync removes packages">
 <div class="callout-header d-flex align-content-center">
@@ -974,7 +982,9 @@ flowchart TB
 <span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>We can confirm <code>pyap</code> isn’t installed by trying to import it:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-c</span> <span class="st">"import pyap"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em></em></p><em>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>ModuleNotFoundError: No module named 'pyap'</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</em><p><em></em></p>
 <p>This error is expected. A non-package project is a perfectly good way to manage an app that only ever runs from its own folder, and many Shiny for Python apps never need more. We want <code>pyap</code> to be importable (and testable, and installable), though, so the next step is giving it something to build.</p>
 </section>
 </section>
@@ -1021,6 +1031,7 @@ flowchart TB
 <p>The <code>03.3_create-package</code> branch turns <code>pyap</code> into a package. Check it out to follow along:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout 03.3_create-package</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The branch makes three changes: it adds a <code>[build-system]</code> table to <code>pyproject.toml</code>, it moves the Python code into <code>src/pyap/</code>, and it updates the import in <code>app.py</code>. The new project structure is below:</p>
+<p><em></em></p><em>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>pyap/</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>├── .gitignore</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>├── .python-version</span>
@@ -1035,6 +1046,7 @@ flowchart TB
 <span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>│       ├── app.py</span>
 <span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>│       └── utils.py</span>
 <span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>└── uv.lock</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</em><p><em></em></p>
 <p>R packages need two things to be packages: a <code>DESCRIPTION</code> file with the mandatory fields and an <code>R/</code> folder. A Python package needs three: a <code>pyproject.toml</code> with <code>name</code> and <code>version</code>, a <code>[build-system]</code> table, and an import package for the backend to build. We already have the first, so the sections below add the other two.</p>
 <section id="adding-a-build-system" class="level3" data-number="3.6.1">
 <h3 data-number="3.6.1" class="anchored" data-anchor-id="adding-a-build-system"><span class="header-section-number">3.6.1</span> Adding a build system</h3>
@@ -1101,11 +1113,13 @@ flowchart TB
 <h3 data-number="3.6.5" class="anchored" data-anchor-id="installing-in-editable-mode"><span class="header-section-number">3.6.5</span> Installing in editable mode</h3>
 <p>With a build system and an import package in place, <code>uv sync</code> now installs <code>pyap</code> itself along with its dependencies:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em></em></p><em>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Resolved 45 packages in 411ms</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>      Built pyap @ file:///home/path/to/projects/apps/python/pyap                                 </span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>Prepared 1 package in 10ms</span>
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>Installed 1 package in 0.96ms</span>
 <span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a> + pyap==0.1.0 (from file:///home/path/to/projects/apps/python/pyap)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</em><p><em></em></p>
 <p><code>uv</code> installs the project in editable mode by default. An editable install points Python at the files in <code>src/pyap/</code> instead of copying them into <code>.venv/</code>, so changes to the code are picked up the next time <code>pyap</code> is imported (without reinstalling).<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> We only need to sync again when <code>pyproject.toml</code> changes. The <code>pyap</code> entry in <code>uv.lock</code> changes from a <code>virtual</code> source to an <code>editable</code> one:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[[package]]</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"pyap"</span></span>
@@ -1113,7 +1127,9 @@ flowchart TB
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="dt">source</span> <span class="op">=</span> <span class="op">{ </span><span class="dt">editable</span><span class="op"> =</span> <span class="st">"."</span><span class="op"> }</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The import that failed in the previous branch now works, and <code>__file__</code> shows Python is reading <code>pyap</code> from our source folder:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-c</span> <span class="st">"import pyap; print(pyap.__file__)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em></em></p><em>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>/path/to/pyap/src/pyap/__init__.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</em><p><em></em></p>
 <div class="callout callout-style-default callout-note no-icon callout-titled" title="Editable installs in the Posit docs">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">

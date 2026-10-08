@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-10-07">
+<meta name="dcterms.date" content="2026-10-08">
 <meta name="description" content="Getting your Shiny for Python app into a Python package">
 
 <title>2&nbsp; Shiny for Python – Shiny for Python App-Packages</title>
@@ -550,7 +550,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2026-10-07</p>
+      <p class="date">2026-10-08</p>
     </div>
   </div>
   
@@ -829,10 +829,12 @@ flowchart TB
 <p>Check out the <code>02.2_movies-app</code> branch to follow along:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout 02.2_movies-app</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The branch replaces the Old Faithful code with three files:</p>
+<p><em></em></p><em>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>pyap/</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>├── app.py</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>├── movies.csv</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>└── utils.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</em><p><em></em></p>
 <p>The movies app reads the data with <code>pandas</code>, so we’ll install it into the virtual environment (<code>shiny</code> and <code>matplotlib</code> are already installed):</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install pandas</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-note no-icon callout-titled" title="pandas or polars?">
@@ -1119,6 +1121,7 @@ flowchart TB
 <h2 data-number="2.5" class="anchored" data-anchor-id="project-structure"><span class="header-section-number">2.5</span> Project structure</h2>
 <p>The movies app runs, but nothing in the folder tells another developer (or our future selves) which packages it needs or how the editor should be configured. The <code>02.3_proj-app</code> branch adds these files:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout 02.3_proj-app</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em></em></p><em>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>pyap/</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>├── .gitignore</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>├── .vscode/</span>
@@ -1128,6 +1131,7 @@ flowchart TB
 <span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>├── movies.csv</span>
 <span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>├── requirements.txt</span>
 <span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>└── utils.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</em><p><em></em></p>
 <p>The app code (<code>app.py</code>, <code>utils.py</code>, and <code>movies.csv</code>) is unchanged. The branch adds <code>requirements.txt</code> and <code>.vscode/settings.json</code>, and it updates <code>README.md</code> and <code>.gitignore</code>.</p>
 <section id="requirements.txt" class="level3" data-number="2.5.1">
 <h3 data-number="2.5.1" class="anchored" data-anchor-id="requirements.txt"><span class="header-section-number">2.5.1</span> requirements.txt</h3>
