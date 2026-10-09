@@ -463,24 +463,41 @@ collected 0 items
 </em>
 
 
-The `04_dev` branch doesn't have a `tests/` folder yet, and `pytest` isn't installed in this branch's environment, so the command above has nothing to run here (and if another copy of `pytest` is on your `PATH`, `uv run` may pick it up instead of failing). We added both in the [Whole Game](whole_game.qmd) chapter (`uv add --dev pytest` and a `tests/test_data.py` file), and the [Test Suite](test_suite.qmd) chapter adds them to `pyap`.
+The `04_dev` branch doesn't have a `tests/` folder yet, and `pytest` isn't installed in this branch's environment, so the command above has nothing to run here.[^py-test] We added both in the [Whole Game](whole_game.qmd) chapter (`uv add --dev pytest` and a `tests/test_data.py` file), and the [Test Suite](test_suite.qmd) chapter adds them to `pyap`.
 
-Once tests exist, two variations are worth knowing during development. The first command below runs a single test file, and the second stops at the first failure:
+[^py-test]: f another copy of `pytest` is on your `PATH`, `uv run` may pick it up instead of failing.
+
+Once tests exist, two variations are worth knowing during development: 
+
+1. Run a single test file:[^test-active-file]
 
 ```bash
 uv run pytest tests/test_data.py
+```
+
+2. Stop at the first failure
+
+```bash
 uv run pytest -x
 ```
 
-The rest of the Testing section covers fixtures, testing modules, and system tests, starting with the [Test Suite](test_suite.qmd) chapter.
+[^test-active-file]: This is similar to [`devtools::test_active_file()`](https://devtools.r-lib.org/reference/test.html) in R. 
+
+The [Tests section](tests.qmd) covers fixtures, testing modules, and system tests, starting with the [Test Suite](test_suite.qmd) chapter.
 
 ## Using Positron for the loop
 
-You don't have to use Positron for any of this, since every step above is a terminal command. Positron puts the same steps into panes that share one environment, which removes a few of the places where things can drift out of sync.
+Positron isn't required to run any of the commands I've covered so far (every step above is a Terminal command). However, Positron puts the same steps into panes that share a single environment, which removes a few of the places where things can drift out of sync. Below I'll cover some of the other Positron settings for Python package development. 
 
-### Choosing the interpreter
+### Choosing an interpreter
 
-The `.vscode/settings.json` file from the `02.3_proj-app` branch sets `python.defaultInterpreterPath` to `.venv/bin/python`. Positron also detects `.venv/` folders in the project on its own. The interpreter picker in the top right corner of the window should show the Python from `.venv/`; if it doesn't, select it there. If `.venv/` didn't exist when the project was opened, run `uv sync` in the terminal first, then select the new environment.
+The `.vscode/settings.json` file from the `02.3_proj-app` branch sets `python.defaultInterpreterPath` to `.venv/bin/python`. Positron will also detect `.venv/` folders in the project on its own.
+
+ The interpreter picker in the top right corner of the window should show the Python from `.venv/`; if it doesn't, select it there.
+
+ ![](images/development-positron-virtual-env.png){width="100%" fig-align="center"}
+ 
+ If `.venv/` didn't exist when the project was opened, run `uv sync` in the terminal first, then select the new environment.
 
 With `.venv/` selected, the console, the editor, and the test runner all use the same environment as `uv run`.
 
@@ -492,7 +509,23 @@ The console behaves like an activated environment: it doesn't sync anything. Aft
 
 ### The terminal
 
-The `python.terminal.activateEnvironment` setting in `.vscode/settings.json` activates `.venv/` in every new terminal, so the prompt starts with `(pyap)`. Both styles from the start of this chapter work there: `uv run shiny run ...` and `shiny run ...` launch the same app.
+The `python.terminal.activateEnvironment` setting in `.vscode/settings.json` activates `.venv/` in every new terminal, so the prompt starts with `(pyap)`. 
+
+![](images/development-positron-uv-terminal.png){width="100%" fig-align="center"}
+
+Both styles from the start of this chapter work there: 
+
+```bash
+uv run shiny run ...
+```
+
+and ...
+
+```bash
+shiny run ...
+```
+
+launch the same app.
 
 ### Running the app
 
@@ -511,12 +544,12 @@ The [Data](data.qmd) chapter removes this dependence on the working directory.
 The [Python Packages](packages.qmd#the-development-loop) chapter mapped each `devtools` function to its Python counterpart. The diagram below compares the shape of the two loops, which is where the day to day difference shows up:
 
 ```{mermaid}
-%%| fig-cap: 'One pass through the R and Python development loops'
+%%| fig-cap: 'One pass through the R development loop'
 %%| fig-align: center
 %%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', "fontSize":"14px"}}}%%
 
 flowchart LR
-    subgraph RLoop["<strong>R app-package (sap)</strong>"]
+    subgraph RLoop["<strong>R app-package</strong>"]
         REdit(["i. edit <code>R/</code>"])
         RLoad("ii. <code>load_all()</code>")
         RDoc("iii. <code>document()</code>")
@@ -526,7 +559,20 @@ flowchart LR
         RTest -.->|"next change"| REdit
     end
 
-    subgraph PyLoop["<strong>Python app-package (pyap)</strong>"]
+    classDef rStyle fill:#2c5282,stroke:#63b3ed,color:#fff
+    class REdit,RLoad,RDoc,RInst,RTest rStyle
+    
+```
+
+In R, the load step is something we do on every pass: `load_all()` (or the keyboard shortcut) after each edit, plus `document()` and `install()` as the package changes.
+```{mermaid}
+%%| fig-cap: 'One pass through the Python development loop'
+%%| fig-align: center
+%%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', "fontSize":"14px"}}}%%
+
+flowchart LR
+
+    subgraph PyLoop["<strong>Python app-package</strong>"]
         PEdit(["i. edit <code>src/pyap/</code>"])
         PMeta{"ii. <code>pyproject.toml</code><br/>changed?"}
         PSync("<code>uv sync</code>")
@@ -539,14 +585,12 @@ flowchart LR
         PTest -.->|"next change"| PEdit
     end
 
-    classDef rStyle fill:#2c5282,stroke:#63b3ed,color:#fff
     classDef pyStyle fill:#744210,stroke:#f6ad55,color:#fff
-
-    class REdit,RLoad,RDoc,RInst,RTest rStyle
     class PEdit,PMeta,PSync,PSave,PTest pyStyle
+
 ```
 
-In R, the load step is something we do on every pass: `load_all()` (or the keyboard shortcut) after each edit, plus `document()` and `install()` as the package changes. In Python, the load step moves into process startup. `--reload` restarts the app on save, `pytest` starts fresh on every run, and `uv sync` only enters the loop when `pyproject.toml` or `uv.lock` changes. The one place we still load code by hand is the Python console, where a restart plays the role `load_all()` plays in R.
+ In Python, the load step moves into process startup. `--reload` restarts the app on save, `pytest` starts fresh on every run, and `uv sync` only enters the loop when `pyproject.toml` or `uv.lock` changes. The one place we still load code by hand is the Python console, where a restart plays the role `load_all()` plays in R.
 
 ## Recap
 
