@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-10-08">
+<meta name="dcterms.date" content="2026-10-09">
 <meta name="description" content="Getting your Shiny for Python app into a Python package">
 
 <title>4&nbsp; Development Workflow – Shiny for Python App-Packages</title>
@@ -528,7 +528,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#running-tests" id="toc-running-tests" class="nav-link" data-scroll-target="#running-tests"><span class="header-section-number">4.6</span> Running tests</a></li>
   <li><a href="#using-positron-for-the-loop" id="toc-using-positron-for-the-loop" class="nav-link" data-scroll-target="#using-positron-for-the-loop"><span class="header-section-number">4.7</span> Using Positron for the loop</a>
   <ul>
-  <li><a href="#choosing-the-interpreter" id="toc-choosing-the-interpreter" class="nav-link" data-scroll-target="#choosing-the-interpreter"><span class="header-section-number">4.7.1</span> Choosing the interpreter</a></li>
+  <li><a href="#choosing-an-interpreter" id="toc-choosing-an-interpreter" class="nav-link" data-scroll-target="#choosing-an-interpreter"><span class="header-section-number">4.7.1</span> Choosing an interpreter</a></li>
   <li><a href="#the-console" id="toc-the-console" class="nav-link" data-scroll-target="#the-console"><span class="header-section-number">4.7.2</span> The console</a></li>
   <li><a href="#the-terminal" id="toc-the-terminal" class="nav-link" data-scroll-target="#the-terminal"><span class="header-section-number">4.7.3</span> The terminal</a></li>
   <li><a href="#running-the-app" id="toc-running-the-app" class="nav-link" data-scroll-target="#running-the-app"><span class="header-section-number">4.7.4</span> Running the app</a></li>
@@ -554,7 +554,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2026-10-08</p>
+      <p class="date">2026-10-09</p>
     </div>
   </div>
   
@@ -1003,18 +1003,31 @@ flowchart TB
 <span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>=================== no tests ran in 0.00s ===================</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </em><p><em></em></p>
-<p>The <code>04_dev</code> branch doesn’t have a <code>tests/</code> folder yet, and <code>pytest</code> isn’t installed in this branch’s environment, so the command above has nothing to run here (and if another copy of <code>pytest</code> is on your <code>PATH</code>, <code>uv run</code> may pick it up instead of failing). We added both in the <a href="./whole_game.html">Whole Game</a> chapter (<code>uv add --dev pytest</code> and a <code>tests/test_data.py</code> file), and the <a href="./test_suite.html">Test Suite</a> chapter adds them to <code>pyap</code>.</p>
-<p>Once tests exist, two variations are worth knowing during development. The first command below runs a single test file, and the second stops at the first failure:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest tests/test_data.py</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest <span class="at">-x</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The rest of the Testing section covers fixtures, testing modules, and system tests, starting with the <a href="./test_suite.html">Test Suite</a> chapter.</p>
+<p>The <code>04_dev</code> branch doesn’t have a <code>tests/</code> folder yet, and <code>pytest</code> isn’t installed in this branch’s environment, so the command above has nothing to run here.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> We added both in the <a href="./whole_game.html">Whole Game</a> chapter (<code>uv add --dev pytest</code> and a <code>tests/test_data.py</code> file), and the <a href="./test_suite.html">Test Suite</a> chapter adds them to <code>pyap</code>.</p>
+<p>Once tests exist, two variations are worth knowing during development:</p>
+<ol type="1">
+<li>Run a single test file:<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest tests/test_data.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ol start="2" type="1">
+<li>Stop at the first failure</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest <span class="at">-x</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <a href="./tests.html">Tests section</a> covers fixtures, testing modules, and system tests, starting with the <a href="./test_suite.html">Test Suite</a> chapter.</p>
 </section>
 <section id="using-positron-for-the-loop" class="level2" data-number="4.7">
 <h2 data-number="4.7" class="anchored" data-anchor-id="using-positron-for-the-loop"><span class="header-section-number">4.7</span> Using Positron for the loop</h2>
-<p>You don’t have to use Positron for any of this, since every step above is a terminal command. Positron puts the same steps into panes that share one environment, which removes a few of the places where things can drift out of sync.</p>
-<section id="choosing-the-interpreter" class="level3" data-number="4.7.1">
-<h3 data-number="4.7.1" class="anchored" data-anchor-id="choosing-the-interpreter"><span class="header-section-number">4.7.1</span> Choosing the interpreter</h3>
-<p>The <code>.vscode/settings.json</code> file from the <code>02.3_proj-app</code> branch sets <code>python.defaultInterpreterPath</code> to <code>.venv/bin/python</code>. Positron also detects <code>.venv/</code> folders in the project on its own. The interpreter picker in the top right corner of the window should show the Python from <code>.venv/</code>; if it doesn’t, select it there. If <code>.venv/</code> didn’t exist when the project was opened, run <code>uv sync</code> in the terminal first, then select the new environment.</p>
+<p>Positron isn’t required to run any of the commands I’ve covered so far (every step above is a Terminal command). However, Positron puts the same steps into panes that share a single environment, which removes a few of the places where things can drift out of sync. Below I’ll cover some of the other Positron settings for Python package development.</p>
+<section id="choosing-an-interpreter" class="level3" data-number="4.7.1">
+<h3 data-number="4.7.1" class="anchored" data-anchor-id="choosing-an-interpreter"><span class="header-section-number">4.7.1</span> Choosing an interpreter</h3>
+<p>The <code>.vscode/settings.json</code> file from the <code>02.3_proj-app</code> branch sets <code>python.defaultInterpreterPath</code> to <code>.venv/bin/python</code>. Positron will also detect <code>.venv/</code> folders in the project on its own.</p>
+<p>The interpreter picker in the top right corner of the window should show the Python from <code>.venv/</code>; if it doesn’t, select it there.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="images/development-positron-virtual-env.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="images/development-positron-virtual-env.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+<p>If <code>.venv/</code> didn’t exist when the project was opened, run <code>uv sync</code> in the terminal first, then select the new environment.</p>
 <p>With <code>.venv/</code> selected, the console, the editor, and the test runner all use the same environment as <code>uv run</code>.</p>
 </section>
 <section id="the-console" class="level3" data-number="4.7.2">
@@ -1024,13 +1037,23 @@ flowchart TB
 </section>
 <section id="the-terminal" class="level3" data-number="4.7.3">
 <h3 data-number="4.7.3" class="anchored" data-anchor-id="the-terminal"><span class="header-section-number">4.7.3</span> The terminal</h3>
-<p>The <code>python.terminal.activateEnvironment</code> setting in <code>.vscode/settings.json</code> activates <code>.venv/</code> in every new terminal, so the prompt starts with <code>(pyap)</code>. Both styles from the start of this chapter work there: <code>uv run shiny run ...</code> and <code>shiny run ...</code> launch the same app.</p>
+<p>The <code>python.terminal.activateEnvironment</code> setting in <code>.vscode/settings.json</code> activates <code>.venv/</code> in every new terminal, so the prompt starts with <code>(pyap)</code>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="images/development-positron-uv-terminal.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="images/development-positron-uv-terminal.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+<p>Both styles from the start of this chapter work there:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run shiny run ...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>and …</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="ex">shiny</span> run ...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>launch the same app.</p>
 </section>
 <section id="running-the-app" class="level3" data-number="4.7.4">
 <h3 data-number="4.7.4" class="anchored" data-anchor-id="running-the-app"><span class="header-section-number">4.7.4</span> Running the app</h3>
 <p>When <code>src/pyap/app.py</code> is open in the editor, the Run Shiny App button (from the <a href="https://open-vsx.org/extension/posit/shiny">Shiny extension</a>) launches the app with reloading turned on and displays it in the Viewer pane. Saving <code>app.py</code> or <code>utils.py</code> restarts the app, exactly as <code>--reload</code> does in the terminal.</p>
 <p><code>app.py</code> still reads <code>movies.csv</code> with a relative path, though, so the app only finds the file when it’s launched from the project root. If the app fails with a <code>FileNotFoundError</code>, launch it from the terminal instead:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run shiny run <span class="at">--reload</span> <span class="at">--launch-browser</span> src/pyap/app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run shiny run <span class="at">--reload</span> <span class="at">--launch-browser</span> src/pyap/app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The <a href="./data.html">Data</a> chapter removes this dependence on the working directory.</p>
 </section>
 </section>
@@ -1045,7 +1068,7 @@ flowchart TB
 <pre class="mermaid mermaid-js">%%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', "fontSize":"14px"}}}%%
 
 flowchart LR
-    subgraph RLoop["&lt;strong&gt;R app-package (sap)&lt;/strong&gt;"]
+    subgraph RLoop["&lt;strong&gt;R app-package&lt;/strong&gt;"]
         REdit(["i. edit &lt;code&gt;R/&lt;/code&gt;"])
         RLoad("ii. &lt;code&gt;load_all()&lt;/code&gt;")
         RDoc("iii. &lt;code&gt;document()&lt;/code&gt;")
@@ -1055,7 +1078,26 @@ flowchart LR
         RTest -.-&gt;|"next change"| REdit
     end
 
-    subgraph PyLoop["&lt;strong&gt;Python app-package (pyap)&lt;/strong&gt;"]
+    classDef rStyle fill:#2c5282,stroke:#63b3ed,color:#fff
+    class REdit,RLoad,RDoc,RInst,RTest rStyle
+    
+</pre>
+</div>
+<p></p><figcaption> One pass through the R development loop</figcaption> </figure><p></p>
+</div>
+</div>
+</div>
+<p>In R, the load step is something we do on every pass: <code>load_all()</code> (or the keyboard shortcut) after each edit, plus <code>document()</code> and <code>install()</code> as the package changes.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', "fontSize":"14px"}}}%%
+
+flowchart LR
+
+    subgraph PyLoop["&lt;strong&gt;Python app-package&lt;/strong&gt;"]
         PEdit(["i. edit &lt;code&gt;src/pyap/&lt;/code&gt;"])
         PMeta{"ii. &lt;code&gt;pyproject.toml&lt;/code&gt;&lt;br/&gt;changed?"}
         PSync("&lt;code&gt;uv sync&lt;/code&gt;")
@@ -1068,18 +1110,16 @@ flowchart LR
         PTest -.-&gt;|"next change"| PEdit
     end
 
-    classDef rStyle fill:#2c5282,stroke:#63b3ed,color:#fff
     classDef pyStyle fill:#744210,stroke:#f6ad55,color:#fff
-
-    class REdit,RLoad,RDoc,RInst,RTest rStyle
     class PEdit,PMeta,PSync,PSave,PTest pyStyle
+
 </pre>
 </div>
-<p></p><figcaption> One pass through the R and Python development loops</figcaption> </figure><p></p>
+<p></p><figcaption> One pass through the Python development loop</figcaption> </figure><p></p>
 </div>
 </div>
 </div>
-<p>In R, the load step is something we do on every pass: <code>load_all()</code> (or the keyboard shortcut) after each edit, plus <code>document()</code> and <code>install()</code> as the package changes. In Python, the load step moves into process startup. <code>--reload</code> restarts the app on save, <code>pytest</code> starts fresh on every run, and <code>uv sync</code> only enters the loop when <code>pyproject.toml</code> or <code>uv.lock</code> changes. The one place we still load code by hand is the Python console, where a restart plays the role <code>load_all()</code> plays in R.</p>
+<p>In Python, the load step moves into process startup. <code>--reload</code> restarts the app on save, <code>pytest</code> starts fresh on every run, and <code>uv sync</code> only enters the loop when <code>pyproject.toml</code> or <code>uv.lock</code> changes. The one place we still load code by hand is the Python console, where a restart plays the role <code>load_all()</code> plays in R.</p>
 </section>
 <section id="recap" class="level2" data-number="4.9">
 <h2 data-number="4.9" class="anchored" data-anchor-id="recap"><span class="header-section-number">4.9</span> Recap</h2>
@@ -1099,6 +1139,8 @@ flowchart LR
 <ol>
 <li id="fn1"><p><code>renv</code> activates the project library automatically through the <code>.Rprofile</code> file it writes, which makes it closer to <code>uv run</code> than to <code>source .venv/bin/activate</code>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p><code>load_all()</code> re-sources every file in <code>R/</code> each time we call it, so the <strong>Console</strong> always has the latest code. Python has no single command that does this for a whole package.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>f another copy of <code>pytest</code> is on your <code>PATH</code>, <code>uv run</code> may pick it up instead of failing.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>This is similar to <a href="https://devtools.r-lib.org/reference/test.html"><code>devtools::test_active_file()</code></a> in R.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
