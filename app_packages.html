@@ -28,6 +28,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -455,15 +490,22 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul>
+  <li><a href="#where-we-are" id="toc-where-we-are" class="nav-link active" data-scroll-target="#where-we-are">Where we are</a></li>
+  <li><a href="#whats-ahead" id="toc-whats-ahead" class="nav-link" data-scroll-target="#whats-ahead">What’s ahead</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/mjfrigaard/shiny-py-pkgs/edit/main/app_packages.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mjfrigaard/shiny-py-pkgs/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">App-Packages</h1>
+<h1 class="title"><span id="sec-app-pkgs" class="quarto-section-identifier">App-Packages</span></h1>
 </div>
 
 
@@ -486,9 +528,142 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This part covers the core components of a well-structured Python app-package: documentation, dependency management, data files, app entry points, and static resources.</p>
+<p>The first section of the book took <code>pyap</code> from a single <code>app.py</code> file to an installable Python package. This section fills that package in. Expand the callout boxes below to review what we covered in the last four chapters:</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Review Chapters 1 to 4">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Review Chapters 1 to 4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Whole Game (Chapter 1)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The <a href="./whole_game.html">Whole Game</a> chapter ran through the entire app-package workflow in one pass, using the Old Faithful app:</p>
+<ul>
+<li>Creating the project with <code>uv init --package</code> and editing the metadata in <code>pyproject.toml</code></li>
+<li>Moving <code>app.py</code> into the <code>src/pyap/</code> import package</li>
+<li>Adding dependencies with <code>uv add</code> and installing the package in editable mode</li>
+<li>Moving code into documented functions and testing them with <code>pytest</code></li>
+<li>Adding a launch function and registering it under <code>[project.scripts]</code></li>
+<li>Building the package with <code>uv build</code>, writing a <code>README.md</code>, and committing to Git</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Shiny for Python (Chapter 2)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The <a href="./shiny.html">Shiny for Python</a> chapter set up a virtual environment and built the app we use for the rest of the book, one branch at a time:</p>
+<ul>
+<li><code>02.1_shiny-app</code>: the Core API (a UI object, a <code>server()</code> function with <code>@render</code> outputs, and <code>App()</code>)</li>
+<li><code>02.2_movies-app</code>: the movies app, with inputs, data from <code>movies.csv</code>, a <code>scatter_plot()</code> utility function, <code>@reactive.calc</code>, and <code>@reactive.event()</code></li>
+<li><code>02.3_proj-app</code>: a <code>requirements.txt</code> file and shared editor settings in <code>.vscode/settings.json</code></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Python Packages (Chapter 3)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The <a href="./packages.html">Python Packages</a> chapter separated modules, import packages, and distributions, walked through the tables in <code>pyproject.toml</code>, and turned the movies app into a package:</p>
+<ul>
+<li><code>03.1_pyproject</code>: a hand written <code>pyproject.toml</code> replaced <code>requirements.txt</code></li>
+<li><code>03.2_uv</code>: <code>uv python pin</code> and <code>uv sync</code> created <code>.python-version</code>, <code>.venv/</code>, and <code>uv.lock</code> (with <code>pyap</code> as a non-package project)</li>
+<li><code>03.3_create-package</code>: a <code>[build-system]</code> table with <code>uv_build</code>, code in <code>src/pyap/</code>, and package imports made <code>pyap</code> installable in editable mode</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Development Workflow (Chapter 4)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The <a href="./development.html">Development Workflow</a> chapter used the <code>04_dev</code> branch to sort changes by what they require:</p>
+<ul>
+<li>No action: edits to code in <code>src/pyap/</code> (the editable install and <code>shiny run --reload</code> pick them up)</li>
+<li>A sync: changes to dependencies or metadata (<code>uv add</code>, <code>uv remove</code>, hand edits to <code>pyproject.toml</code>, or switching branches)</li>
+<li>A restart: code the Python console has already imported, and data the app reads at startup</li>
+</ul>
+<p>It also covered <code>uv run</code> versus an activated <code>.venv/</code>, running tests with <code>uv run pytest</code>, and pointing Positron at the project environment.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section id="where-we-are" class="level2">
+<h2 class="anchored" data-anchor-id="where-we-are">Where we are</h2>
+<p>At the end of the <code>04_dev</code> branch, <code>pyap</code> has the structure below:</p>
+<p><em></em></p><em>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pyap/</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>├── .gitignore</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>├── .python-version</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>├── .vscode/</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>│   └── settings.json</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>├── README.md</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>├── movies.csv</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>├── pyproject.toml</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>├── src/</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>│   └── pyap/</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>│       ├── __init__.py</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>│       ├── app.py</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>│       └── utils.py</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>└── uv.lock</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</em><p><em></em></p>
+<p>The package installs and the app runs, but a few loose ends remain. The functions in <code>utils.py</code> have no documentation, <code>movies.csv</code> sits outside the package and is only found when we launch the app from the project root, and we still start the app by pointing <code>shiny run</code> at a file path. The chapters in this section address each of these with the edit, sync, and run loop from the <a href="./development.html">Development Workflow</a> chapter.</p>
+</section>
+<section id="whats-ahead" class="level2">
+<h2 class="anchored" data-anchor-id="whats-ahead">What’s ahead</h2>
+<p><a href="./document.html">Documentation</a> covers writing docstrings for the functions in <code>pyap</code> and generating HTML documentation from them with <code>pdoc</code>, <code>mkdocs</code>, or <code>great-docs</code>. In R, <code>roxygen2</code> comments are rendered into help files with <code>document()</code>; Python reads docstrings directly, so the work is mostly in writing them well.</p>
+<p><a href="./dependencies.html">Dependencies</a> covers declaring, pinning, and managing the packages <code>pyap</code> depends on in <code>pyproject.toml</code>, and keeping environments reproducible across machines with <code>uv add</code>, <code>uv lock</code>, and <code>uv sync</code>.</p>
+<p><a href="./data.html">Data</a> moves <code>movies.csv</code> inside the package and reads it with <code>importlib.resources</code>, so the file is found no matter where <code>pyap</code> is installed or which folder the app is launched from.</p>
+<p><a href="./launch.html">Launch</a> defines an entry point in <code>[project.scripts]</code>, so users can start the app with a single command instead of calling <code>shiny run</code> on a path inside <code>src/pyap/</code>.</p>
+<p><a href="./resources.html">Resources</a> covers including static files (CSS, JavaScript, images, and HTML templates) in the package and serving them from the Shiny app.</p>
+<p>By the end of this section, <code>pyap</code> will be a self contained app-package: documented, reproducible, carrying its own data and assets, and launchable from the command line. The <a href="./debug.html">Debugging</a> and <a href="./tests.html">Testing</a> sections build on this foundation.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -947,4 +1122,4 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/mjfrigaard/shiny-py-pkgs/edit/main/app_packages.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mjfrigaard/shiny-py-pkgs/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/mjfrigaard/shiny-py-pkgs/edit/main/app_packages.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mjfrigaard/shiny-py-pkgs/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
