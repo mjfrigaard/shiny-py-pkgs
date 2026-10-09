@@ -2,9 +2,54 @@
 title: "Documentation"
 ---
 
-In the [Development Workflow](development.qmd) chapter, we settled into a loop of editing code in `src/pyap/`, saving, and checking the result. `pyap` installs and runs, but its only documentation is a single sentence on `scatter_plot()` and another in `__init__.py`. Anyone opening the package (including us, six months from now) has to read the function body to learn what each argument expects and what comes back. This chapter fixes that by writing complete docstrings for the code in `pyap`, then rendering them into an HTML documentation site.
+In the [Development Workflow](development.qmd) chapter, we settled into a loop of editing code in `src/pyap/`, saving, and checking the result. `pyap` installs and runs, but the only documentation was a single sentence on `scatter_plot()` and another in `__init__.py`. This means anyone opening the package (including me, six months from now) would need to read the function body to learn what each argument expects and what comes back.
 
-If you've read the [Documentation](https://mjfrigaard.github.io/shiny-app-pkgs/document.html) chapter of [Shiny App-Packages](https://mjfrigaard.github.io/shiny-app-pkgs/), you've done this before with `roxygen2`. In R, we wrote `#'` comments above each function and ran `devtools::document()` to turn them into `.Rd` files in `man/`. Python skips the build step: a docstring is stored on the function itself, so `help()` can read it the moment the module is imported. I've found this shifts the work from running tools to writing well, so most of this chapter is about what goes inside the triple quotes.
+This chapter fixes that by writing complete docstrings for the code in `pyap`, then rendering them into an HTML documentation site.
+
+::: {.callout-note title="Comparison to R package documentation" collapse="true"}
+
+If you've read the [Documentation](https://mjfrigaard.github.io/shiny-app-pkgs/document.html) chapter of [Shiny App-Packages](https://mjfrigaard.github.io/shiny-app-pkgs/), you'll know we document app-package functions with `roxygen2`:
+
+* Help documentation is created by placing `#'` comments above each function   
+* Tags like `@title` and `@description` are used to organize the documentation   
+* We run `devtools::document()` to turn them into `.Rd` files in `man/`
+
+:::
+
+Python stores docstrings on the function itself, so `help()` can read it the moment the module is imported. I've found this shifts the work from running tools to writing well, so most of this chapter is about what goes inside the triple quotes.
+
+## Diverging branches
+
+Chapters 1 to 4 built `pyap` in a straight line: each branch started where the previous one ended. Going forward, some of the branches will diverge. I've done this to try and accurately demonstrate how Python package development goes: there are usually several valid tools for the same job in Python. For example, from what I've seen, there are at least three good ways to turn docstrings into a website. I'd rather show a working version of the main options than pretend there's only one. The branches in this chapter are here to illustrate *alternatives* (different tools for the same step). 
+
+The diagram below shows the branches in this chapter:
+
+```{mermaid}
+%%| fig-cap: 'The main line and a side branch'
+%%| fig-align: center
+%%{init: {'theme': 'neutral', 'themeVariables': { 'fontFamily': 'monospace', "fontSize":"14px"}}}%%
+
+flowchart LR
+    B4["<strong>04_dev</strong><br/>edit, sync,<br/>run loop"]
+    B51["<strong>05.1_pdoc</strong><br/>docstrings +<br/><code>pdoc</code>"]
+    B6["<strong>06_dependencies</strong><br/>next chapter"]
+    B52["<strong>05.2_mkdocs</strong><br/><code>mkdocs</code> +<br/><code>mkdocstrings</code>"]
+
+    B4 --> B51 --> B6
+    B51 -.->|"alternative"| B52
+
+    classDef project fill:#553c9a,stroke:#b794f4,color:#fff
+    classDef uvStyle fill:#744210,stroke:#f6ad55,color:#fff
+    classDef pkg fill:#2d3748,stroke:#48bb78,color:#fff
+
+    class B4 project
+    class B51,B6 pkg
+    class B52 uvStyle
+```
+
+`05.1_pdoc` adds the docstrings and builds the documentation with `pdoc`. `05.2_mkdocs` starts from `05.1_pdoc`, keeps the docstrings, and swaps `pdoc` for `mkdocs`. The dotted arrow marks it as a side branch: the [Dependencies](dependencies.qmd) chapter will build on `05.1_pdoc`.
+
+Let's dive into docstrings!
 
 ## What is a docstring?
 
@@ -29,17 +74,19 @@ The fastest way to read a docstring is `help()` in a Python console. We'll start
 ```
 
 <em>
+
 ```default
 Help on function scatter_plot in module pyap.utils:
 
 scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title='')
     Create a scatter plot of df colored by a categorical variable.
 ```
+
 </em>
 
 `help()` prints the function's signature above the docstring, so the arguments and their defaults come for free.[^doc-pager] In a terminal, the output opens in a pager; press <kbd>q</kbd> to return to the prompt.
 
-[^doc-pager]: `help(scatter_plot)` is the Python version of `?scatter_plot`. The difference is that `?` reads an `.Rd` file generated by `document()`, and `help()` reads the string attached to the function.
+[^doc-pager]: `help(scatter_plot)` is the Python version of `?scatter_plot`. The difference is that `?` reads an `.Rd` file generated by `devtools::document()`, and `help()` reads the string attached to the function.
 
 The raw string is available on the `__doc__` attribute:
 
@@ -48,9 +95,11 @@ The raw string is available on the `__doc__` attribute:
 ```
 
 <em>
+
 ```default
 'Create a scatter plot of df colored by a categorical variable.'
 ```
+
 </em>
 
 Modules and packages have docstrings too. `pyap.__doc__` returns the sentence in `src/pyap/__init__.py` from the [Python Packages](packages.qmd#moving-the-code-into-srcpyap) chapter, and `help(pyap)` lists the package docstring along with its contents.
@@ -107,16 +156,17 @@ Every route reads the same string. There's no generated help folder to keep in s
 
 ## Writing docstrings
 
-Check out the `05_document` branch to follow along, and sync the environment:
+The docstrings in this section (and the `pdoc` site in the next one) are on the `05.1_pdoc` branch. Check it out to follow along, and sync the environment:
 
 ```bash
-git checkout 05_document
+git checkout 05.1_pdoc
 uv sync
 ```
 
 The branch adds docstrings to all three modules in `src/pyap/`, adds `pdoc` to the `dev` dependency group (`pyproject.toml` and `uv.lock`), and adds `docs/` to `.gitignore`. The project structure is below:
 
 <em>
+
 ```default
 pyap/
 ├── .gitignore
@@ -133,6 +183,7 @@ pyap/
 │       └── utils.py
 └── uv.lock
 ```
+
 </em>
 
 No files are added to the package. Documentation in Python lives inside the files we already have, which is why the tree looks exactly like the one from the `04_dev` branch.
@@ -392,13 +443,13 @@ Docstrings are part of the source code, so the editable install picks them up wi
 >>> help(scatter_plot)
 ```
 
-<!-- TODO: capture help(scatter_plot) output from the 05_document branch -->
+<!-- TODO: capture help(scatter_plot) output from the 05.1_pdoc branch -->
 
 The output should show the full NumPy style docstring below the signature. `help()` prints the sections as plain text; the underlined headings are what documentation tools look for when they turn the docstring into HTML.
 
 ## Rendering documentation to HTML
 
-`help()` and editor tooltips cover anyone who already has `pyap` installed. A documentation site covers everyone else (and makes the docstrings searchable). We'll use [`pdoc`](https://pdoc.dev/) in the `05_document` branch, then look briefly at two alternatives.
+`help()` and editor tooltips cover anyone who already has `pyap` installed. A documentation site covers everyone else (and makes the docstrings searchable). We'll use [`pdoc`](https://pdoc.dev/) on the `05.1_pdoc` branch, build the same site with `mkdocs` on the `05.2_mkdocs` branch, and finish with a short look at `great-docs`.
 
 ### Adding `pdoc`
 
@@ -471,19 +522,85 @@ docs/
 ```
 </em>
 
-The pages are self contained, so opening `docs/index.html` in a browser shows the same site as the preview. The `05_document` branch lists `docs/` in `.gitignore`, because the HTML can always be rebuilt from the docstrings. We'll publish it in the [Deploy](deploy.qmd) section.
+The pages are self contained, so opening `docs/index.html` in a browser shows the same site as the preview. The `05.1_pdoc` branch lists `docs/` in `.gitignore`, because the HTML can always be rebuilt from the docstrings. We'll publish it in the [Deploy](deploy.qmd) section.
 
-### `mkdocs` with `mkdocstrings`
+## Building the site with `mkdocs`
 
-[`mkdocs`](https://www.mkdocs.org/) builds a documentation site from a folder of Markdown files, and the [`mkdocstrings`](https://mkdocstrings.github.io/) plugin inserts API documentation from docstrings into those pages. It takes more setup than `pdoc`, but it's the better fit when the site needs written guides alongside the reference pages. `mkdocs` isn't part of the `05_document` branch, so treat this section as a sketch.
+`pdoc` is the simplest way to get from docstrings to HTML, but every page it builds comes from a docstring. When a package needs written guides alongside its reference pages, [`mkdocs`](https://www.mkdocs.org/) is a common next step. `mkdocs` builds a site from a folder of Markdown files, and the [`mkdocstrings`](https://mkdocstrings.github.io/) plugin inserts API documentation from docstrings into those pages.
 
-Both packages go in the `dev` group (the `[python]` extra installs the Python handler for `mkdocstrings`):
+The two tools can't share a project as it's set up on `05.1_pdoc`, because they use `docs/` for opposite jobs. `pdoc -o docs` writes generated HTML into `docs/`, which is why that branch ignores the folder. `mkdocs` reads its Markdown sources from `docs/`, so the folder has to be committed. Rather than pointing one tool at a different folder, the `05.2_mkdocs` branch swaps `pdoc` out entirely. Check it out to follow along:
+
+```bash
+git checkout 05.2_mkdocs
+uv sync
+```
+
+This is the side branch from the diagram at the top of the chapter. It keeps every docstring from `05.1_pdoc`, and the main line of the book doesn't continue from it.
+
+### Swapping the dev dependencies
+
+`uv remove --dev` takes `pdoc` out of the `dev` group, and `uv add --dev` adds `mkdocs` and `mkdocstrings` (the `[python]` extra installs the Python handler for `mkdocstrings`):
+
+```bash
+uv remove --dev pdoc
+```
+
+<!-- TODO: capture uv remove --dev pdoc output -->
 
 ```bash
 uv add --dev mkdocs "mkdocstrings[python]"
 ```
 
-The site is configured in an `mkdocs.yml` file at the project root. The settings below tell `mkdocstrings` to look for code in `src/` and to read NumPy style docstrings:
+<!-- TODO: capture uv add --dev mkdocs "mkdocstrings[python]" output -->
+
+The `dev` group in `pyproject.toml` now lists the two new packages:
+
+<!-- TODO: replace X.Y.Z with the lower bounds written by uv add -->
+
+```toml
+[dependency-groups]
+dev = [
+    "mkdocs>=X.Y.Z",
+    "mkdocstrings[python]>=X.Y.Z",
+]
+```
+
+### Project structure
+
+The branch adds an `mkdocs.yml` file at the project root and a `docs/index.md` page. The project structure is below:
+
+<em>
+```default
+pyap/
+├── .gitignore
+├── .python-version
+├── .vscode/
+│   └── settings.json
+├── README.md
+├── docs/
+│   └── index.md
+├── mkdocs.yml
+├── movies.csv
+├── pyproject.toml
+├── src/
+│   └── pyap/
+│       ├── __init__.py
+│       ├── app.py
+│       └── utils.py
+└── uv.lock
+```
+</em>
+
+`docs/` is now source code for the site, so the branch removes `docs/` from `.gitignore` and adds `site/` (the folder `mkdocs build` writes to) in its place:
+
+```default
+# Documentation
+site/
+```
+
+### Configuring `mkdocs.yml`
+
+`mkdocs.yml` names the site and lists its plugins. The settings below keep the built in search, tell `mkdocstrings` to look for code in `src/`, and tell it to read NumPy style docstrings (the same job as the `--docformat numpy` flag we passed to `pdoc`):
 
 ```yaml
 site_name: pyap
@@ -497,19 +614,49 @@ plugins:
             docstring_style: numpy
 ```
 
-The pages live in a `docs/` folder. A `docs/index.md` file with the line below renders the documentation for `pyap.utils`:
+### Writing `docs/index.md`
+
+Each Markdown file in `docs/` becomes a page. Inside a page, a line that starts with `:::` followed by an import path tells `mkdocstrings` to insert the documentation for that object. `docs/index.md` combines a short introduction with the reference for both modules:
 
 ```markdown
+# pyap
+
+A Shiny for Python app-package for exploring the movies data.
+
 ::: pyap.utils
+
+::: pyap.app
 ```
 
-`uv run mkdocs serve` previews the site, and `uv run mkdocs build` writes it to a `site/` folder. `mkdocstrings` reads the source files by default (the bottom route in the diagram), so it doesn't need `movies.csv` to be found.
+This is where `mkdocs` differs from `pdoc`. The prose at the top of the page is ours to write, and we decide which objects appear and in what order. A larger site would add more pages (installation, a tour of the app) and list them in a `nav` section of `mkdocs.yml`.
 
-::: {.callout-note title="docs/ means different things" collapse="true"}
+### Previewing and building
 
-`pdoc -o docs` writes generated HTML into `docs/`, and `mkdocs` reads Markdown sources from `docs/`. Don't use both tools with the same folder. If you switch `pyap` to `mkdocs`, point `pdoc` somewhere else (or drop it).
+`mkdocs serve` starts a local web server for the site:
 
-:::
+```bash
+uv run mkdocs serve
+```
+
+<!-- TODO: capture mkdocs serve output -->
+
+The server prints the address to open in the browser, and it rebuilds the site when we save a change to `docs/` or `mkdocs.yml`. Press <kbd>Ctrl</kbd> + <kbd>C</kbd> to stop it.
+
+<!-- TODO: screenshot of the mkdocs page for pyap (images/document-mkdocs-index.png) -->
+
+`mkdocs build` writes the finished site to `site/`:
+
+```bash
+uv run mkdocs build
+```
+
+<!-- TODO: capture mkdocs build output -->
+
+`mkdocstrings` reads the source files by default (the bottom route in the docstring diagram), so it never imports `pyap.app`. Unlike `pdoc`, it doesn't need `movies.csv` to be found, and the build works from any folder that can see `mkdocs.yml`.
+
+## Choosing a documentation tool
+
+`pdoc` and `mkdocs` aren't the only options, and the docstrings we wrote don't depend on either one. This section covers a third tool and how the three compare.
 
 ### `great-docs`
 
@@ -525,7 +672,7 @@ You don't have to choose a documentation site generator before writing docstring
 | Pages | API reference only | Markdown pages plus API reference | Quarto based site |
 | Reads docstrings by | Importing the package | Parsing source files (by default) | Covered in a later chapter |
 
-I'll use `pdoc` for the rest of this section, because a package with two modules needs a reference, not a website. When `pyap` grows (or needs tutorials alongside the API reference), the docstrings we wrote in this chapter carry over unchanged, because every tool reads the same strings.
+The main line of the book stays with `pdoc`, because a package with two modules needs a reference, not a website. The chapters that follow build on `05.1_pdoc`. When `pyap` grows (or needs tutorials alongside the API reference), the docstrings we wrote in this chapter carry over unchanged, as `05.2_mkdocs` shows, because every tool reads the same strings.
 
 ## Comparing documentation with R
 
@@ -541,20 +688,22 @@ The [Python Packages](packages.qmd#the-development-loop) chapter mapped `documen
 | Public versus internal | `@export` and `@noRd` | Leading underscore and `__all__` |
 | Documentation site | `pkgdown::build_site()` | `pdoc`, `mkdocs`, or `great-docs` |
 
-The build step is the biggest difference. In R, documentation can go stale: we can edit a `roxygen2` block and forget to run `document()`, which is why the R book covers `roxygen2::needs_roxygenize()`. In Python, there's nothing to forget at the help file level. The HTML site is the only generated output, and it's rebuilt from the docstrings whenever we run `pdoc`.
+The build step is the biggest difference. In R, documentation can go stale: we can edit a `roxygen2` block and forget to run `document()`, which is why the R book covers `roxygen2::needs_roxygenize()`. In Python, there's nothing to forget at the help file level. The HTML site is the only generated output, and it's rebuilt from the docstrings whenever we run `pdoc` (or `mkdocs build`).
 
 The tradeoff is that Python has no single standard for the inside of a docstring. `roxygen2` defines one set of tags for every R package, while Python leaves the format to conventions like NumPy and Google style. Choosing one (and telling the tools about it) is the step R doesn't need.
 
 ## Recap
 
-In this chapter we documented `pyap` on the `05_document` branch:
+In this chapter we documented `pyap` on two branches, and the book's branches stopped being a straight line:
 
 1. Docstrings are strings stored on Python objects as `__doc__`. `help()` and `pdoc` read them from the imported package, and editors and `mkdocstrings` read them from the source files.
 2. PEP 257 sets the basic shape (triple quotes, a one line summary in the imperative mood, a blank line, then details), and a convention sets the sections. We used NumPy style to match `pandas`, `numpy`, and `matplotlib`.
-3. `scatter_plot()` and `server()` got full docstrings, `utils.py` and `app.py` got module docstrings, and `__init__.py` got a package docstring that points readers to both modules.
-4. `uv add --dev pdoc` added `pdoc` to the `dev` group, and `uv run pdoc --docformat numpy pyap` previews the site (`-o docs` writes it to files). `mkdocs` with `mkdocstrings` and `great-docs` are alternatives for larger sites.
+3. 05.1_pdoc: `scatter_plot()` and `server()` got full docstrings, `utils.py` and `app.py` got module docstrings, and `__init__.py` got a package docstring. `uv add --dev pdoc` added `pdoc` to the `dev` group, `uv run pdoc --docformat numpy pyap` previews the site, and `-o docs` writes it to an ignored `docs/` folder.
+4. 05.2_mkdocs: a side branch that keeps the docstrings and swaps `pdoc` for `mkdocs` and `mkdocstrings`. `docs/` now holds committed Markdown sources (`docs/index.md`), `mkdocs.yml` configures the site, `site/` is ignored, and `uv run mkdocs serve` and `uv run mkdocs build` preview and build it.
 
-`pdoc` also exposed the same problem the app has: importing `pyap.app` only works from the project root, because `movies.csv` is read from the working directory. In the next chapter, [Dependencies](dependencies.qmd), we'll take a closer look at how `pyap` declares and locks the packages it needs, before the [Data](data.qmd) chapter moves `movies.csv` into the package.
+`great-docs` is a third option for Quarto based sites, covered in a later chapter. `pdoc` also exposed the same problem the app has: importing `pyap.app` only works from the project root, because `movies.csv` is read from the working directory.
+
+The next chapter, [Dependencies](dependencies.qmd), starts from `05.1_pdoc` (not `05.2_mkdocs`), so check it out before moving on. We'll take a closer look at how `pyap` declares and locks the packages it needs, before the [Data](data.qmd) chapter moves `movies.csv` into the package.
 
 For more depth on the topics in this chapter, see:
 
