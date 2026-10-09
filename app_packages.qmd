@@ -1,3 +1,99 @@
-# App-Packages {.unnumbered}
+# App-Packages {#sec-app-pkgs .unnumbered}
 
-This part covers the core components of a well-structured Python app-package: documentation, dependency management, data files, app entry points, and static resources.
+The first section of the book took `pyap` from a single `app.py` file to an installable Python package. This section fills that package in. Expand the callout boxes below to review what we covered in the last four chapters:
+
+:::: {.callout-tip collapse="true" title="Review Chapters 1 to 4"}
+
+::: {.callout-note collapse="true"}
+
+#### Whole Game (Chapter 1)
+
+The [Whole Game](whole_game.qmd) chapter ran through the entire app-package workflow in one pass, using the Old Faithful app:
+
+* Creating the project with `uv init --package` and editing the metadata in `pyproject.toml`
+* Moving `app.py` into the `src/pyap/` import package
+* Adding dependencies with `uv add` and installing the package in editable mode
+* Moving code into documented functions and testing them with `pytest`
+* Adding a launch function and registering it under `[project.scripts]`
+* Building the package with `uv build`, writing a `README.md`, and committing to Git
+
+:::
+
+::: {.callout-note collapse="true"}
+
+#### Shiny for Python (Chapter 2)
+
+The [Shiny for Python](shiny.qmd) chapter set up a virtual environment and built the app we use for the rest of the book, one branch at a time:
+
+* `02.1_shiny-app`: the Core API (a UI object, a `server()` function with `@render` outputs, and `App()`)
+* `02.2_movies-app`: the movies app, with inputs, data from `movies.csv`, a `scatter_plot()` utility function, `@reactive.calc`, and `@reactive.event()`
+* `02.3_proj-app`: a `requirements.txt` file and shared editor settings in `.vscode/settings.json`
+
+:::
+
+::: {.callout-note collapse="true"}
+
+#### Python Packages (Chapter 3)
+
+The [Python Packages](packages.qmd) chapter separated modules, import packages, and distributions, walked through the tables in `pyproject.toml`, and turned the movies app into a package:
+
+* `03.1_pyproject`: a hand written `pyproject.toml` replaced `requirements.txt`
+* `03.2_uv`: `uv python pin` and `uv sync` created `.python-version`, `.venv/`, and `uv.lock` (with `pyap` as a non-package project)
+* `03.3_create-package`: a `[build-system]` table with `uv_build`, code in `src/pyap/`, and package imports made `pyap` installable in editable mode
+
+:::
+
+::: {.callout-note collapse="true"}
+
+#### Development Workflow (Chapter 4)
+
+The [Development Workflow](development.qmd) chapter used the `04_dev` branch to sort changes by what they require:
+
+* No action: edits to code in `src/pyap/` (the editable install and `shiny run --reload` pick them up)
+* A sync: changes to dependencies or metadata (`uv add`, `uv remove`, hand edits to `pyproject.toml`, or switching branches)
+* A restart: code the Python console has already imported, and data the app reads at startup
+
+It also covered `uv run` versus an activated `.venv/`, running tests with `uv run pytest`, and pointing Positron at the project environment.
+
+:::
+
+::::
+
+## Where we are
+
+At the end of the `04_dev` branch, `pyap` has the structure below:
+
+<em>
+```default
+pyap/
+├── .gitignore
+├── .python-version
+├── .vscode/
+│   └── settings.json
+├── README.md
+├── movies.csv
+├── pyproject.toml
+├── src/
+│   └── pyap/
+│       ├── __init__.py
+│       ├── app.py
+│       └── utils.py
+└── uv.lock
+```
+</em>
+
+The package installs and the app runs, but a few loose ends remain. The functions in `utils.py` have no documentation, `movies.csv` sits outside the package and is only found when we launch the app from the project root, and we still start the app by pointing `shiny run` at a file path. The chapters in this section address each of these with the edit, sync, and run loop from the [Development Workflow](development.qmd) chapter.
+
+## What's ahead
+
+[Documentation](document.qmd) covers writing docstrings for the functions in `pyap` and generating HTML documentation from them with `pdoc`, `mkdocs`, or `great-docs`. In R, `roxygen2` comments are rendered into help files with `document()`; Python reads docstrings directly, so the work is mostly in writing them well.
+
+[Dependencies](dependencies.qmd) covers declaring, pinning, and managing the packages `pyap` depends on in `pyproject.toml`, and keeping environments reproducible across machines with `uv add`, `uv lock`, and `uv sync`.
+
+[Data](data.qmd) moves `movies.csv` inside the package and reads it with `importlib.resources`, so the file is found no matter where `pyap` is installed or which folder the app is launched from.
+
+[Launch](launch.qmd) defines an entry point in `[project.scripts]`, so users can start the app with a single command instead of calling `shiny run` on a path inside `src/pyap/`.
+
+[Resources](resources.qmd) covers including static files (CSS, JavaScript, images, and HTML templates) in the package and serving them from the Shiny app.
+
+By the end of this section, `pyap` will be a self contained app-package: documented, reproducible, carrying its own data and assets, and launchable from the command line. The [Debugging](debug.qmd) and [Testing](tests.qmd) sections build on this foundation.
