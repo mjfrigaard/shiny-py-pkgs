@@ -1,0 +1,140 @@
+/*-- scss:defaults --*/
+/* Dark mode adjustments for 'superhero' theme */
+
+/* Adjust font sizes */
+$small-font-size:             .75rem !default;
+$code-font-size:              .85em !default;
+
+/* Primary color */
+$primary:                     #DF691A !default; /* Vibrant orange for primary accents */
+
+/* Background and text colors for code */
+$code-block-bg:               #1A2732 !default; /* Dark blue-gray background for code blocks */
+$code-bg:                     #1A2732 !default; /* Background for inline code */
+$code-color:                  #FFDD88 !default; /* Soft yellow text for code blocks */
+$btn-code-copy-color:         $primary; /* Button color for 'copy code' */
+
+/* Callout box styling */
+$callout-bg:                  #34495E !default; /* Dark background for callout boxes */
+$callout-border-color:        $primary !default; /* Accent color for callout box border */
+$callout-text-color:          #F5F5F5 !default; /* Light text color for callout content */
+$callout-title-color:         $primary !default; /* Accent color for callout titles */
+$callout-color-note:          #3498db !default; /* Blue */
+$callout-color-tip:           #2ecc71 !default; /* Green */
+$callout-color-caution:       #e67e22 !default; /* Orange */
+$callout-color-warning:       #f1c40f !default; /* Yellow */
+$callout-color-important:     #e74c3c !default; /* Red */
+
+/* Mermaid colors (diagrams render with the light 'neutral' theme) */
+$mermaid-dark-bg:             #34495E !default;
+$mermaid-dark-line:           #CBD5E0 !default;
+$mermaid-dark-text:           #F5F5F5 !default;
+
+/*-- scss:rules --*/
+
+body {
+  background-color: #2B3E50; /* Dark background matching superhero theme */
+  color: #F5F5F5; /* Light text color */
+}
+
+code {
+  color: $code-color; /* Soft yellow for code text */
+  background-color: $code-bg; /* Dark background for inline code */
+  /* Removed border */
+}
+
+pre {
+  background-color: $code-block-bg; /* Background for preformatted code blocks */
+  color: $code-color; /* Code block text color */
+  /* Removed border */
+}
+
+button.copy-code {
+  background-color: $code-block-bg; /* Button blends with block background */
+  color: $btn-code-copy-color; /* Primary accent color for button text */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #F5F5F5; /* Ensure headers are readable in dark mode */
+}
+
+/* Callout box styling (border keeps the per-type color) */
+div.callout {
+  background-color: $callout-bg; /* Dark background for callout boxes */
+  color: $callout-text-color; /* Light text color inside callouts */
+  border-left-width: 4px;
+}
+
+div.callout > .callout-header {
+  background-color: darken($callout-bg, 6%); /* Header slightly darker than body */
+}
+
+div.callout .callout-title-container,
+div.callout .callout-toggle::before {
+  color: $callout-title-color; /* Title color matching primary theme */
+}
+
+div.callout-note > .callout-header .callout-title-container { color: $callout-color-note; }
+div.callout-tip > .callout-header .callout-title-container { color: $callout-color-tip; }
+div.callout-warning > .callout-header .callout-title-container { color: $callout-color-warning; }
+div.callout-caution > .callout-header .callout-title-container { color: $callout-color-caution; }
+div.callout-important > .callout-header .callout-title-container { color: $callout-color-important; }
+
+div.callout h4, div.callout h5 {
+  color: $callout-text-color;
+}
+
+/* Mermaid: !important beats mermaid's defaults but not classDef colors */
+svg[id^="mermaid"] {
+  .edgePath .path,
+  .flowchart-link {
+    stroke: $mermaid-dark-line !important;
+  }
+  .marker,
+  marker path,
+  .arrowheadPath {
+    fill: $mermaid-dark-line !important;
+    stroke: $mermaid-dark-line !important;
+  }
+  .edgeLabel,
+  .edgeLabel p,
+  .edgeLabel rect,
+  .labelBkg {
+    background-color: #2B3E50 !important;
+    fill: #2B3E50 !important;
+    color: $mermaid-dark-text !important;
+  }
+  .cluster rect {
+    fill: $mermaid-dark-bg !important;
+    stroke: $mermaid-dark-line !important;
+  }
+  .cluster-label,
+  .cluster-label span,
+  .cluster text {
+    color: $mermaid-dark-text !important;
+    fill: $mermaid-dark-text !important;
+  }
+  .node rect,
+  .node polygon,
+  .node circle,
+  .node path {
+    fill: $mermaid-dark-bg !important;
+    stroke: $mermaid-dark-line !important;
+  }
+  .nodeLabel,
+  .node .label,
+  .node text {
+    color: $mermaid-dark-text !important;
+    fill: $mermaid-dark-text !important;
+  }
+}
+
+/* co_box() sets an inline dark text color on the callout body */
+div.callout [style*="color: #282b2d"] {
+  color: $callout-text-color !important;
+}
+
+/* Lighter links inside callouts for contrast on the dark background */
+div.callout a {
+  color: lighten($primary, 20%);
+}
