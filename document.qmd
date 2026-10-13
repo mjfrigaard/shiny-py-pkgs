@@ -20,7 +20,9 @@ Python stores docstrings on the function itself, so `help()` can read it the mom
 
 ## Diverging branches
 
-Chapters 1 to 4 built `pyap` in a straight line: each branch started where the previous one ended. Going forward, some of the branches will diverge. I've done this to try and accurately demonstrate how Python package development goes: there are usually several valid tools for the same job in Python. For example, from what I've seen, there are at least three good ways to turn docstrings into a website. I'd rather show a working version of the main options than pretend there's only one. The branches in this chapter are here to illustrate *alternatives* (different tools for the same step). 
+Chapters 1 to 4 built `pyap` in a straight line: each branch started where the previous one ended. Going forward, some of the branches will diverge. I've done this to try and accurately demonstrate how Python package development goes. In R, documentation is limited to `roxygen2` tags (and `pkgdown` for building package websites). But as with most things in Python, there are several valid tools for the same job. 
+
+For example, from what I've seen, there are at least three excellent ways to turn docstrings into package documentation with a website. So, in this chapter, I'd rather show a working version of these options than pretend there's only one. The branches in this chapter are here to illustrate *alternatives* (different tools for the same step). 
 
 The diagram below shows the branches in this chapter:
 
@@ -160,6 +162,9 @@ The docstrings in this section (and the `pdoc` site in the next one) are on the 
 
 ```bash
 git checkout 05.1_pdoc
+```
+
+```bash
 uv sync
 ```
 
@@ -197,7 +202,7 @@ No files are added to the package. Documentation in Python lives inside the file
 3. For longer docstrings, leave a blank line after the summary, then add the details. Put the closing `"""` on a line by itself.
 4. Place the docstring as the first statement in the body (or at the top of the file, for a module docstring).
 
-The existing docstring on `scatter_plot()` already follows the first two rules. The summary line deserves extra care, because it's the line tools show in package indexes and tooltips. PEP 257 doesn't say anything about how to describe arguments or return values, though. That job belongs to a docstring convention.
+The existing docstring on `scatter_plot()` already follows the first two rules. The summary line deserves extra care, because it's the line tools show in package indexes and tooltips. PEP 257 doesn't say anything about how to describe arguments or return values, though. That job belongs to a docstring convention (which we'll cover below).
 
 ### Choosing a convention
 
@@ -208,7 +213,7 @@ A docstring convention is just an agreed set of section headings and layouts, so
 * [NumPy style](https://numpydoc.readthedocs.io/en/latest/format.html): section titles underlined with dashes, and each parameter on its own line followed by its type.
 * [Google style](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings): section titles followed by a colon (`Args:`, `Returns:`), with each parameter indented beneath.
 
-The [Whole Game](whole_game.qmd) chapter used Google style for `geyser_waiting()`, and it's a fine choice. For `pyap`, I recommend NumPy style. `pandas`, `numpy`, and `matplotlib` (all three of the packages `scatter_plot()` depends on) document their functions this way, so our help pages will read like the ones we consult while writing the code. NumPy style also has more room for longer descriptions, which helps when an argument needs a sentence or two of explanation.
+The [Whole Game](whole_game.qmd) chapter used Google style for `geyser_waiting()`, and it's a fine choice. For the remaining branches in `pyap`, I'll switch to NumPy style because `pandas`, `numpy`, and `matplotlib` (all three of the packages `scatter_plot()` depends on) document their functions this way, so our help pages will read like the ones I consulted while writing the code. NumPy style also has more room for longer descriptions, which helps when an argument needs a sentence or two of explanation.
 
 The convention matters less than consistency. Pick one for the whole package, and tell the documentation tools which one you picked (we'll do this with a flag below).
 
@@ -216,7 +221,11 @@ The convention matters less than consistency. Pick one for the whole package, an
 
 A NumPy style function docstring has a summary line, an extended description, and a series of sections. The full docstring for `scatter_plot()` is below:
 
-```python
+```{python}
+#| eval: false 
+#| code-fold: show 
+#| code-summary: 'show/hide scatter_plot() from src/pyap/utils.py'
+# in src/pyap/utils.py
 def scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title=""):
     """Create a scatter plot colored by a categorical variable.
 
@@ -263,6 +272,35 @@ def scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title=""):
     >>> fig = scatter_plot(movies, "critics_score", "audience_score",
     ...                    "mpaa_rating", 0.4, 3)
     """
+    fig, ax = plt.subplots()
+
+    categories = sorted(df[col_var].dropna().unique())
+    cmap = plt.get_cmap("tab10")
+
+    for i, cat in enumerate(categories):
+        subset = df[df[col_var] == cat]
+        ax.scatter(
+            subset[x_var],
+            subset[y_var],
+            alpha=alpha_var,
+            s=size_var ** 2 * 10,
+            color=cmap(i % 10),
+            label=str(cat),
+        )
+
+    ax.set_xlabel(x_var.replace("_", " ").title())
+    ax.set_ylabel(y_var.replace("_", " ").title())
+    if title:
+        ax.set_title(title)
+    ax.legend(
+        title=col_var.replace("_", " ").title(),
+        bbox_to_anchor=(1.05, 1),
+        loc="upper left",
+    )
+    ax.grid(alpha=0.3)
+    plt.tight_layout()
+
+    return fig
 ```
 
 Each section maps to something a reader would otherwise have to work out from the code:
@@ -443,7 +481,59 @@ Docstrings are part of the source code, so the editable install picks them up wi
 >>> help(scatter_plot)
 ```
 
-<!-- TODO: capture help(scatter_plot) output from the 05.1_pdoc branch -->
+<em>
+
+```default
+Help on function scatter_plot in module pyap.utils:
+
+scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title='')
+    Create a scatter plot colored by a categorical variable.
+
+    Draws one scatter layer per category in `col_var`, so each category
+    gets its own color and legend entry. Axis labels and the legend title
+    are built from the column names (underscores become spaces, and each
+    word is capitalized).
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Data containing the columns named in `x_var`, `y_var`, and
+        `col_var`.
+    x_var : str
+        Name of the numeric column mapped to the x axis.
+    y_var : str
+        Name of the numeric column mapped to the y axis.
+    col_var : str
+        Name of the categorical column used to color the points. Rows
+        with a missing value in this column are not plotted.
+    alpha_var : float
+        Point transparency, from 0 (transparent) to 1 (opaque).
+    size_var : float
+        Point size. The marker area is `size_var ** 2 * 10`.
+    title : str, optional
+        Plot title. The default (an empty string) leaves the plot
+        untitled.
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        The figure holding the scatter plot.
+
+    Notes
+    -----
+    Colors come from the matplotlib `tab10` colormap, which repeats
+    after ten categories.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from pyap.utils import scatter_plot
+    >>> movies = pd.read_csv("movies.csv")
+    >>> fig = scatter_plot(movies, "critics_score", "audience_score",
+    ...                    "mpaa_rating", 0.4, 3)
+```
+
+</em>
 
 The output should show the full NumPy style docstring below the signature. `help()` prints the sections as plain text; the underlined headings are what documentation tools look for when they turn the docstring into HTML.
 
@@ -459,16 +549,31 @@ The output should show the full NumPy style docstring below the signature. `help
 uv add --dev pdoc
 ```
 
-<!-- TODO: capture uv add --dev pdoc output -->
+<em>
+
+```default
+Resolved 50 packages in 310ms
+   Building pyap @ file:///path/to/pyap
+      Built pyap @ file:///path/to/pyap
+Prepared 5 packages in 169ms
+Uninstalled 1 package in 1ms
+Installed 6 packages in 12ms
+ + jinja2==3.1.6
+ + markdown2==2.5.5
+ + markupsafe==3.0.4
+ + pdoc==16.0.0
+ ~ pyap==0.1.0 (from file:///path/to/pyap)
+ + pygments==2.21.0
+```
+
+</em>
 
 `uv add` updates `pyproject.toml`, `uv.lock`, and `.venv/` in one step. The new table in `pyproject.toml` is below:
-
-<!-- TODO: replace X.Y.Z with the lower bound written by uv add -->
 
 ```toml
 [dependency-groups]
 dev = [
-    "pdoc>=X.Y.Z",
+    "pdoc>=16.0.0",
 ]
 ```
 
@@ -482,7 +587,13 @@ Installing `pyap` never installs `pdoc`, because dependency groups aren't part o
 uv run pdoc --docformat numpy pyap
 ```
 
-<!-- TODO: capture pdoc server startup output -->
+<em>
+
+```default
+pdoc server ready at http://localhost:8080
+```
+
+</em>
 
 This starts a local web server and opens the documentation in the browser. The `--docformat numpy` flag tells `pdoc` to read the `Parameters`, `Returns`, `Notes`, and `Examples` sections as NumPy style (without it, the underlined headings render as plain text). The package docstring becomes the landing page, and `pyap.app` and `pyap.utils` each get their own page. Press <kbd>Ctrl</kbd> + <kbd>C</kbd> in the terminal to stop the server.
 
@@ -507,8 +618,6 @@ uv run pdoc --docformat numpy -o docs pyap
 ```
 
 `pdoc` writes one HTML page per module, plus an index page and a search index. The `docs/` folder should look like this:
-
-<!-- TODO: confirm docs/ contents against a real run -->
 
 <em>
 ```default
@@ -545,23 +654,68 @@ This is the side branch from the diagram at the top of the chapter. It keeps eve
 uv remove --dev pdoc
 ```
 
-<!-- TODO: capture uv remove --dev pdoc output -->
+<em>
+
+```default
+Resolved 45 packages in 13ms
+   Building pyap @ file:///path/to/pyap
+      Built pyap @ file:///path/to/pyap
+Prepared 1 package in 3ms
+Uninstalled 6 packages in 4ms
+Installed 1 package in 0.55ms
+ - jinja2==3.1.6
+ - markdown2==2.5.5
+ - markupsafe==3.0.4
+ - pdoc==16.0.0
+ ~ pyap==0.1.0 (from file:///path/to/pyap)
+ - pygments==2.21.0
+```
+
+</em>
 
 ```bash
 uv add --dev mkdocs "mkdocstrings[python]"
 ```
 
-<!-- TODO: capture uv add --dev mkdocs "mkdocstrings[python]" output -->
+<em>
+
+```default
+Resolved 62 packages in 321ms
+   Building pyap @ file:///path/to/pyap
+      Built pyap @ file:///path/to/pyap
+Downloading mkdocs (3.7MiB)
+ Downloaded mkdocs
+Prepared 15 packages in 1.13s
+Uninstalled 1 package in 0.67ms
+Installed 17 packages in 5ms
+ + ghp-import==2.1.0
+ + griffelib==2.3.2
+ + jinja2==3.1.6
+ + markdown==3.11
+ + markupsafe==3.0.4
+ + mergedeep==1.3.4
+ + mkdocs==1.6.1
+ + mkdocs-autorefs==1.4.4
+ + mkdocs-get-deps==0.2.2
+ + mkdocstrings==1.0.7
+ + mkdocstrings-python==2.0.9
+ + pathspec==1.1.1
+ ~ pyap==0.1.0 (from file:///path/to/pyap)
+ + pymdown-extensions==12.2
+ + pyyaml==6.0.3
+ + pyyaml-env-tag==1.1
+ + watchdog==6.0.0
+```
+
+</em>
 
 The `dev` group in `pyproject.toml` now lists the two new packages:
-
-<!-- TODO: replace X.Y.Z with the lower bounds written by uv add -->
 
 ```toml
 [dependency-groups]
 dev = [
-    "mkdocs>=X.Y.Z",
-    "mkdocstrings[python]>=X.Y.Z",
+    "mkdocs>=1.6.1",
+    "mkdocstrings[python]>=1.0.7",
 ]
 ```
 
@@ -638,7 +792,17 @@ This is where `mkdocs` differs from `pdoc`. The prose at the top of the page is 
 uv run mkdocs serve
 ```
 
-<!-- TODO: capture mkdocs serve output -->
+<em>
+
+```default
+INFO    -  Building documentation...
+INFO    -  Cleaning site directory
+INFO    -  Documentation built in 0.31 seconds
+INFO    -  [12:29:18] Watching paths for changes: 'docs', 'mkdocs.yml'
+INFO    -  [12:29:18] Serving on http://127.0.0.1:8000/
+```
+
+</em>
 
 The server prints the address to open in the browser, and it rebuilds the site when we save a change to `docs/` or `mkdocs.yml`. Press <kbd>Ctrl</kbd> + <kbd>C</kbd> to stop it.
 
@@ -650,7 +814,15 @@ The server prints the address to open in the browser, and it rebuilds the site w
 uv run mkdocs build
 ```
 
-<!-- TODO: capture mkdocs build output -->
+<em>
+
+```default
+INFO    -  Cleaning site directory
+INFO    -  Building documentation to directory: /path/to/pyap/site
+INFO    -  Documentation built in 0.23 seconds
+```
+
+</em>
 
 `mkdocstrings` reads the source files by default (the bottom route in the docstring diagram), so it never imports `pyap.app`. Unlike `pdoc`, it doesn't need `movies.csv` to be found, and the build works from any folder that can see `mkdocs.yml`.
 
