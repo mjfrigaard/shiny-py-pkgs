@@ -446,7 +446,7 @@ import pandas as pd
 from pyap.utils import scatter_plot
 ```
 
-The last sentence is a deliberate warning. Reading `movies.csv` at import time is the behavior that will trip up `pdoc` below, and the docstring is the right place to tell readers about it until the [Data](data.qmd) chapter changes it.
+The last sentence is a deliberate warning, because reading `movies.csv` at import time is the behavior that will trip up `pdoc` below, and the docstring is the right place to tell readers about it until the [Data](data.qmd) chapter changes it.
 
 #### `server` docstring
 

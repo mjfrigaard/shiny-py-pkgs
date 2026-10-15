@@ -5,7 +5,7 @@ editor:
   render-on-save: true
 
 book:
-  title: "Shiny for Python App-Packages"
+  title: "Shiny Python App-Packages"
   author: "Martin Frigaard"
   description: |
     Getting your Shiny for Python app into a Python package
