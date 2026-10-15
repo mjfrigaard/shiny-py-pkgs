@@ -6,10 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-10-14">
+<meta name="dcterms.date" content="2026-10-15">
 <meta name="description" content="Getting your Shiny for Python app into a Python package">
 
-<title>5&nbsp; Documentation – Shiny for Python App-Packages</title>
+<title>5&nbsp; Documentation – Shiny Python App-Packages</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -313,7 +313,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Shiny for Python App-Packages</a> 
+      <a href="./">Shiny Python App-Packages</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/mjfrigaard/shiny-py-pkgs" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
@@ -733,7 +733,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2026-10-14</p>
+      <p class="date">2026-10-15</p>
     </div>
   </div>
   
@@ -968,7 +968,7 @@ flowchart LR
 <section id="function-docstrings" class="level3" data-number="5.3.3">
 <h3 data-number="5.3.3" class="anchored" data-anchor-id="function-docstrings"><span class="header-section-number">5.3.3</span> Function docstrings</h3>
 <p>A NumPy style function docstring has a summary line, an extended description, and a series of sections. The summary line and description for <code>scatter_plot()</code> are below:</p>
-<div id="5b644095" class="cell" data-execution_count="1">
+<div id="019b6ddc" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>show/hide summary and description</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title<span class="op">=</span><span class="st">""</span>):</span>
@@ -986,7 +986,7 @@ flowchart LR
 <section id="parameters" class="level4 unnumbered">
 <h4 class="unnumbered anchored" data-anchor-id="parameters"><code>Parameters</code></h4>
 <p>Parameters need one entry per argument, written as <code>name : type</code> with the description indented below it. Optional arguments add <code>optional</code> after the type.</p>
-<div id="6e459a40" class="cell" data-execution_count="2">
+<div id="734f4268" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>show/hide Parameters section</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title<span class="op">=</span><span class="st">""</span>):</span>
@@ -1017,7 +1017,7 @@ flowchart LR
 <section id="returns" class="level4 unnumbered">
 <h4 class="unnumbered anchored" data-anchor-id="returns"><code>Returns</code></h4>
 <p>The <code>Returns</code> section should include the type of the returned object and a short description. <code>scatter_plot()</code> returns the figure rather than drawing it, which is what <code>@render.plot</code> expects.</p>
-<div id="ca3bd08d" class="cell" data-execution_count="3">
+<div id="04156f4a" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>show/hide Returns section</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title<span class="op">=</span><span class="st">""</span>):</span>
@@ -1033,7 +1033,7 @@ flowchart LR
 <section id="notes" class="level4 unnumbered">
 <h4 class="unnumbered anchored" data-anchor-id="notes"><code>Notes</code></h4>
 <p><code>Notes</code> can be any details that don’t belong to a single argument. The <code>tab10</code> limit is easy to miss until a column has more than ten categories.</p>
-<div id="0e412d41" class="cell" data-execution_count="4">
+<div id="3bba3e1f" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>show/hide Notes section</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title<span class="op">=</span><span class="st">""</span>):</span>
@@ -1049,7 +1049,7 @@ flowchart LR
 <section id="examples" class="level4 unnumbered">
 <h4 class="unnumbered anchored" data-anchor-id="examples"><code>Examples</code></h4>
 <p>Like <code>@examples</code> in <code>roxygen2</code>, the <code>Examples</code> section holds code a reader can paste into the console, written in the <code>&gt;&gt;&gt;</code> prompt format.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
-<div id="9110c837" class="cell" data-execution_count="5">
+<div id="63c42ed0" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>show/hide Examples section</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title<span class="op">=</span><span class="st">""</span>):</span>
@@ -1066,7 +1066,7 @@ flowchart LR
 </div>
 <p>I’ve written the descriptions from the reader’s side of the function. <code>col_var</code> doesn’t just say “column for color”; it also says what happens to missing values, because that’s the question someone debugging a sparse plot will have. This is the same advice I gave for <code>@param</code> in the R book: include the type and what the argument does.</p>
 <p>The full docstring for <code>scatter_plot()</code> is below:</p>
-<div id="f0231412" class="cell" data-execution_count="6">
+<div id="e07985a0" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>show/hide full scatter_plot() docstring</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># in src/pyap/utils.py</span></span>
@@ -1140,7 +1140,7 @@ flowchart LR
 <section id="module-docstrings" class="level3" data-number="5.3.4">
 <h3 data-number="5.3.4" class="anchored" data-anchor-id="module-docstrings"><span class="header-section-number">5.3.4</span> Module docstrings</h3>
 <p>A module docstring describes the file as a whole. It must be the first statement in the file, above the imports.</p>
-<div id="e6a324e9" class="cell" data-execution_count="7">
+<div id="52eb0bce" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>show/hide scatter plot module docstring</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">"""Plotting utilities for the pyap movies app.</span></span>
@@ -1155,7 +1155,7 @@ flowchart LR
 </details>
 </div>
 <p><code>src/pyap/app.py</code> gets a module docstring too. The <code># Run with:</code> comment can stay on the first line, because comments aren’t statements; the docstring is still the first statement in the file:</p>
-<div id="2028752d" class="cell" data-execution_count="8">
+<div id="43f8d99c" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>show/hide app module docstring</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run with: uv run shiny run src/pyap/app.py</span></span>
@@ -1172,11 +1172,11 @@ flowchart LR
 <span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyap.utils <span class="im">import</span> scatter_plot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>The last sentence is a deliberate warning. Reading <code>movies.csv</code> at import time is the behavior that will trip up <code>pdoc</code> below, and the docstring is the right place to tell readers about it until the <a href="./data.html">Data</a> chapter changes it.</p>
+<p>The last sentence is a deliberate warning, because reading <code>movies.csv</code> at import time is the behavior that will trip up <code>pdoc</code> below, and the docstring is the right place to tell readers about it until the <a href="./data.html">Data</a> chapter changes it.</p>
 <section id="server-docstring" class="level4" data-number="5.3.4.1">
 <h4 data-number="5.3.4.1" class="anchored" data-anchor-id="server-docstring"><span class="header-section-number">5.3.4.1</span> <code>server</code> docstring</h4>
 <p>The <code>server()</code> function also gets a short docstring. Shiny passes it three objects, so the <code>Parameters</code> section names their types and lists the inputs and outputs the function uses:</p>
-<div id="41317795" class="cell" data-execution_count="9">
+<div id="b527a733" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>show/hide server docstring</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> server(<span class="bu">input</span>, output, session):</span>
