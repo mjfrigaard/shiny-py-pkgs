@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-11-06">
+<meta name="dcterms.date" content="2026-11-20">
 <meta name="description" content="Getting your Shiny for Python app into a Python package">
 
 <title>4&nbsp; Development Workflow – Shiny Python App-Packages</title>
@@ -87,9 +87,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-8f0fc31974e1db57220c7a265fee603b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-040baf68c433ff95fdc3f372fa3e2454.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-8f0fc31974e1db57220c7a265fee603b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-0399d8b1115fec79224b7ce5be4dc326.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-b061eedb331bbb24b5dc7970ca91f966.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-0399d8b1115fec79224b7ce5be4dc326.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -728,7 +728,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2026-11-06</p>
+      <p class="date">2026-11-20</p>
     </div>
   </div>
   
@@ -755,15 +755,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>I tend to reach for <code>uv run</code> first because it’s hard to run code against a stale environment by accident.</p>
 <p>The same prefix works for any command installed in the environment. The first line below opens a Python console, and the second confirms Python is reading <code>pyap</code> from our source folder:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Python 3.12.15 (main, Oct  3 2026, 01:03:07) [Clang 22.1.3 ] on linux</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>Type "help", "copyright", "credits" or "license" for more information.</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>&gt;&gt;&gt; </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-c</span> <span class="st">"import pyap; print(pyap.__file__)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>/home/path/to/pyap/src/pyap/__init__.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 </section>
 <section id="with-an-activated-.venv" class="level3" data-number="4.1.2">
 <h3 data-number="4.1.2" class="anchored" data-anchor-id="with-an-activated-.venv"><span class="header-section-number">4.1.2</span> With an activated <code>.venv/</code></h3>
@@ -772,19 +772,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">shiny</span> run <span class="at">--reload</span> <span class="at">--launch-browser</span> src/pyap/app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Running <code>deactivate</code> returns the terminal to its previous state.</p>
+<div id="co_box_on_windows" class="cell" data-execution_count="1">
 <div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>On Windows
+<span class="screen-reader-only">Tip</span><span style="font-weight: bold; font-size: 1.05em;">On Windows</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<div style="font-size: 0.95em; color: #282b2d;">
 <p>On Windows (PowerShell), the activation script is <code>.venv\Scripts\Activate.ps1</code>.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -924,20 +928,24 @@ flowchart TB
 <p>After we saved the file, the terminal showed the app restarting, and the scatter plot in the browser is redrawn with light grid lines.</p>
 <p>We didn’t stop the app, reinstall <code>pyap</code>, or refresh the page. This is the one edit in the chapter we keep, and it’s committed on the <code>04_dev</code> branch.</p>
 <p>Each reload restarts the app’s Python process, so every session starts over and any inputs we changed go back to their default values. For an app the size of <code>pyap</code>, this takes a second or two.</p>
+<div id="co_box_what_reload_watches" class="cell" data-execution_count="2">
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>What <code>--reload</code> watches
+<span class="screen-reader-only">Note</span><span style="font-weight: bold; font-size: 1.05em;">What <code>--reload</code> watches</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<div style="font-size: 0.95em; color: #282b2d;">
 <p>By default, <code>--reload</code> only reacts to certain file types (such as <code>.py</code>, <code>.css</code>, <code>.js</code>, and <code>.html</code> files) inside the folder that holds the app. <code>movies.csv</code> fails <em>both</em> tests because it’s a <code>.csv</code> file, and it sits at the <em>project root</em> instead of in <code>src/pyap/</code>.</p>
 <p>Running <code>shiny run --help</code> lists the <code>--reload-dir</code>, <code>--reload-includes</code>, and <code>--reload-excludes</code> options for changing what’s watched.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -950,7 +958,7 @@ flowchart TB
 <h3 data-number="4.4.1" class="anchored" data-anchor-id="adding-and-removing-dependencies"><span class="header-section-number">4.4.1</span> Adding and removing dependencies</h3>
 <p><code>uv add</code> and <code>uv remove</code> cover most of these changes. Each one updates <code>pyproject.toml</code>, re-resolves <code>uv.lock</code>, and syncs <code>.venv/</code> in a single step, so there’s nothing left for us to run afterwards. For example, the commands below add <code>polars</code> (from the callout in the <a href="./shiny.html">Shiny for Python</a> chapter) and then remove it again:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> add polars</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Resolved 47 packages in 418ms</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>      Built pyap @ file:///path/to/pyap/                                                         </span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>Prepared 1 package in 10ms</span>
@@ -959,11 +967,11 @@ flowchart TB
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a> + polars==2.0.0</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a> + polars-runtime-32==2.0.0</span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a> ~ pyap==0.1.0 (from file:///path/to/pyap)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p>After <code>uv add</code>, <code>polars</code> appears in the <code>dependencies</code> list with a lower bound, and <code>uv run python -c "import polars"</code> succeeds.</p>
 <p><code>uv remove</code> takes it back out of all three places, so <code>uv.lock</code> is back where it started, and <code>pyproject.toml</code> only differs by whitespace (<code>uv</code> may add a trailing newline when it rewrites the file).</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> remove polars</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Resolved 45 packages in 15ms</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>      Built pyap @ file:///path/to/pyap                                                            </span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>Prepared 1 package in 3ms</span>
@@ -972,7 +980,7 @@ flowchart TB
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a> - polars==2.0.0</span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a> - polars-runtime-32==2.0.0</span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a> ~ pyap==0.1.0 (from file:///path/to/pyap)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p>Development tools go in the <code>dev</code> dependency group with <code>--dev</code>, as <code>pytest</code> did in the <a href="./whole_game.html">Whole Game</a> chapter. The <a href="./dependencies.html">Dependencies</a> chapter covers version constraints, groups, and upgrades.</p>
 </section>
 <section id="editing-pyproject.toml-by-hand" class="level3" data-number="4.4.2">
@@ -981,38 +989,38 @@ flowchart TB
 <p>The package version is a good example, because Python reads it from metadata written at install time, not from <code>pyproject.toml</code>. With the environment activated, we can print the installed version with <code>importlib.metadata</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">"from importlib.metadata import version; print(version('pyap'))"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>0.1.0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p>Next, we’ll make another illustrative edit and change <code>version = "0.1.0"</code> to <code>version = "0.1.1"</code> in <code>pyproject.toml</code>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-17"><pre class="sourceCode toml code-annotation-code code-with-copy code-annotated"><code class="sourceCode toml"><span id="annotated-cell-17-1"><a href="#annotated-cell-17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[project]</span></span>
-<span id="annotated-cell-17-2"><a href="#annotated-cell-17-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"pyap"</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-17" data-target-annotation="1">1</button><span id="annotated-cell-17-3" class="code-annotation-target"><a href="#annotated-cell-17-3" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"0.1.1"</span></span>
-<span id="annotated-cell-17-4"><a href="#annotated-cell-17-4" aria-hidden="true" tabindex="-1"></a><span class="dt">description</span> <span class="op">=</span> <span class="st">"A Shiny for Python app-package"</span></span>
-<span id="annotated-cell-17-5"><a href="#annotated-cell-17-5" aria-hidden="true" tabindex="-1"></a><span class="dt">readme</span> <span class="op">=</span> <span class="st">"README.md"</span></span>
-<span id="annotated-cell-17-6"><a href="#annotated-cell-17-6" aria-hidden="true" tabindex="-1"></a><span class="dt">authors</span> <span class="op">=</span> <span class="op">[</span></span>
-<span id="annotated-cell-17-7"><a href="#annotated-cell-17-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">{ </span><span class="dt">name</span><span class="op"> =</span> <span class="st">"Martin Frigaard"</span><span class="op"> }</span></span>
-<span id="annotated-cell-17-8"><a href="#annotated-cell-17-8" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span>
-<span id="annotated-cell-17-9"><a href="#annotated-cell-17-9" aria-hidden="true" tabindex="-1"></a><span class="dt">requires-python</span> <span class="op">=</span> <span class="st">"&gt;=3.12"</span></span>
-<span id="annotated-cell-17-10"><a href="#annotated-cell-17-10" aria-hidden="true" tabindex="-1"></a><span class="dt">dependencies</span> <span class="op">=</span> <span class="op">[</span></span>
-<span id="annotated-cell-17-11"><a href="#annotated-cell-17-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"matplotlib&gt;=3.8.0"</span><span class="op">,</span></span>
-<span id="annotated-cell-17-12"><a href="#annotated-cell-17-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"numpy&gt;=1.26.0"</span><span class="op">,</span></span>
-<span id="annotated-cell-17-13"><a href="#annotated-cell-17-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pandas&gt;=2.1.0"</span><span class="op">,</span></span>
-<span id="annotated-cell-17-14"><a href="#annotated-cell-17-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"shiny&gt;=1.2.0"</span><span class="op">,</span></span>
-<span id="annotated-cell-17-15"><a href="#annotated-cell-17-15" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span>
-<span id="annotated-cell-17-16"><a href="#annotated-cell-17-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-17-17"><a href="#annotated-cell-17-17" aria-hidden="true" tabindex="-1"></a><span class="kw">[build-system]</span></span>
-<span id="annotated-cell-17-18"><a href="#annotated-cell-17-18" aria-hidden="true" tabindex="-1"></a><span class="dt">requires</span> <span class="op">=</span> <span class="op">[</span><span class="st">"uv_build&gt;=0.12.23,&lt;0.13.0"</span><span class="op">]</span></span>
-<span id="annotated-cell-17-19"><a href="#annotated-cell-17-19" aria-hidden="true" tabindex="-1"></a><span class="dt">build-backend</span> <span class="op">=</span> <span class="st">"uv_build"</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-12"><pre class="sourceCode toml code-annotation-code code-with-copy code-annotated"><code class="sourceCode toml"><span id="annotated-cell-12-1"><a href="#annotated-cell-12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[project]</span></span>
+<span id="annotated-cell-12-2"><a href="#annotated-cell-12-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"pyap"</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-12" data-target-annotation="1">1</button><span id="annotated-cell-12-3" class="code-annotation-target"><a href="#annotated-cell-12-3" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"0.1.1"</span></span>
+<span id="annotated-cell-12-4"><a href="#annotated-cell-12-4" aria-hidden="true" tabindex="-1"></a><span class="dt">description</span> <span class="op">=</span> <span class="st">"A Shiny for Python app-package"</span></span>
+<span id="annotated-cell-12-5"><a href="#annotated-cell-12-5" aria-hidden="true" tabindex="-1"></a><span class="dt">readme</span> <span class="op">=</span> <span class="st">"README.md"</span></span>
+<span id="annotated-cell-12-6"><a href="#annotated-cell-12-6" aria-hidden="true" tabindex="-1"></a><span class="dt">authors</span> <span class="op">=</span> <span class="op">[</span></span>
+<span id="annotated-cell-12-7"><a href="#annotated-cell-12-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">{ </span><span class="dt">name</span><span class="op"> =</span> <span class="st">"Martin Frigaard"</span><span class="op"> }</span></span>
+<span id="annotated-cell-12-8"><a href="#annotated-cell-12-8" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span>
+<span id="annotated-cell-12-9"><a href="#annotated-cell-12-9" aria-hidden="true" tabindex="-1"></a><span class="dt">requires-python</span> <span class="op">=</span> <span class="st">"&gt;=3.12"</span></span>
+<span id="annotated-cell-12-10"><a href="#annotated-cell-12-10" aria-hidden="true" tabindex="-1"></a><span class="dt">dependencies</span> <span class="op">=</span> <span class="op">[</span></span>
+<span id="annotated-cell-12-11"><a href="#annotated-cell-12-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"matplotlib&gt;=3.8.0"</span><span class="op">,</span></span>
+<span id="annotated-cell-12-12"><a href="#annotated-cell-12-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"numpy&gt;=1.26.0"</span><span class="op">,</span></span>
+<span id="annotated-cell-12-13"><a href="#annotated-cell-12-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pandas&gt;=2.1.0"</span><span class="op">,</span></span>
+<span id="annotated-cell-12-14"><a href="#annotated-cell-12-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"shiny&gt;=1.2.0"</span><span class="op">,</span></span>
+<span id="annotated-cell-12-15"><a href="#annotated-cell-12-15" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span>
+<span id="annotated-cell-12-16"><a href="#annotated-cell-12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-12-17"><a href="#annotated-cell-12-17" aria-hidden="true" tabindex="-1"></a><span class="kw">[build-system]</span></span>
+<span id="annotated-cell-12-18"><a href="#annotated-cell-12-18" aria-hidden="true" tabindex="-1"></a><span class="dt">requires</span> <span class="op">=</span> <span class="op">[</span><span class="st">"uv_build&gt;=0.12.23,&lt;0.13.0"</span><span class="op">]</span></span>
+<span id="annotated-cell-12-19"><a href="#annotated-cell-12-19" aria-hidden="true" tabindex="-1"></a><span class="dt">build-backend</span> <span class="op">=</span> <span class="st">"uv_build"</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <dl class="code-annotation-container-hidden code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-17" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-12" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-17" data-code-lines="3" data-code-annotation="1">Change from “0.1.0” to “0.1.1”</span>
+<span data-code-cell="annotated-cell-12" data-code-lines="3" data-code-annotation="1">Change from “0.1.0” to “0.1.1”</span>
 </dd>
 </dl>
 <p>Running the same command still prints <code>0.1.0</code>. The editable install points at our code, but the package metadata is a snapshot from the last sync. <code>uv sync</code> rebuilds it:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Resolved 45 packages in 522ms</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>      Built pyap @ file:///path/to/pyap                            </span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>Prepared 1 package in 9ms</span>
@@ -1020,15 +1028,15 @@ flowchart TB
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>Installed 1 package in 0.80ms</span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a> - pyap==0.1.0 (from file:///path/to/pyap)</span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a> + pyap==0.1.1 (from file:///path/to/pyap)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">"from importlib.metadata import version; print(version('pyap'))"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>0.1.1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p><code>uv run python -c "..."</code> would have printed <code>0.1.1</code> without the explicit <code>uv sync</code>, because <code>uv run</code> syncs first. We’ll undo the edit (along with the lockfile change the sync made) and sync again:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> restore pyproject.toml uv.lock</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Resolved 45 packages in 1ms</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>      Built pyap @ file:///path/to/pyap                            </span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>Prepared 1 package in 4ms</span>
@@ -1036,7 +1044,7 @@ flowchart TB
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>Installed 1 package in 0.79ms</span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a> - pyap==0.1.1 (from file:///path/to/pyap)</span>
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a> + pyap==0.1.0 (from file:///path/to/pyap)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p>The same rule applies to the rest of <code>[project]</code> (such as <code>requires-python</code>, <code>dependencies</code>, and the <code>[project.scripts]</code> commands we’ll add in the <a href="./launch.html">Launch</a> chapter), and to the <code>[build-system]</code> table. All of them are read when the package is installed, so a change only takes effect after a sync.</p>
 </section>
 <section id="switching-branches" class="level3" data-number="4.4.3">
@@ -1111,22 +1119,24 @@ flowchart TB
 <p>We have two options. The first is <code>importlib.reload()</code>, which re-executes a module that’s already been imported:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="im">import</span> importlib</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> importlib.<span class="bu">reload</span>(utils)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>&lt;module 'pyap.utils' from '/path/to/pyap/src/pyap/utils.py'&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p>The second is restarting the console and running the imports again. I’ve found restarting is the more reliable habit, for the reasons in the warning below.</p>
+<div id="co_box_the_limits_of_importlib_reload" class="cell" data-execution_count="3">
 <div class="callout callout-style-default callout-warning no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>The limits of <code>importlib.reload()</code>
+<span class="screen-reader-only">Warning</span><span style="font-weight: bold; font-size: 1.05em;">The limits of <code>importlib.reload()</code></span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
+<div style="font-size: 0.95em; color: #282b2d;">
 <p><code>importlib.reload()</code> is useful for quick checks, but it misses changes in a few common situations:</p>
 <ul>
 <li><p>One module at a time: reloading <code>pyap.utils</code> doesn’t reload the modules it imports, and reloading <code>pyap</code> doesn’t reload <code>pyap.utils</code>.</p></li>
@@ -1136,22 +1146,28 @@ flowchart TB
 </div>
 </div>
 </div>
+</div>
+</div>
+<div id="co_box_ipython_autoreload" class="cell" data-execution_count="4">
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>IPython autoreload
+<span class="screen-reader-only">Note</span><span style="font-weight: bold; font-size: 1.05em;">IPython autoreload</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<div style="font-size: 0.95em; color: #282b2d;">
 <p>IPython (the enhanced console behind Positron’s Python console) includes an <a href="https://ipython.readthedocs.io/en/stable/config/extensions/autoreload.html">autoreload extension</a> that reloads changed modules before each command:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext autoreload</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>autoreload <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This is convenient for long console sessions, but it can still miss the same edge cases as <code>importlib.reload()</code>. When the results don’t make sense, restart.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1168,7 +1184,7 @@ flowchart TB
 <h2 data-number="4.6" class="anchored" data-anchor-id="running-tests"><span class="header-section-number">4.6</span> Running tests</h2>
 <p>Tests close the loop. <code>pytest</code> starts a new Python process each time it runs, so it always imports the current code in <code>src/pyap/</code> and nothing needs reloading. With the <code>uv run</code> prefix, it also runs against a synced environment:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>=================== test session starts ===================</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>platform linux -- Python 3.12.3, pytest-9.1.0, pluggy-1.6.0</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>rootdir: /path/to/pyap</span>
@@ -1177,7 +1193,7 @@ flowchart TB
 <span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>collected 0 items</span>
 <span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>=================== no tests ran in 0.00s ===================</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p>The <code>04_dev</code> branch doesn’t have a <code>tests/</code> folder yet, and <code>pytest</code> isn’t installed in this branch’s environment, so the command above has nothing to run here.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> We added both in the <a href="./whole_game.html">Whole Game</a> chapter (<code>uv add --dev pytest</code> and a <code>tests/test_data.py</code> file), and the <a href="./test_suite.html">Test Suite</a> chapter adds them to <code>pyap</code>.</p>
 <p>Once tests exist, two variations are worth knowing during development:</p>
 <ol type="1">

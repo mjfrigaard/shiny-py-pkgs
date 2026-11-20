@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-11-06">
+<meta name="dcterms.date" content="2026-11-20">
 <meta name="description" content="Getting your Shiny for Python app into a Python package">
 
 <title>2&nbsp; Shiny for Python – Shiny Python App-Packages</title>
@@ -87,9 +87,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-8f0fc31974e1db57220c7a265fee603b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-040baf68c433ff95fdc3f372fa3e2454.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-8f0fc31974e1db57220c7a265fee603b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-0399d8b1115fec79224b7ce5be4dc326.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-b061eedb331bbb24b5dc7970ca91f966.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-0399d8b1115fec79224b7ce5be4dc326.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -724,7 +724,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2026-11-06</p>
+      <p class="date">2026-11-20</p>
     </div>
   </div>
   
@@ -1005,29 +1005,33 @@ flowchart TB
 <p>Check out the <code>02.2_movies-app</code> branch to follow along:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout 02.2_movies-app</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The branch replaces the Old Faithful code with three files:</p>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>pyap/</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>├── app.py</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>├── movies.csv</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>└── utils.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p>The movies app reads the data with <code>pandas</code>, so we’ll install it into the virtual environment (<code>shiny</code> and <code>matplotlib</code> are already installed):</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install pandas</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="co_box_pandas_or_polars" class="cell" data-execution_count="1">
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>pandas or polars?
+<span class="screen-reader-only">Note</span><span style="font-weight: bold; font-size: 1.05em;">pandas or polars?</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<div style="font-size: 0.95em; color: #282b2d;">
 <p>This book uses <code>pandas</code> because it’s more common in Shiny for Python examples (roughly 3 to 1 over <a href="https://pola.rs/"><code>polars</code></a> in the <a href="https://github.com/posit-dev/py-shiny"><code>py-shiny</code></a> and <a href="https://github.com/posit-dev/py-shiny-templates"><code>py-shiny-templates</code></a> repositories as of 2026-10). Shiny doesn’t force the choice, though: <code>@render.data_frame</code> accepts both <code>pandas</code> and <code>polars</code> DataFrames. To follow along with <code>polars</code> instead, install it into the virtual environment:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install polars</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>polars</code> builds queries from column expressions (like <code>pl.col("genre")</code>), so its syntax will feel familiar if you’re coming from <code>dplyr</code>.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1144,18 +1148,20 @@ flowchart TB
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>movies <span class="op">=</span> pd.read_csv(<span class="st">"movies.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Like <code>waiting</code> in the Old Faithful app, <code>movies</code> is created outside the server, so the file is read once when the app starts and every session shares the same data. The path is relative, which means Python looks for <code>movies.csv</code> in the current working directory. We need to run the app from the folder that holds <code>movies.csv</code> (we’ll fix this fragile path when we store the data inside the package in the <a href="./data.html">Data</a> chapter).</p>
 <p>The data have 34 columns describing each movie (<code>title</code>, <code>genre</code>, <code>runtime</code>, <code>mpaa_rating</code>, <code>imdb_rating</code>, <code>critics_score</code>, <code>audience_score</code>, and others). The app only plots a handful of them.</p>
+<div id="co_box_reading_data_with_polars" class="cell" data-execution_count="2">
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Reading data with polars
+<span class="screen-reader-only">Note</span><span style="font-weight: bold; font-size: 1.05em;">Reading data with polars</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<div style="font-size: 0.95em; color: #282b2d;">
 <p>The code blocks below import the package, read <code>movies.csv</code>, and count rows in <code>pandas</code>, <code>polars</code>, and the tidyverse:</p>
 <p><code>pandas</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -1173,6 +1179,8 @@ flowchart TB
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>movies <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"movies.csv"</span>)</span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(movies)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>pandas</code> reads the string <code>NA</code> as a missing value by default, but <code>polars</code> only treats empty fields as missing. Because <code>movies.csv</code> stores missing values as <code>NA</code>, <code>pl.read_csv("movies.csv")</code> fails with a parsing error, so we pass the string to <code>null_values</code>.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1258,18 +1266,20 @@ flowchart TB
 <span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
 <span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>matplotlib</code> doesn’t map a categorical variable to colors automatically, so <code>scatter_plot()</code> loops over each category in <code>col_var</code> and draws its points with a color from the <code>tab10</code> palette. The <code>s</code> argument sets the marker area, so <code>size_var ** 2 * 10</code> scales the slider’s 1 to 5 range into visible point sizes. The axis and legend labels are built from the column names (<code>critics_score</code> becomes “Critics Score”), and the legend is placed outside the plot area so it doesn’t cover any points.</p>
+<div id="co_box_filtering_with_polars" class="cell" data-execution_count="3">
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Filtering with polars
+<span class="screen-reader-only">Note</span><span style="font-weight: bold; font-size: 1.05em;">Filtering with polars</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<div style="font-size: 0.95em; color: #282b2d;">
 <p>The code blocks below show the two <code>pandas</code> operations in <code>scatter_plot()</code> next to their <code>polars</code> and <code>dplyr</code> equivalents (selecting the rows in a category, and the unique values with no missing entries):</p>
 <p><code>pandas</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df[df[col_var] <span class="op">==</span> cat]</span>
@@ -1281,6 +1291,8 @@ flowchart TB
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(df, .data[[col_var]] <span class="sc">==</span> cat)</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(<span class="fu">na.omit</span>(df[[col_var]]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>pl.col(col_var)</code> refers to a column by name inside an expression, much like <code>.data[[col_var]]</code> in <code>dplyr</code>. Using it requires <code>import polars as pl</code> at the top of <code>utils.py</code>. <code>polars</code> doesn’t preserve the order of <code>unique()</code> results by default, but <code>scatter_plot()</code> already wraps them in <code>sorted()</code>.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1297,7 +1309,7 @@ flowchart TB
 <h2 data-number="2.5" class="anchored" data-anchor-id="project-structure"><span class="header-section-number">2.5</span> Project structure</h2>
 <p>The movies app runs, but nothing in the folder tells another developer (or our future selves) which packages it needs or how the editor should be configured. The <code>02.3_proj-app</code> branch adds these files:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout 02.3_proj-app</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>pyap/</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>├── .gitignore</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>├── .vscode/</span>
@@ -1307,7 +1319,7 @@ flowchart TB
 <span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>├── movies.csv</span>
 <span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>├── requirements.txt</span>
 <span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>└── utils.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p>The app code (<code>app.py</code>, <code>utils.py</code>, and <code>movies.csv</code>) is unchanged. The branch adds <code>requirements.txt</code> and <code>.vscode/settings.json</code>, and it updates <code>README.md</code> and <code>.gitignore</code>.</p>
 <section id="requirements.txt" class="level3" data-number="2.5.1">
 <h3 data-number="2.5.1" class="anchored" data-anchor-id="requirements.txt"><span class="header-section-number">2.5.1</span> requirements.txt</h3>
@@ -1336,17 +1348,24 @@ flowchart TB
 <span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
 <span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>python.defaultInterpreterPath</code> points the editor at the Python inside <code>.venv/</code>, and <code>python.terminal.activateEnvironment</code> activates the virtual environment whenever we open a new terminal. The remaining settings format Python files with <a href="https://black.readthedocs.io/">Black</a> every time we save, and draw a ruler at 88 characters (Black’s default line length). The Black formatter setting requires the <a href="https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter">Black Formatter extension</a>.</p>
+<div id="co_box_sharing_editor_settings" class="cell" data-execution_count="4">
 <div class="callout callout-style-default callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Sharing editor settings
+<span class="screen-reader-only">Note</span><span style="font-weight: bold; font-size: 1.05em;">Sharing editor settings</span>
 </div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
+<div style="font-size: 0.95em; color: #282b2d;">
 <p>The <code>.gitignore</code> in the earlier branches listed <code>.vscode/</code>, so editor settings were never committed. The <code>02.3_proj-app</code> branch removes that entry, which means <code>.vscode/settings.json</code> is shared with anyone who clones the repository.</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 </section>

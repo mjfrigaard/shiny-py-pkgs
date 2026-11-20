@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-11-06">
+<meta name="dcterms.date" content="2026-11-20">
 <meta name="description" content="Getting your Shiny for Python app into a Python package">
 
 <title>5&nbsp; Documentation – Shiny Python App-Packages</title>
@@ -87,9 +87,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-8f0fc31974e1db57220c7a265fee603b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-040baf68c433ff95fdc3f372fa3e2454.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-8f0fc31974e1db57220c7a265fee603b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-0399d8b1115fec79224b7ce5be4dc326.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-b061eedb331bbb24b5dc7970ca91f966.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-0399d8b1115fec79224b7ce5be4dc326.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -739,7 +739,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2026-11-06</p>
+      <p class="date">2026-11-20</p>
     </div>
   </div>
   
@@ -753,18 +753,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>In the <a href="./development.html">Development Workflow</a> chapter, we settled into a loop of editing code in <code>src/pyap/</code>, saving, and checking the result. <code>pyap</code> installs and runs, but the only documentation was a single sentence on <code>scatter_plot()</code> and another in <code>__init__.py</code>. This means anyone opening the package (including me, six months from now) would need to read the function body to learn what each argument expects and what comes back.</p>
 <p>This chapter fixes that by writing complete docstrings for the code in <code>pyap</code>, then rendering them into an HTML documentation site.</p>
+<div id="co_box_comparison_to_r_package_documentation" class="cell" data-execution_count="1">
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Comparison to R package documentation
+<span class="screen-reader-only">Note</span><span style="font-weight: bold; font-size: 1.05em;">Comparison to R package documentation</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<div style="font-size: 0.95em; color: #282b2d;">
 <p>If you’ve read the <a href="https://mjfrigaard.github.io/shiny-app-pkgs/document.html">Documentation</a> chapter of <a href="https://mjfrigaard.github.io/shiny-app-pkgs/">Shiny App-Packages</a>, you’ll know we document app-package functions with <code>roxygen2</code>:</p>
 <ul>
 <li>Help documentation is created by placing <code>#'</code> comments above each function<br>
@@ -773,6 +775,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
 <li>We run <code>devtools::document()</code> to turn them into <code>.Rd</code> files in <code>man/</code></li>
 </ul>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -818,20 +822,24 @@ flowchart LR
 <section id="what-is-a-docstring" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="what-is-a-docstring"><span class="header-section-number">5.2</span> What is a docstring?</h2>
 <p>A docstring is a string literal placed as the first statement in a module, function, or class. Python doesn’t discard it like a comment. It attaches the string to the object as its <code>__doc__</code> attribute, which is what makes docstrings readable from the console, the editor, and documentation tools.</p>
+<div id="co_box_comparison_to_r_package_documentation_2" class="cell" data-execution_count="2">
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Comparison to R package documentation
+<span class="screen-reader-only">Note</span><span style="font-weight: bold; font-size: 1.05em;">Comparison to R package documentation</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<div style="font-size: 0.95em; color: #282b2d;">
 <p>A string literal is a string value written directly in the code, between quotes (<code>"movies.csv"</code> or <code>'IMDB rating'</code>), rather than one built by an expression or stored in a variable. R has string literals too (<code>"movies.csv"</code>, and raw strings like <code>r"(C:\path)"</code> since R 4.0), but R doesn’t treat a string at the top of a function body as documentation.</p>
 <p>If we placed <code>"Create a scatter plot"</code> as the first line of an R function, R would evaluate it, discard the result, and move on. This is why R documentation lives outside the function code, in <code>roxygen2</code> comments that <code>document()</code> turns into <code>.Rd</code> files.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -844,12 +852,12 @@ flowchart LR
 <p>The fastest way to read a docstring is <code>help()</code> in a Python console (Positron’s <strong>Console</strong>, or <code>uv run python</code> from the project root in a terminal). We’ll import the function and pass it to <code>help()</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="im">from</span> pyap.utils <span class="im">import</span> scatter_plot</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="bu">help</span>(scatter_plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Help on function scatter_plot in module pyap.utils:</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title='')</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    Create a scatter plot of df colored by a categorical variable.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p>The output above is from a terminal, where <code>help()</code> opens a pager (press <kbd>q</kbd> to return to the prompt). In Positron, <code>help()</code> displays the function’s signature and docstring in the <strong>Help</strong> pane:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -858,9 +866,9 @@ flowchart LR
 </div>
 <p>The raw string is available on the <code>__doc__</code> attribute:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> scatter_plot.__doc__</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>'Create a scatter plot of df colored by a categorical variable.'</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p>Modules and packages have docstrings too. <code>pyap.__doc__</code> returns the sentence in <code>src/pyap/__init__.py</code> from the <a href="./packages.html#moving-the-code-into-srcpyap">Python Packages</a> chapter, and <code>help(pyap)</code> shows the package docstring along with its contents. In a terminal, the contents list both <code>app</code> and <code>utils</code>, but Positron’s <strong>Help</strong> pane only listed <code>utils</code> (the module we had already imported):</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -935,7 +943,7 @@ flowchart LR
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout 05.1_pdoc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The branch adds docstrings to all three modules in <code>src/pyap/</code>, adds <code>pdoc</code> to the <code>dev</code> dependency group (<code>pyproject.toml</code> and <code>uv.lock</code>), and adds <code>docs/</code> to <code>.gitignore</code>. The project structure is below:</p>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pyap/</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>├── .gitignore</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>├── .python-version</span>
@@ -950,7 +958,7 @@ flowchart LR
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>│       ├── app.py</span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>│       └── utils.py</span>
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>└── uv.lock</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p>Unlike <code>roxygen2</code>, which generates <code>.Rd</code> files in <code>man/</code>, docstrings add no files to the package. Documentation in Python lives <em>inside</em> the files we already have, which is why the tree looks exactly like the one from the <code>04_dev</code> branch.</p>
 <section id="pep-257-basics" class="level3" data-number="5.3.1">
 <h3 data-number="5.3.1" class="anchored" data-anchor-id="pep-257-basics"><span class="header-section-number">5.3.1</span> PEP 257 basics</h3>
@@ -976,7 +984,7 @@ flowchart LR
 <section id="function-docstrings" class="level3" data-number="5.3.3">
 <h3 data-number="5.3.3" class="anchored" data-anchor-id="function-docstrings"><span class="header-section-number">5.3.3</span> Function docstrings</h3>
 <p>A NumPy style function docstring has a summary line, an extended description, and a series of sections. The summary line and description for <code>scatter_plot()</code> are below:</p>
-<div id="9b497d6a" class="cell" data-execution_count="1">
+<div id="67ffd6d8" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>show/hide summary and description</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title<span class="op">=</span><span class="st">""</span>):</span>
@@ -994,7 +1002,7 @@ flowchart LR
 <section id="parameters" class="level4 unnumbered">
 <h4 class="unnumbered anchored" data-anchor-id="parameters"><code>Parameters</code></h4>
 <p>Parameters need one entry per argument, written as <code>name : type</code> with the description indented below it. Optional arguments add <code>optional</code> after the type.</p>
-<div id="f026a595" class="cell" data-execution_count="2">
+<div id="3166774f" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>show/hide Parameters section</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title<span class="op">=</span><span class="st">""</span>):</span>
@@ -1025,7 +1033,7 @@ flowchart LR
 <section id="returns" class="level4 unnumbered">
 <h4 class="unnumbered anchored" data-anchor-id="returns"><code>Returns</code></h4>
 <p>The <code>Returns</code> section should include the type of the returned object and a short description. <code>scatter_plot()</code> returns the figure rather than drawing it, which is what <code>@render.plot</code> expects.</p>
-<div id="0ee301fe" class="cell" data-execution_count="3">
+<div id="6983bd68" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>show/hide Returns section</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title<span class="op">=</span><span class="st">""</span>):</span>
@@ -1041,7 +1049,7 @@ flowchart LR
 <section id="notes" class="level4 unnumbered">
 <h4 class="unnumbered anchored" data-anchor-id="notes"><code>Notes</code></h4>
 <p><code>Notes</code> can be any details that don’t belong to a single argument. The <code>tab10</code> limit is easy to miss until a column has more than ten categories.</p>
-<div id="f6dd979e" class="cell" data-execution_count="4">
+<div id="fb3e30ce" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>show/hide Notes section</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title<span class="op">=</span><span class="st">""</span>):</span>
@@ -1057,7 +1065,7 @@ flowchart LR
 <section id="examples" class="level4 unnumbered">
 <h4 class="unnumbered anchored" data-anchor-id="examples"><code>Examples</code></h4>
 <p>Like <code>@examples</code> in <code>roxygen2</code>, the <code>Examples</code> section holds code a reader can paste into the console, written in the <code>&gt;&gt;&gt;</code> prompt format.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
-<div id="af1dc56b" class="cell" data-execution_count="5">
+<div id="da767ceb" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>show/hide Examples section</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title<span class="op">=</span><span class="st">""</span>):</span>
@@ -1074,7 +1082,7 @@ flowchart LR
 </div>
 <p>I’ve written the descriptions from the reader’s side of the function. <code>col_var</code> doesn’t just say “column for color”; it also says what happens to missing values, because that’s the question someone debugging a sparse plot will have. This is the same advice I gave for <code>@param</code> in the R book: include the type and what the argument does.</p>
 <p>The full docstring for <code>scatter_plot()</code> is below:</p>
-<div id="e4a70fca" class="cell" data-execution_count="6">
+<div id="1adef7b1" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>show/hide full scatter_plot() docstring</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># in src/pyap/utils.py</span></span>
@@ -1127,19 +1135,23 @@ flowchart LR
 <span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># function body unchanged</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
+<div id="co_box_types_in_docstrings_and_type_hints" class="cell" data-execution_count="9">
 <div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Types in docstrings and type hints
+<span class="screen-reader-only">Tip</span><span style="font-weight: bold; font-size: 1.05em;">Types in docstrings and type hints</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<div style="font-size: 0.95em; color: #282b2d;">
 <p>NumPy style puts each parameter’s type in the docstring. Without type hints, editors can’t infer the types either (the Positron tooltip above shows <code>Unknown</code> for every argument). Python also supports type hints in the function signature (<code>def scatter_plot(df: pd.DataFrame, x_var: str, ...)</code>), and many documentation tools display both. We’ll keep the types in the docstring for now, so the signature in <code>utils.py</code> doesn’t change in this chapter.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1148,7 +1160,7 @@ flowchart LR
 <section id="module-docstrings" class="level3" data-number="5.3.4">
 <h3 data-number="5.3.4" class="anchored" data-anchor-id="module-docstrings"><span class="header-section-number">5.3.4</span> Module docstrings</h3>
 <p>A module docstring describes the file as a whole. It must be the first statement in the file, above the imports.</p>
-<div id="93093fdf" class="cell" data-execution_count="7">
+<div id="23e6939b" class="cell" data-execution_count="10">
 <details open="" class="code-fold">
 <summary>show/hide scatter plot module docstring</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">"""Plotting utilities for the pyap movies app.</span></span>
@@ -1163,7 +1175,7 @@ flowchart LR
 </details>
 </div>
 <p><code>src/pyap/app.py</code> gets a module docstring too. The <code># Run with:</code> comment can stay on the first line, because comments aren’t statements; the docstring is still the first statement in the file:</p>
-<div id="a04498b8" class="cell" data-execution_count="8">
+<div id="80a86f04" class="cell" data-execution_count="11">
 <details open="" class="code-fold">
 <summary>show/hide app module docstring</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run with: uv run shiny run src/pyap/app.py</span></span>
@@ -1184,7 +1196,7 @@ flowchart LR
 <section id="server-docstring" class="level4" data-number="5.3.4.1">
 <h4 data-number="5.3.4.1" class="anchored" data-anchor-id="server-docstring"><span class="header-section-number">5.3.4.1</span> <code>server</code> docstring</h4>
 <p>The <code>server()</code> function also gets a short docstring. Shiny passes it three objects, so the <code>Parameters</code> section names their types and lists the inputs and outputs the function uses:</p>
-<div id="f254fadc" class="cell" data-execution_count="9">
+<div id="13440d97" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>show/hide server docstring</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> server(<span class="bu">input</span>, output, session):</span>
@@ -1221,7 +1233,7 @@ flowchart LR
 <p>Docstrings are part of the source code, so the editable install picks them up without a sync (this is the No action path from the <a href="./development.html#the-edit-run-check-loop">Development Workflow</a> chapter). A console that already imported <code>pyap.utils</code> still holds the old function, though, so we’ll restart it (or start a new one with <code>uv run python</code>) and call <code>help()</code> again:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="im">from</span> pyap.utils <span class="im">import</span> scatter_plot</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="bu">help</span>(scatter_plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Help on function scatter_plot in module pyap.utils:</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title='')</span>
@@ -1269,7 +1281,7 @@ flowchart LR
 <span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>    &gt;&gt;&gt; movies = pd.read_csv("movies.csv")</span>
 <span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>    &gt;&gt;&gt; fig = scatter_plot(movies, "critics_score", "audience_score",</span>
 <span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>    ...                    "mpaa_rating", 0.4, 3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p>The output should show the full NumPy style docstring below the signature. <code>help()</code> prints the sections as plain text; the underlined headings are what documentation tools look for when they turn the docstring into HTML.</p>
 </section>
 </section>
@@ -1280,7 +1292,7 @@ flowchart LR
 <h3 data-number="5.4.1" class="anchored" data-anchor-id="adding-pdoc"><span class="header-section-number">5.4.1</span> Adding <code>pdoc</code></h3>
 <p><code>pdoc</code> generates API documentation from a package’s docstrings with no configuration file. We only need it while developing <code>pyap</code>, so we’ll add it to the <code>dev</code> dependency group with <code>--dev</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> add <span class="at">--dev</span> pdoc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>Resolved 50 packages in 310ms</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>   Building pyap @ file:///path/to/pyap</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>      Built pyap @ file:///path/to/pyap</span>
@@ -1293,7 +1305,7 @@ flowchart LR
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a> + pdoc==16.0.0</span>
 <span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a> ~ pyap==0.1.0 (from file:///path/to/pyap)</span>
 <span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a> + pygments==2.21.0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p><code>uv add</code> updates <code>pyproject.toml</code>, <code>uv.lock</code>, and <code>.venv/</code> in one step. The new table in <code>pyproject.toml</code> is below:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[dependency-groups]</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="dt">dev</span> <span class="op">=</span> <span class="op">[</span></span>
@@ -1305,23 +1317,30 @@ flowchart LR
 <h3 data-number="5.4.2" class="anchored" data-anchor-id="previewing-the-site"><span class="header-section-number">5.4.2</span> Previewing the site</h3>
 <p><code>pdoc</code> takes the name of the package to document. With <code>uv run</code>, we’re sure it imports the editable install of <code>pyap</code> from <code>.venv/</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pdoc <span class="at">--docformat</span> numpy pyap</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>pdoc server ready at http://localhost:8080</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p>This starts a local web server and opens the documentation in the browser. The <code>--docformat numpy</code> flag tells <code>pdoc</code> to read the <code>Parameters</code>, <code>Returns</code>, <code>Notes</code>, and <code>Examples</code> sections as NumPy style (without it, the underlined headings render as plain text). The package docstring becomes the landing page, and <code>pyap.app</code> and <code>pyap.utils</code> each get their own page. Press <kbd>Ctrl</kbd> + <kbd>C</kbd> in the terminal to stop the server.</p>
 <!-- TODO: screenshot of the pdoc page for pyap.utils (images/document-pdoc-utils.png) -->
 <p><code>pdoc</code> only documents public names. Anything that starts with an underscore is skipped, and if a module defines <code>__all__</code>, only the names it lists are included.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<div id="co_box_pdoc_imports_pyap" class="cell" data-execution_count="13">
 <div class="callout callout-style-default callout-warning no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>pdoc imports pyap
+<span class="screen-reader-only">Warning</span><span style="font-weight: bold; font-size: 1.05em;">pdoc imports pyap</span>
 </div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
+<div style="font-size: 0.95em; color: #282b2d;">
 <p><code>pdoc</code> builds its pages from the imported package (the top route in the diagram above), and importing <code>pyap.app</code> runs <code>pd.read_csv("movies.csv")</code>. The relative path is resolved from the folder we run <code>pdoc</code> in, so <code>pdoc</code> has to be run from the project root, exactly like the app. From any other folder, the import of <code>pyap.app</code> fails with a <code>FileNotFoundError</code>. The <a href="./data.html">Data</a> chapter removes this dependence on the working directory.</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 </section>
@@ -1330,7 +1349,7 @@ flowchart LR
 <p>To write the site to files instead of serving it, we pass an output folder with <code>-o</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pdoc <span class="at">--docformat</span> numpy <span class="at">-o</span> docs pyap</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>pdoc</code> writes one HTML page per module, plus an index page and a search index. The <code>docs/</code> folder should look like this:</p>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>docs/</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>├── index.html</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>├── pyap/</span>
@@ -1338,7 +1357,7 @@ flowchart LR
 <span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>│   └── utils.html</span>
 <span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>├── pyap.html</span>
 <span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>└── search.js</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p>The pages are self contained, so opening <code>docs/index.html</code> in a browser shows the same site as the preview. The <code>05.1_pdoc</code> branch lists <code>docs/</code> in <code>.gitignore</code>, because the HTML can always be rebuilt from the docstrings. We’ll publish it in the <a href="./deploy.html">Deploy</a> section.</p>
 </section>
 </section>
@@ -1353,7 +1372,7 @@ flowchart LR
 <h3 data-number="5.5.1" class="anchored" data-anchor-id="swapping-the-dev-dependencies"><span class="header-section-number">5.5.1</span> Swapping the dev dependencies</h3>
 <p><code>uv remove --dev</code> takes <code>pdoc</code> out of the <code>dev</code> group, and <code>uv add --dev</code> adds <code>mkdocs</code> and <code>mkdocstrings</code> (the <code>[python]</code> extra installs the Python handler for <code>mkdocstrings</code>):</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> remove <span class="at">--dev</span> pdoc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Resolved 45 packages in 13ms</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>   Building pyap @ file:///path/to/pyap</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>      Built pyap @ file:///path/to/pyap</span>
@@ -1366,9 +1385,9 @@ flowchart LR
 <span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a> - pdoc==16.0.0</span>
 <span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a> ~ pyap==0.1.0 (from file:///path/to/pyap)</span>
 <span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a> - pygments==2.21.0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> add <span class="at">--dev</span> mkdocs <span class="st">"mkdocstrings[python]"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>Resolved 62 packages in 321ms</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>   Building pyap @ file:///path/to/pyap</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>      Built pyap @ file:///path/to/pyap</span>
@@ -1394,7 +1413,7 @@ flowchart LR
 <span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a> + pyyaml==6.0.3</span>
 <span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a> + pyyaml-env-tag==1.1</span>
 <span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a> + watchdog==6.0.0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p>The <code>dev</code> group in <code>pyproject.toml</code> now lists the two new packages:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[dependency-groups]</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="dt">dev</span> <span class="op">=</span> <span class="op">[</span></span>
@@ -1405,7 +1424,7 @@ flowchart LR
 <section id="project-structure" class="level3" data-number="5.5.2">
 <h3 data-number="5.5.2" class="anchored" data-anchor-id="project-structure"><span class="header-section-number">5.5.2</span> Project structure</h3>
 <p>The branch adds an <code>mkdocs.yml</code> file at the project root and a <code>docs/index.md</code> page. The project structure is below:</p>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>pyap/</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>├── .gitignore</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>├── .python-version</span>
@@ -1423,7 +1442,7 @@ flowchart LR
 <span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>│       ├── app.py</span>
 <span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>│       └── utils.py</span>
 <span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>└── uv.lock</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p><code>docs/</code> is now source code for the site, so the branch removes <code>docs/</code> from <code>.gitignore</code> and adds <code>site/</code> (the folder <code>mkdocs build</code> writes to) in its place:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a># Documentation</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>site/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1457,22 +1476,22 @@ flowchart LR
 <h3 data-number="5.5.5" class="anchored" data-anchor-id="previewing-and-building"><span class="header-section-number">5.5.5</span> Previewing and building</h3>
 <p><code>mkdocs serve</code> starts a local web server for the site:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run mkdocs serve</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>INFO    -  Building documentation...</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>INFO    -  Cleaning site directory</span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>INFO    -  Documentation built in 0.31 seconds</span>
 <span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>INFO    -  [12:29:18] Watching paths for changes: 'docs', 'mkdocs.yml'</span>
 <span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>INFO    -  [12:29:18] Serving on http://127.0.0.1:8000/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p>The server prints the address to open in the browser, and it rebuilds the site when we save a change to <code>docs/</code> or <code>mkdocs.yml</code>. Press <kbd>Ctrl</kbd> + <kbd>C</kbd> to stop it.</p>
 <!-- TODO: screenshot of the mkdocs page for pyap (images/document-mkdocs-index.png) -->
 <p><code>mkdocs build</code> writes the finished site to <code>site/</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run mkdocs build</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><em></em></p><em>
+<div style="font-style: italic;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>INFO    -  Cleaning site directory</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>INFO    -  Building documentation to directory: /path/to/pyap/site</span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>INFO    -  Documentation built in 0.23 seconds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</em><p><em></em></p>
+</div>
 <p><code>mkdocstrings</code> reads the source files by default (the bottom route in the docstring diagram), so it never imports <code>pyap.app</code>. Unlike <code>pdoc</code>, it doesn’t need <code>movies.csv</code> to be found, and the build works from any folder that can see <code>mkdocs.yml</code>.</p>
 </section>
 </section>
