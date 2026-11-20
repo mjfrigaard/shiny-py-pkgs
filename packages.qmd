@@ -118,8 +118,17 @@ This chapter covers the top row of the diagram (`pyproject.toml`, `__init__.py`,
 
 [^pkgs-description]: `pyproject.toml` is the closest Python equivalent of the `DESCRIPTION` file. It also absorbs some of the jobs we'd hand to `.Rproj` build settings and package configuration in R.
 
-::: {.callout-note title="Why pyproject.toml replaced setup.py" collapse="true"}
-
+````{python}
+#| label: co_box_why_pyproject_toml_replaced_setup_py
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='b',
+    look='default',
+    header='Why pyproject.toml replaced setup.py',
+    contents=r'''
 For most of Python's history, package metadata lived in a `setup.py` file. `setup.py` is a Python script that calls `setuptools.setup()` with the package name, version, and dependencies. Because it's executable code, tools had to run it to learn anything about the package, and they couldn't run it without first installing `setuptools`. A static `setup.cfg` file was added later, but it only worked with `setuptools`.
 
 `requirements.txt` was never a package metadata file at all. It's a list of packages for `pip` to install into an environment, which is why we used it in the [Shiny for Python](shiny.qmd) chapter. It can't tell anyone the name or version of our project, and nothing in it describes how to build a distribution.
@@ -131,8 +140,10 @@ Three Python Enhancement Proposals (PEPs) replaced these files with a single dec
 * [PEP 621](https://peps.python.org/pep-0621/): standardized the `[project]` table for metadata, so any backend reads the name, version, and dependencies from the same place.
 
 You'll still find `setup.py` in older projects, and `requirements.txt` is still common for deployment (we'll come back to this below). New packages only need `pyproject.toml`. The [Writing your pyproject.toml](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/) guide in the Python Packaging User Guide is the canonical reference for the file.
-
-:::
+''',
+    fold=True,
+)
+````
 
 ### Reading TOML
 
@@ -218,8 +229,17 @@ testpaths = ["tests"]
 
 We'll add `[tool.*]` tables as we adopt new tools throughout the book. For a real world example of all these tables working together, the [`pyproject.toml` for `py-shiny`](https://github.com/posit-dev/py-shiny/blob/main/pyproject.toml) is worth skimming. It's much longer than ours, but it's built from the same pieces.
 
-::: {.callout-note title="pyproject.toml and Posit Connect" collapse="true"}
-
+````{python}
+#| label: co_box_pyproject_toml_and_posit_connect
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='b',
+    look='default',
+    header='pyproject.toml and Posit Connect',
+    contents=r'''
 `rsconnect-python` can deploy directly from a `pyproject.toml`. [`rsconnect deploy pyproject`](https://docs.posit.co/rsconnect-python/deploying/) reads a `[tool.rsconnect]` table for the app settings:
 
 ```toml
@@ -229,8 +249,10 @@ entrypoint = "app.py"
 ```
 
 The `[project]` dependencies provide the dependency list, and a pinned `uv.lock` or `requirements.txt` can be supplied with `--requirements-file`. [Connect Cloud](https://docs.posit.co/connect-cloud/how-to/python/shiny-python.html) still expects a `requirements.txt` with `app.py` as the primary file, so a `requirements.txt` can come back at deployment time (uv can generate one from `uv.lock` with `uv export`). The [Deploy](deploy.qmd) section covers both.
-
-:::
+''',
+    fold=True,
+)
+````
 
 ## Writing `pyproject.toml`
 
@@ -242,7 +264,8 @@ git checkout 03.1_pyproject
 
 The app code doesn't change. The branch deletes `requirements.txt`, adds `pyproject.toml`, and updates the install instructions in `README.md`:
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 pyap/
 ├── .gitignore
@@ -254,7 +277,8 @@ pyap/
 ├── pyproject.toml
 └── utils.py
 ```
-</em>
+
+:::
 
 ### Adding project metadata
 
@@ -300,11 +324,22 @@ We can confirm the environment still works by launching the app the same way as 
 shiny run --reload --launch-browser app.py
 ```
 
-::: {.callout-tip title="Positron"}
-
+````{python}
+#| label: co_box_positron
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='g',
+    look='default',
+    header='Positron',
+    contents=r'''
 Positron watches for `pyproject.toml` and `requirements.txt` files. If it finds one in a project that doesn't have a virtual environment yet, it [offers to create one with uv](https://opensource.posit.co/blog/2026-07-08_positron-uv/) and install the dependencies for us. If uv can't find a Python installation, the Start Session button also includes an option to install Python with uv.
-
-:::
+''',
+    fold=False,
+)
+````
 
 ## Managing the project with `uv`
 
@@ -316,7 +351,8 @@ git checkout 03.2_uv
 
 The app code and `pyproject.toml` are unchanged. The branch adds `.python-version` and `uv.lock`, removes both from `.gitignore` so they're committed, and updates the commands in `README.md`:
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 pyap/
 ├── .gitignore
@@ -330,7 +366,8 @@ pyap/
 ├── utils.py
 └── uv.lock
 ```
-</em>
+
+:::
 
 ### Pinning Python
 
@@ -342,11 +379,13 @@ uv python pin 3.12
 
 Returns: 
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 Pinned `.python-version` to `3.12`
 ```
-</em>
+
+:::
 
 The file holds a single line:
 
@@ -364,20 +403,33 @@ If Python 3.12 isn't installed, `uv` downloads it the first time it needs it (we
 uv sync
 ```
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 Resolved 45 packages in 127ms
 Checked 43 packages in 0.48ms
 ```
-</em>
+
+:::
 
 This one command does the work of the three we ran in the previous branch. `uv` creates `.venv/` if it doesn't exist (or reuses it if it does), writes `uv.lock`, and installs the locked versions into the environment. We don't need to activate the environment first, and we don't need to tell `uv` which file to read.
 
-::: {.callout-warning title="uv sync removes packages"}
-
+````{python}
+#| label: co_box_uv_sync_removes_packages
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='o',
+    look='default',
+    header='uv sync removes packages',
+    contents=r'''
 `uv sync` makes the environment match the lockfile exactly, which means it uninstalls anything that isn't listed. If you installed extra packages into `.venv/` in earlier branches (like `polars` from the callout in the [Shiny for Python](shiny.qmd) chapter), `uv sync` removes them. From this branch on, add packages with `uv add`, which updates `pyproject.toml`, `uv.lock`, and `.venv/` in one step. The [Dependencies](dependencies.qmd) chapter covers `uv add` in detail.
-
-:::
+''',
+    fold=False,
+)
+````
 
 To run a command inside the environment, we prefix it with `uv run`:
 
@@ -430,11 +482,22 @@ The order of the last two steps is the important difference. `renv::snapshot()` 
 
 [^pkgs-renv-restore]: `uv sync` on a fresh clone is the equivalent of `renv::restore()`.
 
-::: {.callout-note title="Commit uv.lock and .python-version"}
-
+````{python}
+#| label: co_box_commit_uv_lock_and_python_version
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='b',
+    look='default',
+    header='Commit uv.lock and .python-version',
+    contents=r'''
 The `.gitignore` in earlier branches listed `.python-version` and `uv.lock`. The `03.2_uv` branch removes both entries, so anyone who clones the repository and runs `uv sync` gets the same Python version and the same package versions we used.
-
-:::
+''',
+    fold=False,
+)
+````
 
 ### Non-package projects
 
@@ -461,11 +524,13 @@ We can confirm `pyap` isn't installed by trying to import it:
 uv run python -c "import pyap"
 ```
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 ModuleNotFoundError: No module named 'pyap'
 ```
-</em>
+
+:::
 
 This error is expected. A non-package project is a perfectly good way to manage an app that only ever runs from its own folder, and many Shiny for Python apps never need more. We want `pyap` to be importable (and testable, and installable), though, so the next step is giving it something to build.
 
@@ -500,7 +565,8 @@ git checkout 03.3_create-package
 
 The branch makes three changes: it adds a `[build-system]` table to `pyproject.toml`, it moves the Python code into `src/pyap/`, and it updates the import in `app.py`. The new project structure is below:
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 pyap/
 ├── .gitignore
@@ -517,7 +583,8 @@ pyap/
 │       └── utils.py
 └── uv.lock
 ```
-</em>
+
+:::
 
 R packages need two things to be packages: a `DESCRIPTION` file with the mandatory fields and an `R/` folder. A Python package needs three: a `pyproject.toml` with `name` and `version`, a `[build-system]` table, and an import package for the backend to build. We already have the first, so the sections below add the other two.
 
@@ -580,11 +647,22 @@ from pyap.utils import scatter_plot
 
 The rest of `app.py` (including `import pandas as pd`) is unchanged, and so is `utils.py`. `pandas`, `matplotlib`, and `shiny` are installed distributions, so they're imported by name exactly as before. Only imports of our own code change.
 
-::: {.callout-warning title="Why not keep from utils import?"}
-
+````{python}
+#| label: co_box_why_not_keep_from_utils_import
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='o',
+    look='default',
+    header='Why not keep from utils import?',
+    contents=r'''
 `shiny run src/pyap/app.py` adds the folder that holds `app.py` to Python's search path, so `from utils import scatter_plot` would still work when we launch the app this way. It breaks as soon as anything imports the app as `pyap.app` (like a test, or the `run_app("pyap.app:app")` launch function from the [Whole Game](whole_game.qmd) chapter), because `utils` isn't a top level module. `from pyap.utils import scatter_plot` works in both cases.
-
-:::
+''',
+    fold=False,
+)
+````
 
 ### Where the data file goes
 
@@ -600,7 +678,8 @@ With a build system and an import package in place, `uv sync` now installs `pyap
 uv sync
 ```
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 Resolved 45 packages in 411ms
       Built pyap @ file:///home/path/to/projects/apps/python/pyap                                 
@@ -608,7 +687,8 @@ Prepared 1 package in 10ms
 Installed 1 package in 0.96ms
  + pyap==0.1.0 (from file:///home/path/to/projects/apps/python/pyap)
 ```
-</em>
+
+:::
 
 `uv` installs the project in editable mode by default. An editable install points Python at the files in `src/pyap/` instead of copying them into `.venv/`, so changes to the code are picked up the next time `pyap` is imported (without reinstalling).[^pkgs-load-all] We only need to sync again when `pyproject.toml` changes. The `pyap` entry in `uv.lock` changes from a `virtual` source to an `editable` one:
 
@@ -627,17 +707,30 @@ The import that failed in the previous branch now works, and `__file__` shows Py
 uv run python -c "import pyap; print(pyap.__file__)"
 ```
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 /path/to/pyap/src/pyap/__init__.py
 ```
-</em>
-
-::: {.callout-note title="Editable installs in the Posit docs"}
-
-The [Shiny for Python custom components guide](https://shiny.posit.co/py/docs/custom-components-pkg.html) packages its project with a `pyproject.toml` and installs it with `uv pip install -e .` during development. The `-e` flag is the `pip` style way to request an editable install, and it's what `uv sync` does for us automatically in a uv project. The guide points to the [Python Packaging User Guide](https://packaging.python.org/en/latest/tutorials/packaging-projects/) for building and publishing, which we'll cover in the [PyPI](pypi.qmd) chapter.
 
 :::
+
+````{python}
+#| label: co_box_editable_installs_in_the_posit_docs
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='b',
+    look='default',
+    header='Editable installs in the Posit docs',
+    contents=r'''
+The [Shiny for Python custom components guide](https://shiny.posit.co/py/docs/custom-components-pkg.html) packages its project with a `pyproject.toml` and installs it with `uv pip install -e .` during development. The `-e` flag is the `pip` style way to request an editable install, and it's what `uv sync` does for us automatically in a uv project. The guide points to the [Python Packaging User Guide](https://packaging.python.org/en/latest/tutorials/packaging-projects/) for building and publishing, which we'll cover in the [PyPI](pypi.qmd) chapter.
+''',
+    fold=False,
+)
+````
 
 ### Running the app
 

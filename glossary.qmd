@@ -8,7 +8,7 @@ Key terms used throughout the book.
 |------|-----------|
 | App-package | A Python package whose primary purpose is to deliver a Shiny for Python application |
 | Entry point | A command registered in `pyproject.toml` that lets users launch the app from the terminal |
-| Editable install | Installing a package with `pip install -e .` so code changes take effect without reinstalling |
+| Editable install | Installing a package so code changes take effect without reinstalling (`uv sync` does this for uv projects; `pip install -e .` is the older pip style) |
 | Reactive expression | A `reactive.Calc` that caches its result and re-executes only when its dependencies change |
 | Module | A self-contained pair of `ui` and `server` functions that can be embedded in a larger Shiny app |
 | Wheel | A pre-built `.whl` archive of a package that can be installed without a build step (see [Python Packages](packages.qmd#modules-packages-and-distributions)) |

@@ -2,8 +2,17 @@
 
 The first section of the book took `pyap` from a single `app.py` file to an installable Python package. This section fills that package in. Expand the callout boxes below to review what we covered in the last four chapters:
 
-:::: {.callout-tip collapse="true" title="Review Chapters 1 to 4"}
-
+````{python}
+#| label: co_box_review_chapters_1_to_4
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='g',
+    look='default',
+    header='Review Chapters 1 to 4',
+    contents=r'''
 ::: {.callout-note collapse="true"}
 
 #### Whole Game (Chapter 1)
@@ -56,14 +65,17 @@ The [Development Workflow](development.qmd) chapter used the `04_dev` branch to 
 It also covered `uv run` versus an activated `.venv/`, running tests with `uv run pytest`, and pointing Positron at the project environment.
 
 :::
-
-::::
+''',
+    fold=True,
+)
+````
 
 ## Where we are
 
 At the end of the `04_dev` branch, `pyap` has the structure below:
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 pyap/
 ├── .gitignore
@@ -80,7 +92,8 @@ pyap/
 │       └── utils.py
 └── uv.lock
 ```
-</em>
+
+:::
 
 The package installs and the app runs, but a few loose ends remain. The functions in `utils.py` have no documentation, `movies.csv` sits outside the package and is only found when we launch the app from the project root, and we still start the app by pointing `shiny run` at a file path. The chapters in this section address each of these with the edit, sync, and run loop from the [Development Workflow](development.qmd) chapter.
 

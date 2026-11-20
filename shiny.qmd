@@ -353,14 +353,16 @@ git checkout 02.2_movies-app
 
 The branch replaces the Old Faithful code with three files:
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 pyap/
 ├── app.py
 ├── movies.csv
 └── utils.py
 ```
-</em>
+
+:::
 
 The movies app reads the data with `pandas`, so we'll install it into the virtual environment (`shiny` and `matplotlib` are already installed):
 
@@ -368,8 +370,17 @@ The movies app reads the data with `pandas`, so we'll install it into the virtua
 uv pip install pandas
 ```
 
-::: {.callout-note title="pandas or polars?" collapse="true"}
-
+````{python}
+#| label: co_box_pandas_or_polars
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='b',
+    look='default',
+    header='pandas or polars?',
+    contents=r'''
 This book uses `pandas` because it's more common in Shiny for Python examples (roughly 3 to 1 over [`polars`](https://pola.rs/) in the [`py-shiny`](https://github.com/posit-dev/py-shiny) and [`py-shiny-templates`](https://github.com/posit-dev/py-shiny-templates) repositories as of 2026-10). Shiny doesn't force the choice, though: `@render.data_frame` accepts both `pandas` and `polars` DataFrames. To follow along with `polars` instead, install it into the virtual environment:
 
 ```bash
@@ -377,8 +388,10 @@ uv pip install polars
 ```
 
 `polars` builds queries from column expressions (like `pl.col("genre")`), so its syntax will feel familiar if you're coming from `dplyr`.
-
-:::
+''',
+    fold=True,
+)
+````
 
 ### app.py
 
@@ -503,8 +516,17 @@ Like `waiting` in the Old Faithful app, `movies` is created outside the server, 
 
 The data have 34 columns describing each movie (`title`, `genre`, `runtime`, `mpaa_rating`, `imdb_rating`, `critics_score`, `audience_score`, and others). The app only plots a handful of them.
 
-::: {.callout-note title="Reading data with polars" collapse="true"}
-
+````{python}
+#| label: co_box_reading_data_with_polars
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='b',
+    look='default',
+    header='Reading data with polars',
+    contents=r'''
 The code blocks below import the package, read `movies.csv`, and count rows in `pandas`, `polars`, and the tidyverse:
 
 `pandas`:
@@ -535,8 +557,10 @@ nrow(movies)
 ```
 
 `pandas` reads the string `NA` as a missing value by default, but `polars` only treats empty fields as missing. Because `movies.csv` stores missing values as `NA`, `pl.read_csv("movies.csv")` fails with a parsing error, so we pass the string to `null_values`.
-
-:::
+''',
+    fold=True,
+)
+````
 
 ### Inputs
 
@@ -643,8 +667,17 @@ def scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title=""):
 
 `matplotlib` doesn't map a categorical variable to colors automatically, so `scatter_plot()` loops over each category in `col_var` and draws its points with a color from the `tab10` palette. The `s` argument sets the marker area, so `size_var ** 2 * 10` scales the slider's 1 to 5 range into visible point sizes. The axis and legend labels are built from the column names (`critics_score` becomes "Critics Score"), and the legend is placed outside the plot area so it doesn't cover any points.
 
-::: {.callout-note title="Filtering with polars" collapse="true"}
-
+````{python}
+#| label: co_box_filtering_with_polars
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='b',
+    look='default',
+    header='Filtering with polars',
+    contents=r'''
 The code blocks below show the two `pandas` operations in `scatter_plot()` next to their `polars` and `dplyr` equivalents (selecting the rows in a category, and the unique values with no missing entries):
 
 `pandas`:
@@ -669,8 +702,10 @@ unique(na.omit(df[[col_var]]))
 ```
 
 `pl.col(col_var)` refers to a column by name inside an expression, much like `.data[[col_var]]` in `dplyr`. Using it requires `import polars as pl` at the top of `utils.py`. `polars` doesn't preserve the order of `unique()` results by default, but `scatter_plot()` already wraps them in `sorted()`.
-
-:::
+''',
+    fold=True,
+)
+````
 
 Moving this code out of `app.py` keeps the server short, and it gives us a plain Python function we can call (and test) without running the app. `app.py` imports it with `from utils import scatter_plot`, which works because `utils.py` sits in the same folder as `app.py`. This is the same idea behind the `geyser_waiting()` function we added in the [Whole Game](whole_game.qmd) chapter, and it's where the package structure in later chapters starts to pay off.
 
@@ -692,7 +727,8 @@ The movies app runs, but nothing in the folder tells another developer (or our f
 git checkout 02.3_proj-app
 ```
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 pyap/
 ├── .gitignore
@@ -704,7 +740,8 @@ pyap/
 ├── requirements.txt
 └── utils.py
 ```
-</em>
+
+:::
 
 The app code (`app.py`, `utils.py`, and `movies.csv`) is unchanged. The branch adds `requirements.txt` and `.vscode/settings.json`, and it updates `README.md` and `.gitignore`.
 
@@ -751,11 +788,22 @@ VS Code (and Positron, which is built on the same open source code base) reads p
 
 `python.defaultInterpreterPath` points the editor at the Python inside `.venv/`, and `python.terminal.activateEnvironment` activates the virtual environment whenever we open a new terminal. The remaining settings format Python files with [Black](https://black.readthedocs.io/) every time we save, and draw a ruler at 88 characters (Black's default line length). The Black formatter setting requires the [Black Formatter extension](https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter).
 
-::: {.callout-note title="Sharing editor settings"}
-
+````{python}
+#| label: co_box_sharing_editor_settings
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='b',
+    look='default',
+    header='Sharing editor settings',
+    contents=r'''
 The `.gitignore` in the earlier branches listed `.vscode/`, so editor settings were never committed. The `02.3_proj-app` branch removes that entry, which means `.vscode/settings.json` is shared with anyone who clones the repository.
-
-:::
+''',
+    fold=False,
+)
+````
 
 ## Recap
 

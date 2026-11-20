@@ -6,15 +6,26 @@ In the [Development Workflow](development.qmd) chapter, we settled into a loop o
 
 This chapter fixes that by writing complete docstrings for the code in `pyap`, then rendering them into an HTML documentation site.
 
-::: {.callout-note title="Comparison to R package documentation" collapse="true"}
-
+````{python}
+#| label: co_box_comparison_to_r_package_documentation
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='b',
+    look='default',
+    header='Comparison to R package documentation',
+    contents=r'''
 If you've read the [Documentation](https://mjfrigaard.github.io/shiny-app-pkgs/document.html) chapter of [Shiny App-Packages](https://mjfrigaard.github.io/shiny-app-pkgs/), you'll know we document app-package functions with `roxygen2`:
 
 * Help documentation is created by placing `#'` comments above each function   
 * Tags like `@title` and `@description` are used to organize the documentation   
 * We run `devtools::document()` to turn them into `.Rd` files in `man/`
-
-:::
+''',
+    fold=True,
+)
+````
 
 Python stores docstrings on the function itself, so `help()` can read it the moment the module is imported. I've found this shifts the work from running tools to writing well, so most of this chapter is about what goes inside the triple quotes.
 
@@ -57,13 +68,24 @@ Let's dive into docstrings!
 
 A docstring is a string literal placed as the first statement in a module, function, or class. Python doesn't discard it like a comment. It attaches the string to the object as its `__doc__` attribute, which is what makes docstrings readable from the console, the editor, and documentation tools.
 
-::: {.callout-note title="Comparison to R package documentation" collapse="true"}
-
+````{python}
+#| label: co_box_comparison_to_r_package_documentation_2
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='b',
+    look='default',
+    header='Comparison to R package documentation',
+    contents=r'''
 A string literal is a string value written directly in the code, between quotes (`"movies.csv"` or `'IMDB rating'`), rather than one built by an expression or stored in a variable. R has string literals too (`"movies.csv"`, and raw strings like `r"(C:\path)"` since R 4.0), but R doesn't treat a string at the top of a function body as documentation.
 
 If we placed `"Create a scatter plot"` as the first line of an R function, R would evaluate it, discard the result, and move on. This is why R documentation lives outside the function code, in `roxygen2` comments that `document()` turns into `.Rd` files.
-
-:::
+''',
+    fold=True,
+)
+````
 
 By convention, docstrings are written inside three consecutive double quotes: `"""docstring text"""`. In the `04_dev` branch, if we open `src/pyap/utils.py`, we can see a docstring for `scatter_plot()`: 
 
@@ -83,7 +105,7 @@ The fastest way to read a docstring is `help()` in a Python console (Positron's 
 >>> help(scatter_plot)
 ```
 
-<em>
+::: {style="font-style: italic;"}
 
 ```default
 Help on function scatter_plot in module pyap.utils:
@@ -92,7 +114,7 @@ scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title='')
     Create a scatter plot of df colored by a categorical variable.
 ```
 
-</em>
+:::
 
 The output above is from a terminal, where `help()` opens a pager (press <kbd>q</kbd> to return to the prompt). In Positron, `help()` displays the function's signature and docstring in the **Help** pane:
 
@@ -105,13 +127,13 @@ The raw string is available on the `__doc__` attribute:
 >>> scatter_plot.__doc__
 ```
 
-<em>
+::: {style="font-style: italic;"}
 
 ```default
 'Create a scatter plot of df colored by a categorical variable.'
 ```
 
-</em>
+:::
 
 Modules and packages have docstrings too. `pyap.__doc__` returns the sentence in `src/pyap/__init__.py` from the [Python Packages](packages.qmd#moving-the-code-into-srcpyap) chapter, and `help(pyap)` shows the package docstring along with its contents. In a terminal, the contents list both `app` and `utils`, but Positron's **Help** pane only listed `utils` (the module we had already imported):
 
@@ -185,7 +207,7 @@ uv sync
 
 The branch adds docstrings to all three modules in `src/pyap/`, adds `pdoc` to the `dev` dependency group (`pyproject.toml` and `uv.lock`), and adds `docs/` to `.gitignore`. The project structure is below:
 
-<em>
+::: {style="font-style: italic;"}
 
 ```default
 pyap/
@@ -204,7 +226,7 @@ pyap/
 └── uv.lock
 ```
 
-</em>
+:::
 
 Unlike `roxygen2`, which generates `.Rd` files in `man/`, docstrings add no files to the package. Documentation in Python lives *inside* the files we already have, which is why the tree looks exactly like the one from the `04_dev` branch.
 
@@ -400,11 +422,22 @@ def scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title=""):
     # function body unchanged
 ```
 
-::: {.callout-tip title="Types in docstrings and type hints" collapse="true"}
-
+````{python}
+#| label: co_box_types_in_docstrings_and_type_hints
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='g',
+    look='default',
+    header='Types in docstrings and type hints',
+    contents=r'''
 NumPy style puts each parameter's type in the docstring. Without type hints, editors can't infer the types either (the Positron tooltip above shows `Unknown` for every argument). Python also supports type hints in the function signature (`def scatter_plot(df: pd.DataFrame, x_var: str, ...)`), and many documentation tools display both. We'll keep the types in the docstring for now, so the signature in `utils.py` doesn't change in this chapter.
-
-:::
+''',
+    fold=True,
+)
+````
 
 ### Module docstrings
 
@@ -499,7 +532,7 @@ Docstrings are part of the source code, so the editable install picks them up wi
 >>> help(scatter_plot)
 ```
 
-<em>
+::: {style="font-style: italic;"}
 
 ```default
 Help on function scatter_plot in module pyap.utils:
@@ -551,7 +584,7 @@ scatter_plot(df, x_var, y_var, col_var, alpha_var, size_var, title='')
     ...                    "mpaa_rating", 0.4, 3)
 ```
 
-</em>
+:::
 
 The output should show the full NumPy style docstring below the signature. `help()` prints the sections as plain text; the underlined headings are what documentation tools look for when they turn the docstring into HTML.
 
@@ -567,7 +600,7 @@ The output should show the full NumPy style docstring below the signature. `help
 uv add --dev pdoc
 ```
 
-<em>
+::: {style="font-style: italic;"}
 
 ```default
 Resolved 50 packages in 310ms
@@ -584,7 +617,7 @@ Installed 6 packages in 12ms
  + pygments==2.21.0
 ```
 
-</em>
+:::
 
 `uv add` updates `pyproject.toml`, `uv.lock`, and `.venv/` in one step. The new table in `pyproject.toml` is below:
 
@@ -605,13 +638,13 @@ Installing `pyap` never installs `pdoc`, because dependency groups aren't part o
 uv run pdoc --docformat numpy pyap
 ```
 
-<em>
+::: {style="font-style: italic;"}
 
 ```default
 pdoc server ready at http://localhost:8080
 ```
 
-</em>
+:::
 
 This starts a local web server and opens the documentation in the browser. The `--docformat numpy` flag tells `pdoc` to read the `Parameters`, `Returns`, `Notes`, and `Examples` sections as NumPy style (without it, the underlined headings render as plain text). The package docstring becomes the landing page, and `pyap.app` and `pyap.utils` each get their own page. Press <kbd>Ctrl</kbd> + <kbd>C</kbd> in the terminal to stop the server.
 
@@ -621,11 +654,22 @@ This starts a local web server and opens the documentation in the browser. The `
 
 [^doc-export]: This is the closest `pdoc` comes to `@export`. In R, unexported functions still get help pages unless they're marked `@noRd`; in Python, a leading underscore keeps a function out of the generated site.
 
-::: {.callout-warning title="pdoc imports pyap"}
-
+````{python}
+#| label: co_box_pdoc_imports_pyap
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='o',
+    look='default',
+    header='pdoc imports pyap',
+    contents=r'''
 `pdoc` builds its pages from the imported package (the top route in the diagram above), and importing `pyap.app` runs `pd.read_csv("movies.csv")`. The relative path is resolved from the folder we run `pdoc` in, so `pdoc` has to be run from the project root, exactly like the app. From any other folder, the import of `pyap.app` fails with a `FileNotFoundError`. The [Data](data.qmd) chapter removes this dependence on the working directory.
-
-:::
+''',
+    fold=False,
+)
+````
 
 ### Writing a static site
 
@@ -637,7 +681,8 @@ uv run pdoc --docformat numpy -o docs pyap
 
 `pdoc` writes one HTML page per module, plus an index page and a search index. The `docs/` folder should look like this:
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 docs/
 ├── index.html
@@ -647,7 +692,8 @@ docs/
 ├── pyap.html
 └── search.js
 ```
-</em>
+
+:::
 
 The pages are self contained, so opening `docs/index.html` in a browser shows the same site as the preview. The `05.1_pdoc` branch lists `docs/` in `.gitignore`, because the HTML can always be rebuilt from the docstrings. We'll publish it in the [Deploy](deploy.qmd) section.
 
@@ -672,7 +718,7 @@ This is the side branch from the diagram at the top of the chapter. It keeps eve
 uv remove --dev pdoc
 ```
 
-<em>
+::: {style="font-style: italic;"}
 
 ```default
 Resolved 45 packages in 13ms
@@ -689,13 +735,13 @@ Installed 1 package in 0.55ms
  - pygments==2.21.0
 ```
 
-</em>
+:::
 
 ```bash
 uv add --dev mkdocs "mkdocstrings[python]"
 ```
 
-<em>
+::: {style="font-style: italic;"}
 
 ```default
 Resolved 62 packages in 321ms
@@ -725,7 +771,7 @@ Installed 17 packages in 5ms
  + watchdog==6.0.0
 ```
 
-</em>
+:::
 
 The `dev` group in `pyproject.toml` now lists the two new packages:
 
@@ -741,7 +787,8 @@ dev = [
 
 The branch adds an `mkdocs.yml` file at the project root and a `docs/index.md` page. The project structure is below:
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 pyap/
 ├── .gitignore
@@ -761,7 +808,8 @@ pyap/
 │       └── utils.py
 └── uv.lock
 ```
-</em>
+
+:::
 
 `docs/` is now source code for the site, so the branch removes `docs/` from `.gitignore` and adds `site/` (the folder `mkdocs build` writes to) in its place:
 
@@ -810,7 +858,7 @@ This is where `mkdocs` differs from `pdoc`. The prose at the top of the page is 
 uv run mkdocs serve
 ```
 
-<em>
+::: {style="font-style: italic;"}
 
 ```default
 INFO    -  Building documentation...
@@ -820,7 +868,7 @@ INFO    -  [12:29:18] Watching paths for changes: 'docs', 'mkdocs.yml'
 INFO    -  [12:29:18] Serving on http://127.0.0.1:8000/
 ```
 
-</em>
+:::
 
 The server prints the address to open in the browser, and it rebuilds the site when we save a change to `docs/` or `mkdocs.yml`. Press <kbd>Ctrl</kbd> + <kbd>C</kbd> to stop it.
 
@@ -832,7 +880,7 @@ The server prints the address to open in the browser, and it rebuilds the site w
 uv run mkdocs build
 ```
 
-<em>
+::: {style="font-style: italic;"}
 
 ```default
 INFO    -  Cleaning site directory
@@ -840,7 +888,7 @@ INFO    -  Building documentation to directory: /path/to/pyap/site
 INFO    -  Documentation built in 0.23 seconds
 ```
 
-</em>
+:::
 
 `mkdocstrings` reads the source files by default (the bottom route in the docstring diagram), so it never imports `pyap.app`. Unlike `pdoc`, it doesn't need `movies.csv` to be found, and the build works from any folder that can see `mkdocs.yml`.
 

@@ -78,15 +78,18 @@ cd pyap
 uv init --package --python 3.12
 ```
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 Initialized project `pyap`
 ```
-</em>
+
+:::
 
 uv takes the project name from the folder name, so the package is named `pyap`. The folder now looks like this:
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 pyap/
 ├── .python-version
@@ -97,7 +100,8 @@ pyap/
     └── pyap/
         └── __init__.py
 ```
-</em>
+
+:::
 
 `.python-version` records the Python version uv will use for the project, and `src/pyap/` is the importable package. uv won't overwrite an existing `README.md`. If the folder isn't already a Git repository, `uv init` also runs `git init` and writes a `.gitignore` (we'll come back to Git at the end of the chapter).
 
@@ -145,7 +149,8 @@ Code in a package lives inside the package directory, so we'll move `app.py` int
 mv app.py src/pyap/app.py
 ```
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 pyap/
 ├── .python-version
@@ -156,7 +161,8 @@ pyap/
         ├── __init__.py
         └── app.py
 ```
-</em>
+
+:::
 
 Keeping the package under `src/` means Python can only import `pyap` after it's installed. This sounds like a restriction, but it guarantees our tests run against the installed package (not whatever files happen to be in the working directory). The [src/ Layout](src_layout.qmd) chapter explains why this matters.
 
@@ -198,17 +204,30 @@ We can verify `pyap` is installed (and points to our source files) by importing 
 uv run python -c "import pyap; print(pyap.__file__)"
 ```
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 /path/to/pyap/src/pyap/__init__.py
 ```
-</em>
-
-::: {.callout-tip title="Positron"}
-
-Positron detects the `.venv/` folder in the project. Select it from the interpreter picker so the console, the editor, and the test runner all use the same environment as `uv run`.
 
 :::
+
+````{python}
+#| label: co_box_positron
+#| echo: false
+#| output: asis
+#| eval: true
+from _common import co_box
+co_box(
+    color='g',
+    look='default',
+    header='Positron',
+    contents=r'''
+Positron detects the `.venv/` folder in the project. Select it from the interpreter picker so the console, the editor, and the test runner all use the same environment as `uv run`.
+''',
+    fold=False,
+)
+````
 
 The [Development Workflow](development.qmd) chapter covers the edit, sync, and run loop in more detail.
 
@@ -316,7 +335,8 @@ uv run pytest
 
 The output (trimmed) tells us both tests passed:
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 collected 2 items
 
@@ -324,7 +344,8 @@ tests/test_data.py ..                                                    [100%]
 
 ============================== 2 passed in 0.15s ===============================
 ```
-</em>
+
+:::
 
 The [Test Suite](test_suite.qmd) chapter covers configuring `pytest` and running tests in Positron, and the rest of the Testing section covers fixtures, module tests, and end-to-end tests.
 
@@ -375,13 +396,15 @@ We can also launch the app from the Python console with `from pyap.app import ru
 uv build
 ```
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 dist/
 ├── pyap-0.1.0-py3-none-any.whl
 └── pyap-0.1.0.tar.gz
 ```
-</em>
+
+:::
 
 The wheel is the installable package. Anyone with Python 3.12 or later can install it (along with `shiny`, `matplotlib`, and `numpy`) and launch the app with the `pyap` command:
 
@@ -439,7 +462,8 @@ The [GitHub Setup](github.qmd) appendix covers creating the repository, configur
 
 In this chapter we turned a single `app.py` file into an installable Python package. The final project is shown below:
 
-<em>
+::: {style="font-style: italic;"}
+
 ```default
 pyap/
 ├── .gitignore
@@ -457,7 +481,8 @@ pyap/
 │   └── test_data.py
 └── uv.lock
 ```
-</em>
+
+:::
 
 The workflow followed these steps:
 
